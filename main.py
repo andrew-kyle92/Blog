@@ -104,7 +104,7 @@ def register():
                 salt_length=8)
             new_user = User(
                 email=request.form.get("email"),
-                account_type="Non-Admin",
+                account_type=request.form.get("account_type"),
                 name=request.form.get("name"),
                 password=salted_password
             )
