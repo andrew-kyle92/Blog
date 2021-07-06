@@ -76,7 +76,7 @@ class Comment(db.Model):
     time = db.Column(db.String(255), nullable=False)
 
 
-db.create_all()
+# db.create_all()
 
 
 @app.route('/')
@@ -104,7 +104,7 @@ def register():
                 salt_length=8)
             new_user = User(
                 email=request.form.get("email"),
-                account_type=request.form.get("account_type"),
+                account_type="Non-Admin",
                 name=request.form.get("name"),
                 password=salted_password
             )
