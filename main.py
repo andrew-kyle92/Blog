@@ -1,3 +1,4 @@
+import datetime
 from flask import Flask, render_template, redirect, url_for, flash, request, abort
 from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
@@ -12,7 +13,8 @@ from functools import wraps
 import os
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.urandom(32)  # This is for testing
+app.config['SECRET_KEY'] = SECRET_KEY  # This is for testing
 ckeditor = CKEditor(app)
 Bootstrap(app)
 
@@ -27,7 +29,8 @@ gravatar = Gravatar(app,
                     base_url=None)
 
 # #CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URL'] = os.environ.get("DATABASE_URL", "sqlite:///blog.db")
+# app.config['SQLALCHEMY_DATABASE_URL'] = os.environ.get("DATABASE_URL", "sqlite:///blog.db")
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///blog.db"  # This is for testing
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -76,17 +79,19 @@ class Comment(db.Model):
     time = db.Column(db.String(255), nullable=False)
 
 
-db.create_all()
+# db.create_all()  # This is for database creation
 
 
 @app.route('/')
 def get_all_posts():
+    year = datetime.datetime.now().year
     if current_user:
         user = current_user
+        # print(user.account_type)
     else:
         user = None
     posts = BlogPost.query.all()
-    return render_template("index.html", all_posts=posts, is_authenticated=user.is_authenticated, user=user)
+    return render_template("index.html", all_posts=posts, is_authenticated=user.is_authenticated, user=user, year=year)
 
 
 @app.route('/register', methods=["POST", "GET"])
@@ -111,7 +116,7 @@ def register():
             db.session.add(new_user)
             db.session.commit()
 
-            login_user(new_user)
+            login_user(new_user.account_type)
 
             return redirect(url_for("get_all_posts"))
 
