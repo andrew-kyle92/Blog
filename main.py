@@ -7,7 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
-from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
+from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm, ContactForm
 from flask_gravatar import Gravatar
 from functools import wraps
 import os
@@ -185,10 +185,25 @@ def about():
     return render_template("about.html", is_authenticated=user.is_authenticated)
 
 
-@app.route("/contact")
+@app.route("/contact", methods=["POST", "GET"])
 def contact():
+    form = ContactForm()
     user = current_user
-    return render_template("contact.html", is_authenticated=user.is_authenticated)
+
+    if user.is_authenticated:
+        form.name.data = user.name
+        form.email.data = user.email
+
+    if form.validate_on_submit():
+        print(
+            f"Name: {form.name.data}\n"
+            f"Email: {form.email.data}\n"
+            f"Phone: {form.phone.data}\n"
+            f"Message: {form.message.data}"
+        )
+        flash(message="You're message was sent, successfully!", category="Email Sent Success")
+        return redirect(url_for("contact"))
+    return render_template("contact.html", is_authenticated=user.is_authenticated, form=form)
 
 
 @app.route("/new-post", methods=["POST", "GET"])
