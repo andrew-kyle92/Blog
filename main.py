@@ -201,7 +201,7 @@ def contact():
             f"Phone: {form.phone.data}\n"
             f"Message: {form.message.data}"
         )
-        flash(message="You're message was sent, successfully!", category="Email Sent Success")
+        flash(message="Your message was sent, successfully!", category="Email Sent Success")
         return redirect(url_for("contact"))
     return render_template("contact.html", is_authenticated=user.is_authenticated, form=form)
 
