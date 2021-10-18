@@ -9,10 +9,11 @@ from sqlalchemy.orm import relationship
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm, ContactForm
 from flask_gravatar import Gravatar
-from functools import wraps
+from dotenv import load_dotenv, dotenv_values
 import os
 
 app = Flask(__name__)
+config = dotenv_values(".env")
 SECRET_KEY = os.urandom(32)  # This is for testing
 app.config['SECRET_KEY'] = SECRET_KEY  # This is for testing
 ckeditor = CKEditor(app)
@@ -73,13 +74,14 @@ class Comment(db.Model):
     __tablename__ = "comments"
     id = db.Column(db.Integer, primary_key=True)
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    post_id = db.Column(db.Integer, nullable=False)
     author = relationship("User", back_populates="comments")
     comment = db.Column(db.String(255), nullable=False)
     date = db.Column(db.String(255), nullable=False)
     time = db.Column(db.String(255), nullable=False)
 
 
-# db.create_all()  # This is for database creation
+db.create_all()  # This is for database creation
 
 
 @app.route('/')
@@ -109,14 +111,14 @@ def register():
                 salt_length=8)
             new_user = User(
                 email=request.form.get("email"),
-                account_type="Non-Admin",
+                account_type=request.form.get("account_type"),
                 name=request.form.get("name"),
                 password=salted_password
             )
             db.session.add(new_user)
             db.session.commit()
 
-            login_user(new_user.account_type)
+            login_user(new_user)
 
             return redirect(url_for("get_all_posts"))
 
@@ -136,6 +138,8 @@ def login():
                 login_user(user)
                 return redirect(url_for("get_all_posts"))
             else:
+                flash("Your username or password is incorrect, make sure check caps lock isn't on!",
+                      category="Unsuccessful_Login")
                 return redirect(url_for("login"))
     return render_template("login.html", form=form)
 
@@ -160,6 +164,7 @@ def show_post(post_id):
             return redirect(url_for("login"))
         else:
             new_comment = Comment(
+                post_id=post_id,
                 author=current_user,
                 comment=form.comment.data,
                 date=date.today().strftime("%B %d, %Y"),
