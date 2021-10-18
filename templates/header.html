@@ -10,6 +10,9 @@
 
   <title>Andrew's Blog</title>
 
+  <!-- Custom Non-Vendor CSS Styling -->
+  <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+
   <!-- Bootstrap core CSS -->
   <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
 
@@ -20,9 +23,6 @@
 
   <!-- Custom styles for this template -->
   <link href="{{ url_for('static', filename='css/clean-blog.min.css') }}" rel="stylesheet">
-
-  <!-- Custom Non-Vendor CSS Styling -->
-  <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
 
   <!-- Favicon for the app -->
   <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon" type="image/x-icon">
