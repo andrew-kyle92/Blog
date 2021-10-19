@@ -1,16 +1,20 @@
 import datetime
-from flask import Flask, render_template, redirect, url_for, flash, request, abort
+import os
+from datetime import date, time
+
+from email_class import SendEmail
+
+from dotenv import dotenv_values
+from flask import Flask, render_template, redirect, url_for, flash, request
 from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
-from datetime import date, time
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask_gravatar import Gravatar
+from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
-from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
+from werkzeug.security import generate_password_hash, check_password_hash
+
 from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm, ContactForm
-from flask_gravatar import Gravatar
-from dotenv import load_dotenv, dotenv_values
-import os
 
 app = Flask(__name__)
 config = dotenv_values(".env")
@@ -18,6 +22,7 @@ SECRET_KEY = os.urandom(32)  # This is for testing
 app.config['SECRET_KEY'] = SECRET_KEY  # This is for testing
 ckeditor = CKEditor(app)
 Bootstrap(app)
+send_email = SendEmail()
 
 # Gravatar Init
 gravatar = Gravatar(app,
@@ -200,12 +205,13 @@ def contact():
         form.email.data = user.email
 
     if form.validate_on_submit():
-        print(
-            f"Name: {form.name.data}\n"
-            f"Email: {form.email.data}\n"
-            f"Phone: {form.phone.data}\n"
-            f"Message: {form.message.data}"
-        )
+        msg_info = {
+            "name": form.name.data,
+            "email": form.email.data,
+            "phone": form.phone.data,
+            "msg": form.message.data
+        }
+        send_email.send_email(msg_info)
         flash(message="Your message was sent, successfully!", category="Email Sent Success")
         return redirect(url_for("contact"))
     return render_template("contact.html", is_authenticated=user.is_authenticated, form=form)

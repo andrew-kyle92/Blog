@@ -12,3 +12,9 @@
     text-shadow: 0 1px 0 #fff;
     opacity: .5;
 }
+
+.help-block {
+    color: red;
+    font-size: 14px;
+    margin: 0.5rem auto;
+}
