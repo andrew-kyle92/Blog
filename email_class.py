@@ -17,12 +17,17 @@ class SendEmail:
         self.smtp_port = 587
 
     def send_email(self, sender_data):
-        sender_username = sender_data["email"].split("@")[0]
-        sender_domain = sender_data["email"].split("@")[1]
-        if sender_data['name'] == "":
-            subject = f"Incoming email from Blog Site"
+
+        if sender_data["phone"] != "":
+            phone_num = [digit for digit in sender_data["phone"]]
+            phone = f"({phone_num[0]}{phone_num[1]}{phone_num[2]}) {phone_num[3]}{phone_num[4]}{phone_num[5]}" \
+                            f"-{phone_num[6]}{phone_num[7]}{phone_num[8]}{phone_num[9]}"
         else:
-            subject = f"Incoming email from Blog Site sent by {sender_data['name']}"
+            phone = "No phone number provided"
+        if sender_data['name'] == "":
+            subject = f"New email from Blog Site"
+        else:
+            subject = f"New email from Blog Site sent by {sender_data['name']}"
 
         # Message Container
         msg = EmailMessage()
@@ -37,8 +42,8 @@ class SendEmail:
             <body>
                 {sender_data["msg"]}
                 <br>
-                <p>{sender_data["phone"]}</p>
-                <p>{sender_data["email"]}</p>
+                <p>Sender Phone Number: {phone}</p>
+                <p>Sender Email: {sender_data["email"]}</p>
             </body>
         </html>
         """, subtype='html')
