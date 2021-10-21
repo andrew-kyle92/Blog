@@ -1,6 +1,7 @@
 import datetime
 import os
 from datetime import date, time
+import time as t
 
 from email_class import SendEmail
 
@@ -161,8 +162,9 @@ def show_post(post_id):
     requested_post = BlogPost.query.get(post_id)
     comments = Comment.query.all()
     form = CommentForm()
-    time_epoch = time()
-    time_now = time.strftime(time_epoch, "%I:%M %p")
+    struct_time = t.localtime(t.time())
+    time_now = t.strftime("%I:%M %p", struct_time)
+    print(time_now)
     if form.validate_on_submit():
         if not user.is_authenticated:
             flash("You need to log in or register to comment.")
