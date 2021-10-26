@@ -6,7 +6,7 @@ import time as t
 from email_class import SendEmail
 
 from dotenv import dotenv_values
-from flask import Flask, render_template, redirect, url_for, flash, request
+from flask import Flask, render_template, redirect, url_for, flash, request, abort
 from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
 from flask_gravatar import Gravatar
@@ -144,8 +144,7 @@ def login():
                 login_user(user)
                 return redirect(url_for("get_all_posts"))
             else:
-                flash("Your username or password is incorrect, make sure check caps lock isn't on!",
-                      category="Unsuccessful_Login")
+                flash("Your username or password is incorrect", category="Unsuccessful_Login")
                 return redirect(url_for("login"))
     return render_template("login.html", form=form)
 
@@ -164,7 +163,7 @@ def show_post(post_id):
     form = CommentForm()
     struct_time = t.localtime(t.time())
     time_now = t.strftime("%I:%M %p", struct_time)
-    print(time_now)
+    # print(time_now)
     if form.validate_on_submit():
         if not user.is_authenticated:
             flash("You need to log in or register to comment.")
@@ -224,19 +223,22 @@ def contact():
 def add_new_post():
     user = current_user
     form = CreatePostForm()
-    if form.validate_on_submit():
-        new_post = BlogPost(
-            title=form.title.data,
-            subtitle=form.subtitle.data,
-            body=form.body.data,
-            author=current_user,
-            img_url=form.img_url.data,
-            date=date.today().strftime("%B %d, %Y")
-        )
-        db.session.add(new_post)
-        db.session.commit()
-        return redirect(url_for("get_all_posts"))
-    return render_template("make-post.html", form=form, is_authenticated=user.is_authenticated, user=user)
+    if user.is_anonymous:
+        return redirect(url_for("forbidden"))
+    else:
+        if form.validate_on_submit():
+            new_post = BlogPost(
+                title=form.title.data,
+                subtitle=form.subtitle.data,
+                body=form.body.data,
+                author=current_user,
+                img_url=form.img_url.data,
+                date=date.today().strftime("%B %d, %Y")
+            )
+            db.session.add(new_post)
+            db.session.commit()
+            return redirect(url_for("get_all_posts"))
+        return render_template("make-post.html", form=form, is_authenticated=user.is_authenticated, user=user)
 
 
 @app.route("/edit-post/<int:post_id>", methods=["POST", "GET"])
@@ -278,6 +280,11 @@ def delete_post(post_id):
     db.session.delete(post_to_delete)
     db.session.commit()
     return redirect(url_for('get_all_posts'))
+
+
+@app.errorhandler(401)
+def forbidden(e):
+    return render_template("/aborts/forbidden.html", errors=e), 401
 
 
 if __name__ == "__main__":

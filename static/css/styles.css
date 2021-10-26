@@ -35,3 +35,10 @@
     border-color: red;
 }
 
+.unauthorized-h2 {
+    color: #d12e2e;
+    margin: auto;
+    font-style: italic;
+    text-align: center;
+}
+
