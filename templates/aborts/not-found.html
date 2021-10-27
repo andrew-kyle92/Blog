@@ -1,13 +1,13 @@
  {% include "header.html" %}
 
    <!-- Page Header -->
-  <header class="masthead" style="background-image: url({{ url_for('static', filename='img/unauthorized.jpg') }})">
+  <header class="masthead" style="background-image: url({{ url_for('static', filename='img/not-found.jpg') }})">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="site-heading">
-            <h1>Unauthorized</h1>
+            <h1>Not found</h1>
             <span class="subheading"></span>
           </div>
         </div>
@@ -18,7 +18,7 @@
  <div class="container">
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto content">
-        <h2 class="unauthorized-h2">The page you're trying to access is restricted</h2>
+        <h2 class="unauthorized-h2">The page you're trying to access doesn't exist</h2>
         <br>
         <ul>
             <li>{{ error }}</li>

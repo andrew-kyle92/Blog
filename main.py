@@ -6,7 +6,8 @@ import time as t
 from email_class import SendEmail
 
 from dotenv import dotenv_values
-from flask import Flask, render_template, redirect, url_for, flash, request, abort
+from flask import Flask, render_template, redirect, url_for, flash, request, abort, session
+from flask.sessions import  SessionMixin
 from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
 from flask_gravatar import Gravatar
@@ -16,6 +17,7 @@ from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm, ContactForm
+
 
 app = Flask(__name__)
 config = dotenv_values(".env")
@@ -223,8 +225,9 @@ def contact():
 def add_new_post():
     user = current_user
     form = CreatePostForm()
-    if user.is_anonymous:
-        return redirect(url_for("forbidden"))
+    if user.account_type != "Admin":
+        # abort(401, description="Unauthorized access")
+        return abort(401, response="aborts/forbidden.html")
     else:
         if form.validate_on_submit():
             new_post = BlogPost(
@@ -246,31 +249,35 @@ def add_new_post():
 def edit_post(post_id):
     user = current_user
     post = BlogPost.query.get(post_id)
-    edit_form = CreatePostForm(
-        title=post.title,
-        subtitle=post.subtitle,
-        img_url=post.img_url,
-        body=post.body
-    )
-    if request.method == "POST":
-        if edit_form.validate_on_submit():
-            post.title = edit_form.title.data
-            post.subtitle = edit_form.subtitle.data
-            post.img_url = edit_form.img_url.data
-            post.body = edit_form.body.data
-            db.session.commit()
-            return redirect(url_for("show_post", post_id=post.id))
-        else:
-            print("Didn't work")
-    else:
-        print("Get, not POST")
+    if post.author_id == user.id:
+        edit_form = CreatePostForm(
+            title=post.title,
+            subtitle=post.subtitle,
+            img_url=post.img_url,
+            body=post.body
+        )
+        if request.method == "POST":
+            if edit_form.validate_on_submit():
+                post.title = edit_form.title.data
+                post.subtitle = edit_form.subtitle.data
+                post.img_url = edit_form.img_url.data
+                post.body = edit_form.body.data
+                db.session.commit()
+                return redirect(url_for("show_post", post_id=post.id))
+            else:
+                print("Didn't work")
+        # else:
+        #     print("Get, not POST")
 
-    return render_template(
-        "make-post.html",
-        form=edit_form,
-        is_authenticated=user.is_authenticated,
-        is_edit=True,
-        user=user)
+        return render_template(
+            "make-post.html",
+            form=edit_form,
+            is_authenticated=user.is_authenticated,
+            is_edit=True,
+            user=user)
+    else:
+        print(f"User ID: {user.id}\nAuthor ID: {post.author_id}")
+        return abort(401, response="aborts/forbidden.html")
 
 
 @app.route("/delete/<int:post_id>")
@@ -282,9 +289,17 @@ def delete_post(post_id):
     return redirect(url_for('get_all_posts'))
 
 
+# Error Handling Functions
+
 @app.errorhandler(401)
 def forbidden(e):
-    return render_template("/aborts/forbidden.html", errors=e), 401
+    print(current_user.is_authenticated)
+    return render_template("/aborts/forbidden.html", error=e, is_authenticated=current_user.is_authenticated), 401
+
+
+@app.errorhandler(404)
+def not_found(e):
+    return render_template("/aborts/not-found.html", error=e, is_authenticated=current_user.is_authenticated), 404
 
 
 if __name__ == "__main__":
