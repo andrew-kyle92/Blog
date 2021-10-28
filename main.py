@@ -1,23 +1,20 @@
 import datetime
 import os
-from datetime import date, time
 import time as t
-
-from email_class import SendEmail
+from datetime import date, timedelta
 
 from dotenv import dotenv_values
-from flask import Flask, render_template, redirect, url_for, flash, request, abort, session
-from flask.sessions import  SessionMixin
+from flask import Flask, render_template, redirect, url_for, flash, request, abort
 from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
 from flask_gravatar import Gravatar
-from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
+from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user, login_fresh, fresh_login_required, login_url
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from email_class import SendEmail
 from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm, ContactForm
-
 
 app = Flask(__name__)
 config = dotenv_values(".env")
@@ -41,6 +38,7 @@ gravatar = Gravatar(app,
 # app.config['SQLALCHEMY_DATABASE_URL'] = os.environ.get("DATABASE_URL", "sqlite:///blog.db")
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///blog.db"  # This is for testing
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['REMEMBER_COOKIE_DURATION'] = timedelta(seconds=20)
 db = SQLAlchemy(app)
 
 # #USER LOGIN
@@ -94,6 +92,7 @@ db.create_all()  # This is for database creation
 
 @app.route('/')
 def get_all_posts():
+    print(login_fresh())
     year = datetime.datetime.now().year
     if current_user:
         user = current_user
@@ -141,9 +140,12 @@ def login():
             email = request.form.get("email")
             password = request.form.get("password")
             user = User.query.filter_by(email=email).first()
-
             if check_password_hash(user.password, password):
-                login_user(user)
+                remember_me = request.form.get("remember_me")
+                if remember_me:
+                    login_user(user, remember=True)
+                else:
+                    login_user(user)
                 return redirect(url_for("get_all_posts"))
             else:
                 flash("Your username or password is incorrect", category="Unsuccessful_Login")
@@ -276,7 +278,7 @@ def edit_post(post_id):
             is_edit=True,
             user=user)
     else:
-        print(f"User ID: {user.id}\nAuthor ID: {post.author_id}")
+        # print(f"User ID: {user.id}\nAuthor ID: {post.author_id}")
         return abort(401, response="aborts/forbidden.html")
 
 
@@ -289,8 +291,15 @@ def delete_post(post_id):
     return redirect(url_for('get_all_posts'))
 
 
-# Error Handling Functions
+# Fresh Login Function
+@app.route("/refresh/")
+@fresh_login_required
+def refresh():
+    user = current_user
+    return redirect(url_for("login"))
 
+
+# Error Handling Functions
 @app.errorhandler(401)
 def forbidden(e):
     print(current_user.is_authenticated)
