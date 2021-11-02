@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, SelectField, BooleanField
+from wtforms import StringField, SubmitField, PasswordField, SelectField, BooleanField, HiddenField, IntegerField
 from wtforms.validators import DataRequired, URL, Email, EqualTo, Length
 from flask_ckeditor import CKEditorField
 
@@ -25,6 +25,7 @@ class RegisterForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
+    next_url = HiddenField("next")
     email = StringField("Email", validators=[DataRequired(), Email("Please enter a valid email")])
     password = PasswordField("Password", validators=[DataRequired()])
     remember_me = BooleanField("Remember me")
@@ -42,3 +43,23 @@ class ContactForm(FlaskForm):
     phone = StringField("Phone Number", validators=[Length(min=10, max=10, message="Must enter 10 digits")])
     message = CKEditorField("Message", validators=[DataRequired()])
     submit = SubmitField("Send")
+
+
+class EmailPassword(FlaskForm):
+    step = HiddenField("Email Confirmation", validators=[DataRequired()])
+    email = StringField("Email", validators=[DataRequired(), Email("Please enter a valid email")])
+    submit = SubmitField("Submit")
+
+
+class CodeConfirmation(FlaskForm):
+    step = HiddenField("Code Confirmation", validators=[DataRequired()])
+    code = HiddenField("Code", validators=[DataRequired()])
+    code_conf = StringField("Enter Confirmation Code", validators=[DataRequired()])
+    submit = SubmitField("Confirm")
+
+
+class ResetPassword(FlaskForm):
+    step = HiddenField("Password Reset", validators=[DataRequired()])
+    password = PasswordField("New Password", validators=[DataRequired(), EqualTo("confirm", "Passwords must match")])
+    confirm = PasswordField("confirm")
+    submit = SubmitField("Submit")

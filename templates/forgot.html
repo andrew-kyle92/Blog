@@ -1,0 +1,49 @@
+{% include 'header.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+<!-- Page Header -->
+  <header class="masthead" style="background-image: url('{{ url_for('static', filename='img/reset.jpg') }}')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="page-heading">
+            <h1></h1>
+            <span class="subheading">Reset Password</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="row">
+
+      <div class="col-lg-8 col-md-10 mx-auto content">
+        {% if form["step"] == "Code Confirmation" %}
+          {% with messages = get_flashed_messages() %}
+          {% if messages: %}
+            {% for message in messages: %}
+              <div class="alert-message block-message email-success">
+                <a class="close" onclick="closeMessage()">x</a>
+                <p style="color: red"><em>{{ message }}</em></p>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        {% endif %}
+        {% with messages = get_flashed_messages() %}
+          {% if messages: %}
+            {% for message in messages: %}
+              <p style="color: #368dc7"><em>{{ message }}</em></p>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+
+      </div>
+    </div>
+  </div>
+
+{% include 'footer.html' %}

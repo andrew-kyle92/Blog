@@ -42,3 +42,13 @@
     text-align: center;
 }
 
+.bottom-links {
+    margin: 1rem 0rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.under-form {
+    width: fit-content;
+}
+

@@ -16,7 +16,7 @@ class SendEmail:
         self.smtp_server = "smtp.gmail.com"
         self.smtp_port = 587
 
-    def send_email(self, sender_data):
+    def send_email_message(self, sender_data):
 
         if sender_data["phone"] != "":
             phone_num = [digit for digit in sender_data["phone"]]
@@ -54,3 +54,31 @@ class SendEmail:
             connection.send_message(msg=msg)
 
         print("Email sent successfully")
+
+    def send_reset_conf(self, user_data, conf_code):
+        # Message Container
+        msg = EmailMessage()
+        msg['Subject'] = "Password Reset Confirmation Code"
+        msg['From'] = Address("Do Not Reply", addr_spec="contact@andrewkyle.dev")
+        msg['To'] = Address(display_name=user_data["name"],
+                            addr_spec=user_data["email"])
+        msg.add_alternative(f"""
+                <!DOCTYPE html>
+                <html>
+                    <head></head>
+                    <body>
+                        <p>Hello {user_data["name"]},</p>
+                        <br>
+                        <p>This email was sent because a password reset was requested. Your confirmation number is: {conf_code}<p> 
+                        <br>
+                        <p>If you did not submit this request, then just ignore this email.<p>
+                        <br>
+                        <p>Take care,<br>Andrew's Blog<p>
+                    </body>
+                </html>
+                """, subtype='html')
+
+        with smtplib.SMTP(self.smtp_server, self.smtp_port) as connection:
+            connection.starttls()
+            connection.login(self.email, self.password)
+            connection.send_message(msg=msg)
