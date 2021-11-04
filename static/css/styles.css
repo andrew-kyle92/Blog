@@ -52,3 +52,27 @@
     width: fit-content;
 }
 
+.dropdown-content {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    z-index: 1;
+}
+
+.nav-item.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin: 1.6rem;
+    text-transform: uppercase;
+}
+
+.dropdown-content a:hover {
+    text-decoration: none;
+}
+
