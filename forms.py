@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, SelectField, BooleanField, HiddenField, IntegerField
+from flask_wtf.file import FileAllowed
+from wtforms import StringField, SubmitField, PasswordField, SelectField, BooleanField, HiddenField, FileField
 from wtforms.validators import DataRequired, URL, Email, EqualTo, Length
 from flask_ckeditor import CKEditorField
 
@@ -7,7 +8,7 @@ from flask_ckeditor import CKEditorField
 # #WTForm
 class CreatePostForm(FlaskForm):
     title = StringField("Blog Post Title", validators=[DataRequired()])
-    subtitle = StringField("Subtitle", validators=[DataRequired()])
+    subtitle = StringField("Subtitle")
     img_url = StringField("Blog Image URL", validators=[DataRequired(), URL()])
     body = CKEditorField("Blog Content", validators=[DataRequired()])
     submit = SubmitField("Submit Post")
@@ -63,3 +64,9 @@ class ResetPassword(FlaskForm):
     password = PasswordField("New Password", validators=[DataRequired(), EqualTo("confirm", "Passwords must match")])
     confirm = PasswordField("confirm")
     submit = SubmitField("Submit")
+
+
+class ProfileContent(FlaskForm):
+    profile_picture = FileField("Profile Picture", validators=[FileAllowed(["jpg", "png"], "Images only!")])
+    profile_bio = StringField("Profile Bio")
+    submit = SubmitField("Update")

@@ -14,15 +14,22 @@ from flask_login import (UserMixin, login_user, LoginManager, login_required, cu
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 
+from functions import allowed_file, create_folder_struct
 from email_class import SendEmail
 from forms import (CreatePostForm, RegisterForm, LoginForm, CommentForm, ContactForm, EmailPassword, CodeConfirmation,
-                   ResetPassword)
+                   ResetPassword, ProfileContent)
 
+UPLOAD_FOLDER = "static/uploads/users"
+ALLOWED_EXTENSIONS = {"jpg", "png"}
 app = Flask(__name__)
 config = dotenv_values(".env")
 SECRET_KEY = os.urandom(32)  # This is for testing
 app.config['SECRET_KEY'] = SECRET_KEY  # This is for testing
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+app.config["ALLOWED_EXTENSIONS"] = ALLOWED_EXTENSIONS
+app.config["MAX_CONTENT_LENGTH"] = 1000 * 1024 * 1024 # 1000mb
 ckeditor = CKEditor(app)
 Bootstrap(app)
 send_email = SendEmail()
@@ -83,6 +90,16 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(255), nullable=False)
     posts = relationship("BlogPost", back_populates="author")
     comments = relationship("Comment", back_populates="author")
+    profile = relationship("Profile", back_populates="user")
+
+
+class Profile(db.Model):
+    __tablename__ = "user_profiles"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    user = relationship("User", back_populates="profile")
+    profile_picture = db.Column(db.String(255), nullable=True)
+    profile_bio = db.Column(db.String(255))
 
 
 class Comment(db.Model):
@@ -104,15 +121,16 @@ db.create_all()  # This is for database creation
 def get_all_posts():
     title = "Andrew's Blog"
     year = datetime.datetime.now().year
-    if current_user:
-        user = current_user
+    if current_user.is_authenticated:
+        user = User.query.get(current_user.id)
+
         # print(user.account_type)
     else:
         user = None
     posts = BlogPost.query.all()
     return render_template("index.html",
                            all_posts=posts,
-                           is_authenticated=user.is_authenticated,
+                           is_authenticated=current_user.is_authenticated,
                            user=user,
                            year=year,
                            title=title
@@ -129,6 +147,7 @@ def register():
             flash("You've already signed up with that email, log in instead!")
             return redirect(url_for("login"))
         else:
+            create_folder_struct(request.form.get("name"))
             salted_password = generate_password_hash(
                 password=request.form.get("password"),
                 method="pbkdf2:sha256",
@@ -141,6 +160,15 @@ def register():
                 password=salted_password
             )
             db.session.add(new_user)
+            db.session.commit()
+
+            user = User.query.filter_by(email=form.email.data).first()
+            user_profile = Profile(
+                user=user,
+                profile_picture=url_for("static", filename="img/blank-pro-pic.png"),
+                profile_bio=""
+            )
+            db.session.add(user_profile)
             db.session.commit()
 
             login_user(new_user)
@@ -192,12 +220,60 @@ def logout():
 
 
 @app.route('/profile/<int:_id>', methods=["POST", "GET"])
-@login_required
 def profile(_id):
-    user_data = User.query.get(_id)
-    title = f"{user_data.name} | Andrew's Blog"
+    if current_user.is_authenticated:
+        user_data = User.query.get(current_user.id)
+    else:
+        user_data = {
+            "id": 0
+        }
+    profile_data = User.query.get(_id)
+    title = f"{profile_data.name} | Andrew's Blog"
     user = current_user
-    return render_template("profile.html", is_authenticated=user.is_authenticated, user=user_data, title=title)
+    return render_template(
+        "profile.html",
+        is_authenticated=user.is_authenticated,
+        user=user_data,
+        title=title,
+        profile_data=profile_data,
+    )
+
+
+@app.route('/profile/<int:_id>/edit-profile', methods=["POST", "GET"])
+@login_required
+def edit_profile(_id):
+    user_data = User.query.get(_id)
+    title = f"Edit Profile | Andrew's Blog"
+    user = current_user
+    form = ProfileContent()
+    if form.validate_on_submit():
+        pic_dir = f"/static/uploads/users/{user_data.name.replace(' ', '_').lower()}/data/profile-picture"
+        root_path = "./static/uploads/users"
+        user_path = f"{user_data.name.replace(' ', '_').lower()}/data/profile-picture"
+        new_picture = form.profile_picture.data
+        filename = new_picture.filename
+        user_profile = Profile.query.get(_id)
+        print(f"{new_picture.filename}\n{form.profile_bio.data}")
+        if not new_picture.filename:
+            user_profile.profile_picture = user_profile.profile_picture
+        else:
+            user_profile.profile_picture = f"{pic_dir}/{filename}"
+            new_picture.save(os.path.join(root_path, user_path, filename))
+        if form.profile_bio.data == "":
+            user_profile.profile_bio = user_profile.profile_bio
+        else:
+            user_profile.profile_bio = form.profile_bio.data
+        db.session.commit()
+        return redirect(url_for("profile", _id=_id))
+    if current_user.id == user_data.id:
+        return render_template("edit-profile.html",
+                               is_authenticated=user.is_authenticated,
+                               title=title,
+                               user=user_data,
+                               form=form
+                               )
+    else:
+        return abort(401, response="aborts/forbidden.html")
 
 
 @app.route("/post/<int:post_id>", methods=["POST", "GET"])
@@ -410,12 +486,30 @@ def refresh():
 # Error Handling Functions
 @app.errorhandler(401)
 def forbidden(e):
-    return render_template("/aborts/forbidden.html", error=e, is_authenticated=current_user.is_authenticated), 401
+    if current_user.is_authenticated:
+        user = User.query.get(current_user.id)
+    else:
+        user = None
+    return render_template(
+        "/aborts/forbidden.html",
+        error=e,
+        is_authenticated=current_user.is_authenticated,
+        user=user
+    ), 401
 
 
 @app.errorhandler(404)
 def not_found(e):
-    return render_template("/aborts/not-found.html", error=e, is_authenticated=current_user.is_authenticated), 404
+    if current_user.is_authenticated:
+        user = User.query.get(current_user.id)
+    else:
+        user = None
+    return render_template(
+        "/aborts/not-found.html",
+        error=e,
+        is_authenticated=current_user.is_authenticated,
+        user=user
+    ), 404
 
 
 if __name__ == "__main__":
