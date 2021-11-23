@@ -241,6 +241,7 @@ def profile(_id):
 
 @app.route('/profile/<int:_id>/edit-profile', methods=["POST", "GET"])
 @login_required
+@fresh_login_required
 def edit_profile(_id):
     user_data = User.query.get(_id)
     title = f"Edit Profile | Andrew's Blog"
@@ -471,6 +472,11 @@ def forgot_password(step, arg):
                 return redirect(url_for("login"))
 
     return render_template("forgot.html", form=form)
+
+
+@app.route("/music-player", methods=["POST", "GET"])
+def music_player():
+    return render_template("music-player.html")
 
 
 # Fresh Login Function
