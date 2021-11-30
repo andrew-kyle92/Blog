@@ -88,7 +88,7 @@
 }
 
 .profile-img {
-    border-radius: 60px;
+    border-radius: 34px;
     cursor: pointer;
     height: auto;
     max-width: 100%;
@@ -210,3 +210,397 @@
     }
 }
 
+#music-iframe {
+    box-shadow: 8px 6px 10px black;
+    margin: 0rem auto 3rem;
+    width: fit-content;
+}
+
+#music-player {
+    height: 415px;
+    margin: auto;
+    width: 710px;
+}
+
+/* End Profile Styling */
+
+/* Music Player styling */
+#main-player-content {
+    background-image: linear-gradient(45deg, #5c5c5c, #700808);
+    height: auto;
+    margin: 1rem auto;
+    width: 100%;
+}
+
+.player-frame {
+    margin: auto;
+    width: 80%;
+}
+
+.artwork {
+    width: fit-content;
+    margin: 3rem auto;
+}
+
+.song-img {
+    height: 450px;
+}
+
+.song-playing {
+    color: #b82727!important;
+    font-weight: 700;
+    text-shadow: 1px 1px 20px lightgoldenrodyellow;
+}
+
+#inner-player-top {
+    margin: 0rem;
+}
+
+.buttons {
+    text-align: center;
+    padding: 1rem;
+}
+
+.track-info {
+    color: azure;
+    margin: auto;
+    text-shadow: 1px 1px 20px lightgoldenrodyellow;
+    width: fit-content;
+}
+
+.fa-step-backward, .fa-step-forward, .fa-play-circle, .fa-pause-circle{
+    font-size: 70px!important;
+    width: 12rem;
+}
+
+.fa-volume-up, .fa-volume-off {
+    font-size: 30px!important;
+}
+
+.fa-step-backward:hover, .fa-step-forward:hover, .fa-play-circle:hover, .fa-pause-circle:hover, .fa-volume-up:hover,
+.fa-volume-off:hover {
+    color: #b8b8b8;
+    cursor: pointer;
+}
+
+.fa-step-backward:active, .fa-step-forward:active, .fa-play-circle:active, .fa-pause-circle:active,
+ .fa-volume-up:active, .fa-volume-off:active {
+    color: #7d0202;
+    cursor: pointer;
+}
+
+.song-progress {
+    display: flex;
+    margin: auto;
+    padding: 2rem 0rem;
+    width: fit-content;
+}
+
+.progress {
+    color: azure;
+    font-size: 20px;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    text-shadow: 1px 1px 20px lightgoldenrodyellow;
+}
+
+.progress-bar {
+    width: 500px;
+}
+
+.volume-bar {
+    height: auto;
+    padding: 0.8rem 0rem;
+    width: 350px;
+}
+
+.volume-buttons {
+    display: flex;
+    margin: auto;
+    padding: 1rem;
+    width: fit-content;
+    text-align: center;
+}
+
+.volume {
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+/* Slider Styling */
+
+.seek_slider, .volume_slider {
+    -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+    width: 100%; /* Specific width is required for Firefox. */
+    background: transparent; /* Otherwise white in Chrome */
+}
+
+.seek_slider::-webkit-slider-thumb, .volume_slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+}
+
+.seek_slider::-ms-track, .volume_slider::-ms-track {
+    width: 100%;
+    cursor: pointer;
+
+    /* Hides the slider so custom styles can be added */
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+}
+
+.seek_slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: 1px solid #000000;
+    height: 20px;
+    width: 10px;
+    border-radius: 3px;
+    background: #ffffff;
+    cursor: pointer;
+    margin-top: -14px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; /* Add cool effects to your sliders! */
+}
+
+/* All the same stuff for Firefox */
+.seek_slider::-moz-range-thumb {
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    border: 1px solid #000000;
+    height: 20px;
+    width: 10px;
+    border-radius: 3px;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+.volume_slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: 1px solid #000000;
+    height: 20px;
+    width: 10px;
+    border-radius: 3px;
+    background: #ffffff;
+    cursor: pointer;
+    margin-top: -14px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; /* Add cool effects to your sliders! */
+}
+
+/* All the same stuff for Firefox */
+.volume_slider::-moz-range-thumb {
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    border: 1px solid #000000;
+    height: 20px;
+    width: 10px;
+    border-radius: 3px;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+.seek_slider::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 8.4px;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  background: #3071a9;
+  border-radius: 1.3px;
+  border: 0.2px solid #010101;
+}
+
+.volume_slider:focus::-webkit-slider-runnable-track {
+  background: #367ebd;
+}
+
+.volume_slider::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 8.4px;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  background: #3071a9;
+  border-radius: 1.3px;
+  border: 0.2px solid #010101;
+}
+
+.seek_slider:focus::-webkit-slider-runnable-track {
+  background: #367ebd;
+}
+
+.seek_slider::-moz-range-track {
+  width: 100%;
+  height: 8.4px;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  background: #3071a9;
+  border-radius: 1.3px;
+  border: 0.2px solid #010101;
+}
+
+.volume_slider::-moz-range-track {
+  width: 100%;
+  height: 8.4px;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  background: #3071a9;
+  border-radius: 1.3px;
+  border: 0.2px solid #010101;
+}
+
+.seek_slider::-ms-track {
+  width: 100%;
+  height: 8.4px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  border-width: 16px 0;
+  color: transparent;
+}
+
+.volume_slider::-ms-track {
+  width: 100%;
+  height: 8.4px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  border-width: 16px 0;
+  color: transparent;
+}
+
+.seek_slider::-ms-fill-lower, .volume_slider::-ms-fill-lower {
+  background: #2a6495;
+  border: 0.2px solid #010101;
+  border-radius: 2.6px;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+.seek_slider:focus::-ms-fill-lower, .volume_slider:focus::-ms-fill-lower {
+  background: #3071a9;
+}
+.seek_slider::-ms-fill-upper, .volume_slider::-ms-fill-upper {
+  background: #3071a9;
+  border: 0.2px solid #010101;
+  border-radius: 2.6px;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+.seek_slider:focus::-ms-fill-upper, .volume_slider:focus::-ms-fill-upper {
+  background: #367ebd;
+}
+
+/* End Slider Styling */
+
+.song-list {
+    background-image: linear-gradient(to right, rgba(194, 194, 194), rgba(46, 46, 46));
+    border: 1px solid black;
+    margin: auto;
+    max-height: 70px;
+    overflow: auto;
+    padding-top: 1rem;
+    width: 70%;
+    text-align: center;
+}
+
+.song-item {
+    color: #f5f5f5;
+    margin: auto;
+    text-align: justify;
+    width: 80%;
+}
+
+.song-item:hover {
+    color: #dbdbdb;
+    cursor: pointer;
+    font-weight: 900;
+}
+
+.song-hr {
+    border-top: 1px;
+    color: #f5f5f5;
+    width: 80%;
+}
+
+/* Music Player Responsiveness */
+@media only screen and (max-width: 720px){
+    .artwork{
+        margin: auto;
+    }
+
+    .buttons {
+        padding: 1rem 0rem;
+    }
+
+    .fa-step-backward, .fa-step-forward, .fa-play-circle, .fa-pause-circle {
+        font-size: 50px!important;
+        width: 10rem;
+    }
+
+    #inner-player-bottom {
+        width: 100%
+    }
+
+    #inner-player-top {
+        display: flex;
+        flex-direction: row;
+    }
+
+    #music-player-content {
+        margin: 2rem auto;
+    }
+
+    .player-frame {
+        margin: auto;
+        width: 100%;
+    }
+
+    .song-content {
+        width: 70%;
+        margin: auto;
+    }
+
+    .song-img {
+        height: 200px;
+        max-height: 200px;
+        width: fit-content;
+    }
+
+    .song-list {
+        max-height: 92px;
+    }
+
+    .song-progress {
+        width: 100%;
+    }
+
+    .volume-buttons {
+        padding: 0px;
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 1024px and min-width: 750px){
+    #main-player-content {
+        margin: 1rem auto;
+        width: 100%;
+    }
+
+    .player-frame {
+        margin: auto;
+        width: 100%;
+    }
+
+    .artwork {
+        margin: 0rem auto;
+    }
+
+    .song-content {
+        width: 100%;
+    }
+
+    .song-img {
+        height: 350px;
+    }
+
+    #inner-player-bottom {
+        width: 100%;
+        margin: auto;
+    }
+
+    .song-list {
+        width: 100%;
+    }
+}

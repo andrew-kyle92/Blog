@@ -67,6 +67,7 @@
             <a class="nav-link dropbtn" href="#">Account &#9662</a>
             <div class="dropdown-content">
               <a href="{{ url_for('profile', _id=user.id) }}">Profile</a>
+              <a href="{{ url_for('song_upload') }}">Upload Song</a>
               <a href="#">Settings</a>
             </div>
           </li>

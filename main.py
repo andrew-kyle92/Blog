@@ -16,10 +16,10 @@ from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 
-from functions import allowed_file, create_folder_struct
+from functions import allowed_file, create_folder_struct, add_music
 from email_class import SendEmail
 from forms import (CreatePostForm, RegisterForm, LoginForm, CommentForm, ContactForm, EmailPassword, CodeConfirmation,
-                   ResetPassword, ProfileContent)
+                   ResetPassword, ProfileContent, SongUpload)
 
 UPLOAD_FOLDER = "static/uploads/users"
 ALLOWED_EXTENSIONS = {"jpg", "png"}
@@ -91,6 +91,7 @@ class User(UserMixin, db.Model):
     posts = relationship("BlogPost", back_populates="author")
     comments = relationship("Comment", back_populates="author")
     profile = relationship("Profile", back_populates="user")
+    songs = relationship("Song", back_populates="user")
 
 
 class Profile(db.Model):
@@ -100,6 +101,18 @@ class Profile(db.Model):
     user = relationship("User", back_populates="profile")
     profile_picture = db.Column(db.String(255), nullable=True)
     profile_bio = db.Column(db.String(255))
+
+
+class Song(db.Model):
+    __tablename__ = "songs"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    user = relationship("User", back_populates="songs")
+    artist = db.Column(db.String(255), nullable=True)
+    album = db.Column(db.String(255), nullable=True)
+    album_art = db.Column(db.String(255), nullable=True)
+    song_file = db.Column(db.String(255), nullable=True)
+    song_name = db.Column(db.String(255), nullable=True)
 
 
 class Comment(db.Model):
@@ -254,7 +267,6 @@ def edit_profile(_id):
         new_picture = form.profile_picture.data
         filename = new_picture.filename
         user_profile = Profile.query.get(_id)
-        print(f"{new_picture.filename}\n{form.profile_bio.data}")
         if not new_picture.filename:
             user_profile.profile_picture = user_profile.profile_picture
         else:
@@ -476,7 +488,53 @@ def forgot_password(step, arg):
 
 @app.route("/music-player", methods=["POST", "GET"])
 def music_player():
-    return render_template("music-player.html")
+    all_songs = Song.query.all()
+    return render_template("music-player.html", songs=all_songs)
+
+
+@app.route("/song-upload", methods=["POST", "GET"])
+@login_required
+def song_upload():
+    user = User.query.get(current_user.id)
+    form = SongUpload()
+    if request.method == "POST":
+        if form.validate_on_submit():
+            form_data = {
+                "artist": form.artist.data,
+                "album": form.album.data,
+                "album_art": form.album_art.data,
+                "song": form.song.data
+            }
+            add_song = add_music(user, form_data)
+            root_path = f"static/uploads/users/{user.name.replace(' ', '_').lower()}/data/music"
+            artist_dir = f"{root_path}/{form_data['artist'].replace(' ', '_')}"
+            album_dir = f"{artist_dir}/{form_data['album'].replace(' ', '_')}"
+            album_art_filename = form_data["album_art"].filename
+            song_filename = form_data["song"].filename
+            if add_song:
+                form_data["album_art"].save(os.path.join(album_dir, album_art_filename))
+                form_data["song"].save(os.path.join(album_dir, song_filename))
+                song = f"{form.song.data.filename}"
+                song = song.replace(" ", "_")
+                album_art = f"{form.album_art.data.filename}"
+                album_art = album_art.replace(" ", "_")
+                os.replace(f"{album_dir}/{song_filename}", f"{album_dir}/{song}")
+                os.replace(f"{album_dir}/{album_art_filename}", f"{album_dir}/{album_art}")
+                new_song = Song(
+                    user=user,
+                    artist=form_data["artist"],
+                    album=form_data["album"],
+                    album_art=f"{album_dir}/{album_art}",
+                    song_file=f"{album_dir}/{song}",
+                    song_name=song_filename[:-4]
+                )
+                db.session.add(new_song)
+                db.session.commit()
+                return redirect(url_for("profile", _id=user.id))
+            else:
+                flash("Song either already exists or there was an issue uploading the files\nPlease try again")
+                return redirect(url_for("song_upload"))
+    return render_template("song-upload.html", form=form)
 
 
 # Fresh Login Function

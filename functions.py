@@ -27,3 +27,27 @@ def create_folder_struct(username):
     os.mkdir(user_root_path)
     os.mkdir(f"{user_root_path}/data")
     os.mkdir(f"{user_root_path}/data/profile-picture")
+    os.mkdir(f"{user_root_path}/data/music")
+
+
+def add_music(user, song_data):
+    user_root_path = f"static/uploads/users/{user.name.replace(' ', '_').lower()}/data/music"
+    artist_dir = f"{song_data['artist'].replace(' ', '_')}"
+    artist_exists = os.path.isdir(f"{user_root_path}/{artist_dir}")
+    album_dir = f"{song_data['album'].replace(' ', '_')}"
+    album_exists = os.path.isdir(f"{user_root_path}/{artist_dir}/{album_dir}")
+    song_name = f"{song_data['song']}"
+    song_exists = os.path.isfile(f"{user_root_path}/{artist_dir}/{album_dir}/{song_name}")
+    if artist_exists:
+        if album_exists:
+            if song_exists:
+                return False
+            else:
+                return True
+        else:
+            os.mkdir(f"{user_root_path}/{artist_dir}/{album_dir}")
+            return True
+    else:
+        os.mkdir(f"{user_root_path}/{artist_dir}")
+        os.mkdir(f"{user_root_path}/{artist_dir}/{album_dir}")
+        return True

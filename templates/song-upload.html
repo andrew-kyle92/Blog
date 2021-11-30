@@ -8,7 +8,7 @@
   <div class="row">
     <div class="col-lg-8 col-md-10 mx-auto">
       <div class="page-heading">
-        <h1>Edit Profile</h1>
+        <h1>Upload a new song</h1>
         <span class="subheading"></span>
       </div>
     </div>
@@ -20,15 +20,8 @@
   <div class="row">
     <div class="col-lg-8 col-md-10 mx-auto">
 
-      {% if user.profile[0].profile_bio == "" %}
-        <p>No bio has been set, yet.</p>
-      {% else: %}
-        <h1 class="current-bio">Current bio:</h1>
-        <p class="current-bio p">"{{ user.profile[0].profile_bio }}"</p>
-      {% endif %}
-      <hr>
-
       {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}, enctype="multipart/form-data") }}
+
     </div>
   </div>
 </div>
