@@ -1,6 +1,8 @@
 const playPauseBtn = document.getElementById("play-pause-btn");
 const backBtn = document.getElementById("back-btn");
 const forwardBtn = document.getElementById("forward-btn");
+const volumeUpBtn = document.getElementsByClassName("fa-volume-up");
+const volumeDownBtn = document.getElementsByClassName("fa-volume-off");
 var currentTrackInfo = document.getElementsByClassName("track-info")[0];
 var progressBar = document.getElementsByClassName("seek_slider")[0];
 var volumeBar = document.getElementsByClassName("volume_slider")[0];
@@ -71,7 +73,27 @@ playPauseBtn.addEventListener("click", function(){
 });
 
 backBtn.addEventListener("click", function(){
-    currentTrack.currentTime = 0;
+    if(parseInt(currentTrack.id) > 0){
+        previousTrack = parseInt(currentTrack.id) - 1;
+    }
+    else{
+        previousTrack = parseInt(songObjects.at(-1)["id"]);
+    }
+
+    if(currentTrack.currentTime < 5){
+        currentTrack.currentTime = currentTrack.duration;
+        playPauseBtn.setAttribute("class", "fas fa-play-circle");
+        songItem[parseInt(currentTrack.id)].setAttribute("class", "song-item");
+        if(previousTrack == 0){
+            setTrack(songObjects, songObjects.at(-1)["id"]);
+        }
+        else{
+            setTrack(songObjects, previousTrack);
+        }
+    }
+    else{
+        currentTrack.currentTime = 0;
+    }
 });
 
 forwardBtn.addEventListener("click", function(){
@@ -154,4 +176,18 @@ function playTrack(song_id){
     currentTrack = setTrack(songObjects, parseInt(song_id));
     currentTrack.play();
     playPauseBtn.setAttribute("class", "fas fa-pause-circle");
+};
+
+function volumeUp(){
+    if(volumeBar.value < 100){
+        currentTrack.volume = currentTrack.volume + 0.20;
+        volumeBar.value = volumeBar.value + 20;
+    }
+};
+
+function volumeDown(){
+    if(volumeBar.value > 0){
+        currentTrack.volume = currentTrack.volume - 0.20;
+        volumeBar.value = volumeBar.value - 20;
+    }
 };

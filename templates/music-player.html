@@ -33,11 +33,11 @@
                 <i id="forward-btn" class="fas fa-step-forward"></i>
             </div>
             <div class="volume-buttons">
-                <i class="fas fa-volume-off volume"></i>
+                <i class="fas fa-volume-off volume" onclick="volumeDown()"></i>
                 <div class="volume-bar volume">
                     <input type="range" min="1" max="100" value="100" class="volume_slider" onchange="setVolume()">
                 </div>
-                <i class="fas fa-volume-up volume"></i>
+                <i class="fas fa-volume-up volume" onclick="volumeUp()"></i>
             </div>
 
         </div>
