@@ -497,6 +497,8 @@ def music_player():
 def song_upload():
     user = User.query.get(current_user.id)
     form = SongUpload()
+    is_authenticated = current_user.is_authenticated
+    title = "Upload a new song | Andrew's Blog"
     if request.method == "POST":
         if form.validate_on_submit():
             form_data = {
@@ -534,7 +536,7 @@ def song_upload():
             else:
                 flash("Song either already exists or there was an issue uploading the files\nPlease try again")
                 return redirect(url_for("song_upload"))
-    return render_template("song-upload.html", form=form)
+    return render_template("song-upload.html", form=form, is_authenticated=is_authenticated, title=title, user=user)
 
 
 # Fresh Login Function
@@ -577,4 +579,4 @@ def not_found(e):
 
 
 if __name__ == "__main__":
-    app.run(host='localhost', port=5000)
+    app.run(host='localhost', port=5000, debug=True)
