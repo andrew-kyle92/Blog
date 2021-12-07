@@ -180,14 +180,14 @@ function playTrack(song_id){
 
 function volumeUp(){
     if(volumeBar.value < 100){
-        currentTrack.volume = currentTrack.volume + 0.20;
-        volumeBar.value = parseInt(volumeBar.value) + 20;
+        currentTrack.volume = currentTrack.volume + 0.05;
+        volumeBar.value = parseInt(volumeBar.value) + 5;
     }
 };
 
 function volumeDown(){
     if(volumeBar.value > 0){
-        currentTrack.volume = currentTrack.volume - 0.20;
-        volumeBar.value = parseInt(volumeBar.value) - 20;
+        currentTrack.volume = currentTrack.volume - 0.05;
+        volumeBar.value = parseInt(volumeBar.value) - 5;
     }
 };

@@ -10,13 +10,13 @@ from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
 from flask_gravatar import Gravatar
 from flask_login import (UserMixin, login_user, LoginManager, login_required, current_user, logout_user,
-                         fresh_login_required, login_url, login_fresh, confirm_login)
+                         fresh_login_required)
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 
-from functions import allowed_file, create_folder_struct, add_music
+from functions import create_folder_struct, add_music
 from email_class import SendEmail
 from forms import (CreatePostForm, RegisterForm, LoginForm, CommentForm, ContactForm, EmailPassword, CodeConfirmation,
                    ResetPassword, ProfileContent, SongUpload)
@@ -58,6 +58,7 @@ db = SQLAlchemy(app)
 
 # #USER LOGIN
 login_manager = LoginManager()
+login_manager.session_protection = "strong"
 login_manager.init_app(app)
 
 
