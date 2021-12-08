@@ -1,23 +1,26 @@
-function closeMessage(){
-    var message = document.querySelector(".email-success");
-    message.remove()
-}
+window.addEventListener("DOMContentLoaded", event => {
+    function closeMessage(){
+        var message = document.querySelector(".email-success");
+        message.remove()
+    }
 
-// Get the modal
-var modal = document.getElementById("img-popup");
+    function image(){
+        // Get the modal
+        var modal = document.getElementById("img-popup");
 
-// Get the image and insert it inside the modal - use its "alt" text as a caption
-var img = document.getElementById("profileImg");
-var modalImg = document.getElementById("img01");
-img.onclick = function(){
-  modal.style.display = "block";
-  modalImg.src = this.src;
-}
+        // Get the image and insert it inside the modal - use its "alt" text as a caption
+        var img = document.getElementById("profileImg");
+        var modalImg = document.getElementById("img01");
 
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close-btn")[0];
+        modal.style.display = "block";
+        modalImg.src = this.src;
+    }
 
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  modal.style.display = "none";
-}
+    function SpanClick() {
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close-btn")[0];
+
+        // When the user clicks on <span> (x), close the modal
+        modal.style.display = "none";
+    }
+});
