@@ -28,7 +28,7 @@ config = dotenv_values(".env")
 app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["ALLOWED_EXTENSIONS"] = ALLOWED_EXTENSIONS
-app.config["MAX_CONTENT_LENGTH"] = 1000 * 1024 * 1024 # 1000mb
+app.config["MAX_CONTENT_LENGTH"] = 1000 * 1024 * 1024  # 1000mb
 ckeditor = CKEditor(app)
 Bootstrap(app)
 send_email = SendEmail()
@@ -44,8 +44,8 @@ gravatar = Gravatar(app,
                     base_url=None)
 
 # #CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", "sqlite:///blog.db")
-# app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///blog.db"  # This is for testing
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", "sqlite:///blog.db")
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///blog.db"  # This is for testing
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['REMEMBER_COOKIE_DURATION'] = timedelta(seconds=3600)
 app.config["FORCE_HOST_FOR_REDIRECTS"] = None
@@ -579,4 +579,4 @@ def not_found(e):
 
 
 if __name__ == "__main__":
-    app.run(host='localhost', port=5000, debug=False)
+    app.run(host='localhost', port=5000, debug=True)

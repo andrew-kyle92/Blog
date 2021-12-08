@@ -19,7 +19,7 @@
   <div class="profile-header">
       {% print(profile_data.profile.profile_picture) %}
     <div class="profile-img-block">
-        <img id="profileImg" class="profile-img" src="{{ profile_data.profile[0].profile_picture }}" alt="profile-image">
+        <img id="profileImg" class="profile-img" src="{{ profile_data.profile[0].profile_picture }}" alt="profile-image" onclick="image()">
         <div class="below-img">
             <p>Account creation date: {{ profile_data.creation_date }}</p>
         </div>
