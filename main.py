@@ -14,7 +14,6 @@ from flask_login import (UserMixin, login_user, LoginManager, login_required, cu
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.utils import secure_filename
 
 from functions import create_folder_struct, add_music
 from email_class import SendEmail
@@ -25,7 +24,7 @@ UPLOAD_FOLDER = "static/uploads/users"
 ALLOWED_EXTENSIONS = {"jpg", "png"}
 app = Flask(__name__)
 config = dotenv_values(".env")
-app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
+app.config['SECRET_KEY'] = config.get("SECRET_KEY")
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["ALLOWED_EXTENSIONS"] = ALLOWED_EXTENSIONS
 app.config["MAX_CONTENT_LENGTH"] = 1000 * 1024 * 1024  # 1000mb
@@ -579,4 +578,4 @@ def not_found(e):
 
 
 if __name__ == "__main__":
-    app.run(host='localhost', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=False)
