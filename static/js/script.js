@@ -1,4 +1,4 @@
-window.addEventListener("DOMContentLoaded", event => {
+
     function closeMessage(){
         var message = document.querySelector(".email-success");
         message.remove()
@@ -23,4 +23,3 @@ window.addEventListener("DOMContentLoaded", event => {
         // When the user clicks on <span> (x), close the modal
         modal.style.display = "none";
     }
-});
