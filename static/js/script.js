@@ -12,10 +12,12 @@ function image(){
     var modalImg = document.getElementById("img01");
 
     modal.style.display = "block";
-    modalImg.src = this.src;
+    modalImg.setAttribute("src", img.getAttribute("src"));
 }
 
-function SpanClick() {
+function spanClick() {
+    // Get the modal
+    var modal = document.getElementById("img-popup");
     // Get the <span> element that closes the modal
     var span = document.getElementsByClassName("close-btn")[0];
 
