@@ -24,8 +24,8 @@
             <p>Account creation date: {{ profile_data.creation_date }}</p>
         </div>
         <div id="img-popup" class="img-modal">
-            <span class="close-btn">&times;</span>
-            <img class="popup-img" id="img01" src="{{ profile_data.profile[0].profile_picture }}">
+            <span class="close-btn" onclick="spanClick()">&times;</span>
+            <img class="popup-img" id="img01" src="">
             {% if user.id == profile_data.id %}
                 <div class="popup-content" id="caption"><a href="{{ url_for('edit_profile', _id=profile_data.id) }}">Edit Profile</a></div>
             {% endif %}
