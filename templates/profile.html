@@ -25,7 +25,7 @@
         </div>
         <div id="img-popup" class="img-modal">
             <span class="close-btn">&times;</span>
-            <img class="popup-img" id="img01" src="">
+            <img class="popup-img" id="img01" src="{{ profile_data.profile[0].profile_picture }}">
             {% if user.id == profile_data.id %}
                 <div class="popup-content" id="caption"><a href="{{ url_for('edit_profile', _id=profile_data.id) }}">Edit Profile</a></div>
             {% endif %}
