@@ -7,6 +7,7 @@ instance/*
 !instance/.gitignore
 .webassets-cache
 .env
+blogenv/*
 
 # Database Files
 *.db
@@ -150,6 +151,9 @@ dmypy.json
 cython_debug/
 
 # User Data
-static/uploads/users/*
+/static/uploads/users/*
+
+# App Bind
+*.sock
 
 # End of https://www.toptal.com/developers/gitignore/api/flask
