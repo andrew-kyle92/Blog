@@ -7,7 +7,7 @@ instance/*
 !instance/.gitignore
 .webassets-cache
 .env
-blogenv/*
+blogenv/
 
 # Database Files
 *.db
