@@ -43,8 +43,8 @@ gravatar = Gravatar(app,
                     base_url=None)
 
 # #CONNECT TO DB
-# app.config['SQLALCHEMY_DATABASE_URI'] = config.get("DATABASE_URL", "postgresql:///blog.db")
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///blog.db"  # This is for testing
+app.config['SQLALCHEMY_DATABASE_URI'] = config.get("DATABASE_URL", "postgresql:///blog.db")
+# app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///blog.db"  # This is for testing
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['REMEMBER_COOKIE_DURATION'] = timedelta(seconds=3600)
 app.config["FORCE_HOST_FOR_REDIRECTS"] = None
@@ -582,5 +582,5 @@ def not_found(e):
 
 
 if __name__ == "__main__":
-    # app.run(host='0.0.0.0', port=5000, debug=False)
-    app.run(host='localhost', port=5000, debug=False) # for testing
+    app.run(host='0.0.0.0', port=5000, debug=False)
+    # app.run(host='localhost', port=5000, debug=False)  # for testing
