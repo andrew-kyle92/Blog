@@ -7,7 +7,12 @@ instance/*
 !instance/.gitignore
 .webassets-cache
 .env
-blogenv/*
+
+### Environment Variable ###
+blogenv/
+
+### User Data ###
+static/uploads/
 
 # Database Files
 *.db

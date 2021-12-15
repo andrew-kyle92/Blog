@@ -43,8 +43,8 @@ gravatar = Gravatar(app,
                     base_url=None)
 
 # #CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = config.get("DATABASE_URL", "postgresql:///blog.db")
-# app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///blog.db"  # This is for testing
+# app.config['SQLALCHEMY_DATABASE_URI'] = config.get("DATABASE_URL", "postgresql:///blog.db")
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///blog.db"  # This is for testing
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['REMEMBER_COOKIE_DURATION'] = timedelta(seconds=3600)
 app.config["FORCE_HOST_FOR_REDIRECTS"] = None
@@ -125,7 +125,7 @@ class Comment(db.Model):
     time = db.Column(db.String(255), nullable=False)
 
 
-db.create_all()  # This is for database creation
+# db.create_all()  # This is for database creation for test environment
 
 
 @app.route('/')
@@ -209,19 +209,23 @@ def login():
         email = request.form.get("email")
         password = request.form.get("password")
         user = User.query.filter_by(email=email).first()
-        if check_password_hash(user.password, password):
-            remember_me = request.form.get("remember_me")
-            if remember_me:
-                login_user(user, remember=True)
-            else:
-                login_user(user)
-            if _redirect:
-                return redirect(url_for(next_url, post_id=post_id))
-            else:
-                return redirect(url_for(next_url))
-        else:
-            flash("Your username or password is incorrect", category="Unsuccessful_Login")
+        if user is None:
+            flash(f"There is no user with email: {email}. Make sure there are no typos and try again")
             return redirect(url_for("login"))
+        else:
+            if check_password_hash(user.password, password):
+                remember_me = request.form.get("remember_me")
+                if remember_me:
+                    login_user(user, remember=True)
+                else:
+                    login_user(user)
+                if _redirect:
+                    return redirect(url_for(next_url, post_id=post_id))
+                else:
+                    return redirect(url_for(next_url))
+            else:
+                flash("Your username or password is incorrect", category="Unsuccessful_Login")
+                return redirect(url_for("login"))
     return render_template("login.html", form=form, user=user, title=title)
 
 
@@ -578,5 +582,5 @@ def not_found(e):
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000, debug=False)
-    # app.run(host='localhost', port=5000, debug=False) # for testing
+    # app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(host='localhost', port=5000, debug=False) # for testing
