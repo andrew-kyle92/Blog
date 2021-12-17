@@ -44,7 +44,7 @@ gravatar = Gravatar(app,
 
 # #CONNECT TO DB
 app.config['SQLALCHEMY_DATABASE_URI'] = config.get("DATABASE_URL", "postgresql:///blog.db")
-# app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///blog.db"  # This is for testing
+# app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql:///blogdb"  # This is for testing
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['REMEMBER_COOKIE_DURATION'] = timedelta(seconds=3600)
 app.config["FORCE_HOST_FOR_REDIRECTS"] = None
@@ -579,6 +579,20 @@ def not_found(e):
         is_authenticated=current_user.is_authenticated,
         user=user
     ), 404
+
+
+@app.errorhandler(500)
+def server_error(e):
+    if current_user.is_authenticated:
+        user = User.query.get(current_user.id)
+    else:
+        user = None
+    return render_template(
+        "aborts/server-error.html",
+        error=e,
+        is_authenticated=current_user.is_authenticated,
+        user=user
+    ), 500
 
 
 if __name__ == "__main__":
