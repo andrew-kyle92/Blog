@@ -79,3 +79,18 @@ class SongUpload(FlaskForm):
     song = FileField("Song", validators=[FileAllowed(["wav", "mp3", "m4a"],
                                                      "Only .wav, .mp3, and .m4a files are accepted")])
     submit = SubmitField("Submit")
+
+
+class EditSettings(FlaskForm):
+    name = StringField("Name", validators=[DataRequired()])
+    email = StringField("Email", validators=[DataRequired(), Email("Please enter a valid email")])
+    submit = SubmitField("Save")
+
+
+class ChangePassword(FlaskForm):
+    old_password = PasswordField("Current Password", validators=[DataRequired()])
+    new_password = PasswordField("New Password", validators=[DataRequired(),
+                                                             EqualTo("confirm", "Passwords must match")
+                                                             ])
+    confirm = PasswordField("Confirm", validators=[DataRequired()])
+    submit = SubmitField("Change Password")

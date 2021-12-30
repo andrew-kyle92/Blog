@@ -1,0 +1,49 @@
+{% include 'header.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+<!-- Page Header -->
+<header class="masthead" style="background-image: url({{ url_for('static', filename='img/settings-beach.jpg')}})">
+<div class="overlay"></div>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+      <div class="page-heading">
+        <h1>Settings</h1>
+        <span class="subheading"></span>
+      </div>
+    </div>
+  </div>
+</div>
+</header>
+
+<div class="main-settings-content">
+  <div id="sidebar">
+    <p class="sidebar-cat" data-content="account-overview">Account Overview</p>
+    <p class="sidebar-cat" data-content="change-password">Change Password</p>
+  </div>
+
+  <div class="cat-content">
+    <div class="overview-content">
+      <a class="edit-btn" href="{{ url_for('edit_settings', user_id=user.id) }}">Edit</a>
+      <p><span class="label-text">Account Type:</span> {{ user.account_type }}</p>
+      <p><span class="label-text">Creation Date:</span> {{ user.creation_date }}</p>
+      <p><span class="label-text">Name:</span> {{ user.name }}</p>
+      <p><span class="label-text">Email:</span> {{ user.email }}</p>
+    </div>
+    <div class="password-content">
+      {% with messages = get_flashed_messages() %}
+          {% if messages: %}
+            {% for message in messages: %}
+              <p style="color: red"><em>{{ message }}</em></p>
+            {% endfor %}
+          {% endif %}
+      {% endwith %}
+      {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}, enctype="multipart/form-data") }}
+    </div>
+  </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/settings.js') }}"></script>
+
+{% include 'footer.html' %}

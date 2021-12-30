@@ -18,7 +18,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from functions import create_folder_struct, add_music
 from email_class import SendEmail
 from forms import (CreatePostForm, RegisterForm, LoginForm, CommentForm, ContactForm, EmailPassword, CodeConfirmation,
-                   ResetPassword, ProfileContent, SongUpload)
+                   ResetPassword, ProfileContent, SongUpload, EditSettings, ChangePassword)
 
 UPLOAD_FOLDER = "static/uploads/users"
 ALLOWED_EXTENSIONS = {"jpg", "png"}
@@ -153,6 +153,7 @@ def get_all_posts():
 def register():
     title = "Register | Andrew's Blog"
     user = current_user
+    year = datetime.datetime.now().year
     form = RegisterForm()
     if form.validate_on_submit():
         if User.query.filter_by(email=form.email.data).first():
@@ -169,7 +170,8 @@ def register():
                 account_type=request.form.get("account_type"),
                 creation_date=datetime.date.today(),
                 name=request.form.get("name"),
-                password=salted_password
+                password=salted_password,
+                year=year
             )
             db.session.add(new_user)
             db.session.commit()
@@ -195,6 +197,7 @@ def login():
     title = "Login | Andrew's Blog"
     user = current_user
     form = LoginForm()
+    year = datetime.datetime.now().year
     if request.method == "POST":
         _redirect = False
         if request.args.get("next"):
@@ -226,7 +229,7 @@ def login():
             else:
                 flash("Your username or password is incorrect", category="Unsuccessful_Login")
                 return redirect(url_for("login"))
-    return render_template("login.html", form=form, user=user, title=title)
+    return render_template("login.html", form=form, user=user, title=title, year=year)
 
 
 @app.route('/logout')
@@ -246,12 +249,14 @@ def profile(_id):
     profile_data = User.query.get(_id)
     title = f"{profile_data.name} | Andrew's Blog"
     user = current_user
+    year = datetime.datetime.now().year
     return render_template(
         "profile.html",
         is_authenticated=user.is_authenticated,
         user=user_data,
         title=title,
         profile_data=profile_data,
+        year=year
     )
 
 
@@ -262,6 +267,7 @@ def edit_profile(_id):
     user_data = User.query.get(_id)
     title = f"Edit Profile | Andrew's Blog"
     user = current_user
+    year = datetime.datetime.now().year
     form = ProfileContent()
     if form.validate_on_submit():
         pic_dir = f"/static/uploads/users/{user_data.name.replace(' ', '_').lower()}/data/profile-picture"
@@ -286,7 +292,8 @@ def edit_profile(_id):
                                is_authenticated=user.is_authenticated,
                                title=title,
                                user=user_data,
-                               form=form
+                               form=form,
+                               year=year
                                )
     else:
         return abort(401, response="aborts/forbidden.html")
@@ -298,6 +305,7 @@ def show_post(post_id):
     requested_post = BlogPost.query.get(post_id)
     title = f"{requested_post.title} | {requested_post.subtitle} | Andrew's Blog"
     comments = Comment.query.all()
+    year = datetime.datetime.now().year
     form = CommentForm()
     struct_time = t.localtime(t.time())
     time_now = t.strftime("%I:%M %p", struct_time)
@@ -324,7 +332,8 @@ def show_post(post_id):
         user=user,
         comments=comments,
         form=form,
-        title=title
+        title=title,
+        year=year
     )
 
 
@@ -332,7 +341,8 @@ def show_post(post_id):
 def about():
     title = "About | Andrew's Blog"
     user = current_user
-    return render_template("about.html", is_authenticated=user.is_authenticated, user=user, title=title)
+    year = datetime.datetime.now().year
+    return render_template("about.html", is_authenticated=user.is_authenticated, user=user, title=title, year=year)
 
 
 @app.route("/contact", methods=["POST", "GET"])
@@ -340,6 +350,7 @@ def contact():
     title = "Contact | Andrew's Blog"
     form = ContactForm()
     user = current_user
+    year = datetime.datetime.now().year
 
     if user.is_authenticated:
         form.name.data = user.name
@@ -355,7 +366,13 @@ def contact():
         send_email.send_email_message(msg_info)
         flash(message="Your message was sent, successfully!", category="Email Sent Success")
         return redirect(url_for("contact"))
-    return render_template("contact.html", is_authenticated=user.is_authenticated, user=user, form=form, title=title)
+    return render_template("contact.html",
+                           is_authenticated=user.is_authenticated,
+                           user=user,
+                           form=form,
+                           title=title,
+                           year=year
+                           )
 
 
 @app.route("/new-post", methods=["POST", "GET"])
@@ -365,6 +382,7 @@ def contact():
 def add_new_post():
     title = "New Post | Andrew's Blog"
     user = current_user
+    year = datetime.datetime.now().year
     form = CreatePostForm()
     if user.account_type != "Admin":
         # abort(401, description="Unauthorized access")
@@ -386,7 +404,8 @@ def add_new_post():
                                form=form,
                                is_authenticated=user.is_authenticated,
                                user=user,
-                               title=title
+                               title=title,
+                               year=year
                                )
 
 
@@ -397,6 +416,7 @@ def add_new_post():
 def edit_post(post_id):
     user = current_user
     post = BlogPost.query.get(post_id)
+    year = datetime.datetime.now().year
     title = f"Edit {post.title} | {post.subtitle} | Andrew's Blog"
     if post.author_id == user.id:
         edit_form = CreatePostForm(
@@ -424,7 +444,8 @@ def edit_post(post_id):
             is_authenticated=user.is_authenticated,
             is_edit=True,
             user=user,
-            title=title
+            title=title,
+            year=year
         )
     else:
         # print(f"User ID: {user.id}\nAuthor ID: {post.author_id}")
@@ -444,6 +465,7 @@ def delete_post(post_id):
 
 @app.route("/reset-password?<string:step>&<string:arg>", methods=["POST", "GET"])
 def forgot_password(step, arg):
+    year = datetime.datetime.now().year
     if step == "Password Reset":
         form = ResetPassword()
         form.step.data = step
@@ -486,7 +508,7 @@ def forgot_password(step, arg):
                 db.session.commit()
                 return redirect(url_for("login"))
 
-    return render_template("forgot.html", form=form)
+    return render_template("forgot.html", form=form, year=year)
 
 
 @app.route("/music-player", methods=["POST", "GET"])
@@ -500,6 +522,7 @@ def music_player():
 def song_upload():
     user = User.query.get(current_user.id)
     form = SongUpload()
+    year = datetime.datetime.now().year
     is_authenticated = current_user.is_authenticated
     title = "Upload a new song | Andrew's Blog"
     if request.method == "POST":
@@ -539,7 +562,63 @@ def song_upload():
             else:
                 flash("Song either already exists or there was an issue uploading the files\nPlease try again")
                 return redirect(url_for("song_upload"))
-    return render_template("song-upload.html", form=form, is_authenticated=is_authenticated, title=title, user=user)
+    return render_template("song-upload.html", form=form,
+                           is_authenticated=is_authenticated,
+                           title=title,
+                           user=user,
+                           year=year
+                           )
+
+
+@app.route("/profile/<int:user_id>/settings", methods=["POST", "GET"])
+def settings(user_id):
+    title = "Settings | Andrew's Blog"
+    year = datetime.datetime.now().year
+    auth_user = User.query.get(user_id)
+    form = ChangePassword()
+    if form.validate_on_submit():
+        user = User.query.get(current_user.id)
+        salted_password = generate_password_hash(form.new_password.data, method="pbkdf2:sha256", salt_length=8)
+        pass_check = check_password_hash(user.password, form.old_password.data)
+        if pass_check:
+            user.password = salted_password
+            db.session.commit()
+            flash("Password changed successfully.")
+            return redirect(url_for("settings", user_id=user.id))
+        else:
+            flash("Current password doesn't match.")
+            return redirect(url_for("settings", user_id=user.id))
+    return render_template("settings.html",
+                           title=title,
+                           user=auth_user,
+                           is_authenticated=current_user,
+                           form=form,
+                           year=year
+                           )
+
+
+@app.route("/profile/<int:user_id>/settings/edit", methods=["POST", "GET"])
+@login_required
+def edit_settings(user_id):
+    title = "Settings | Andrew's Blog"
+    year = datetime.datetime.now().year
+    auth_user = User.query.get(user_id)
+    form = EditSettings()
+    if form.validate_on_submit():
+        user = User.query.get(current_user.id)
+        user.name = form.name.data
+        user.email = form.email.data
+        db.session.commit()
+        return redirect(url_for("settings", user_id=user.id))
+    form.name.data = auth_user.name
+    form.email.data = auth_user.email
+    return render_template("settings-edit.html",
+                           title=title,
+                           user=auth_user,
+                           is_authenticated=current_user,
+                           year=year,
+                           form=form
+                           )
 
 
 # Fresh Login Function

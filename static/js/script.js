@@ -24,3 +24,18 @@ function spanClick() {
     // When the user clicks on <span> (x), close the modal
     modal.style.display = "none";
 }
+
+function edit() {
+    var editBtns = document.getElementsByClassName("edit-btn");
+    var textEdit = document.getElementsByClassName("pro-cont-edit");
+    for(let i = 0; i < editBtns.length; i++){
+        if(e.target.parentElement == editBtns[i]){
+            console.log(editBtns[i]);
+            console.log(textEdit[i]);
+        }
+    }
+}
+
+function showSettingContent() {
+
+}
