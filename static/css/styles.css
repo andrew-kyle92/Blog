@@ -297,12 +297,7 @@ html {
     width: 710px;
 }
 
-@media only screen and (max-width: 700px and min-width: 650px){
-    .popup-img {
-        width: 100%;
-}
-
-@media only screen and (max-width: 600px){
+@media only screen and (max-width: 600px) and (min-width: 100px){
     .below-img p {
         text-align: center;
     }
@@ -336,6 +331,81 @@ html {
 
     .current-bio {
         text-align: center;
+    }
+    /* Settings Styling */
+    .main-settings-content {
+        flex-direction: column;
+        width: 80%;
+    }
+
+    #sidebar {
+        border-bottom: 0px;
+        border-right: 2px groove #9c9c9c;
+        flex-direction: row;
+        width: 100%;
+    }
+
+    .overview-content {
+        margin: auto;
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 700px) and (min-width: 605px){
+    .popup-img {
+        width: 100%;
+    }
+
+    .below-img p {
+        text-align: center;
+    }
+
+    #music-iframe {
+        width: 100%;
+    }
+
+    #music-player {
+        height: 650px;
+        width: 100%;
+    }
+
+    .profile-header {
+        flex-direction: column;
+    }
+    .profile-img-block{
+        width: 75%;
+        margin: auto;
+    }
+    .profile-bio {
+        text-align: center;
+        margin: auto;
+        width: 100%;
+        max-width: fit-content;
+    }
+
+    .post-h2 {
+        text-align: center;
+    }
+
+    .current-bio {
+        text-align: center;
+    }
+    /* Settings Styling */
+    .main-settings-content {
+        flex-direction: column;
+        width: 80%;
+    }
+
+    #sidebar {
+        border-bottom: 0px;
+        border-right: 2px groove #9c9c9c;
+        flex-direction: row;
+        width: 100%;
+    }
+
+    .overview-content {
+        margin: auto;
+        width: 100%;
     }
 }
 
