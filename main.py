@@ -391,13 +391,10 @@ def contact():
 @fresh_login_required
 def add_new_post():
     title = "New Post | Andrew's Blog"
-    user = current_user
+    user = User.query.get(current_user.id)
     year = datetime.datetime.now().year
     form = CreatePostForm()
-    if user.account_type != "Admin" or user.account_type != "Super-Admin":
-        # abort(401, description="Unauthorized access")
-        return abort(401, response="aborts/forbidden.html")
-    else:
+    if user.account_type == "Admin" or user.account_type == "Super-Admin":
         if form.validate_on_submit():
             new_post = BlogPost(
                 title=form.title.data,
@@ -412,11 +409,15 @@ def add_new_post():
             return redirect(url_for("get_all_posts"))
         return render_template("make-post.html",
                                form=form,
-                               is_authenticated=user.is_authenticated,
+                               is_authenticated=current_user.is_authenticated,
                                user=user,
                                title=title,
                                year=year
                                )
+
+    else:
+        # abort(401, description="Unauthorized access")
+        return abort(401, response="aborts/forbidden.html")
 
 
 @app.route("/edit-post/<int:post_id>", methods=["POST", "GET"])
