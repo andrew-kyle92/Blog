@@ -133,6 +133,7 @@ html {
 
 .cat-active {
     background-color: #e0e0e0;
+    border-right: 0px!important;
     color: #0085A1;
     cursor: pointer;
     font-weight: bold;
@@ -151,6 +152,7 @@ html {
 
 #sidebar p {
     border-bottom: 1px solid;
+    border-right: 2px solid #9c9c9c;
     margin: 0rem auto;
     text-align: center;
     width: 100%;
@@ -181,18 +183,25 @@ html {
 .administration-content {
     display: none;
     margin: auto;
+    overflow-x: auto;
     width: 80%;
 }
 
-table, th, td {
+td {
     border: 1px solid black;
     border-collapse: collapse;
+    text-align: center;
+}
+
+th {
+    border-bottom: 2px solid black;
     text-align: center;
 }
 
 table {
     margin: 1rem auto;
     width: 100%;
+    text-align: center;
 }
 
 /* End Settings Page Styling */
@@ -352,7 +361,12 @@ table {
     /* Settings Styling */
     .main-settings-content {
         flex-direction: column;
-        width: 80%;
+        width: 95%;
+    }
+
+    .cat-active {
+        border-right: 2px solid #9c9c9c!important;
+        border-bottom: 0px!important;
     }
 
     #sidebar {
@@ -410,7 +424,12 @@ table {
     /* Settings Styling */
     .main-settings-content {
         flex-direction: column;
-        width: 80%;
+        width: 95%;
+    }
+
+    .cat-active {
+        border-right: 2px solid #9c9c9c!important;
+        border-bottom: 0px!important;
     }
 
     #sidebar {
