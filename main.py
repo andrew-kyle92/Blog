@@ -18,7 +18,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from functions import create_folder_struct, add_music
 from email_class import SendEmail
 from forms import (CreatePostForm, RegisterForm, LoginForm, CommentForm, ContactForm, EmailPassword, CodeConfirmation,
-                   ResetPassword, ProfileContent, SongUpload, EditSettings, ChangePassword)
+                   ResetPassword, ProfileContent, SongUpload, EditSettings, ChangePassword, EditUser)
 
 UPLOAD_FOLDER = "static/uploads/users"
 ALLOWED_EXTENSIONS = {"jpg", "png"}
@@ -52,11 +52,12 @@ app.add_url_rule("/", endpoint="get_all_posts")
 app.add_url_rule("/new-post", endpoint="add_new_post")
 app.add_url_rule(rule="/edit-post/<int:post_id>", endpoint="edit_post")
 app.add_url_rule(rule="/delete/<int:post_id>", endpoint="delete_post")
+app.add_url_rule("/settings/<int:user_id>", endpoint="settings")
 db = SQLAlchemy(app)
 
 # #USER LOGIN
 login_manager = LoginManager()
-login_manager.session_protection = "strong"
+login_manager.session_protection = "basic"
 login_manager.init_app(app)
 
 
@@ -135,7 +136,6 @@ def get_all_posts():
     year = datetime.datetime.now().year
     if current_user.is_authenticated:
         user = User.query.get(current_user.id)
-
         # print(user.account_type)
     else:
         user = None
@@ -160,6 +160,7 @@ def register():
             flash("You've already signed up with that email, log in instead!")
             return redirect(url_for("login"))
         else:
+            year = datetime.datetime.now().year
             create_folder_struct(request.form.get("name"))
             salted_password = generate_password_hash(
                 password=request.form.get("password"),
@@ -171,7 +172,6 @@ def register():
                 creation_date=datetime.date.today(),
                 name=request.form.get("name"),
                 password=salted_password,
-                year=year
             )
             db.session.add(new_user)
             db.session.commit()
@@ -200,10 +200,18 @@ def login():
     year = datetime.datetime.now().year
     if request.method == "POST":
         _redirect = False
+        post_id_needed = False
+        user_id_needed = False
         if request.args.get("next"):
             next_url = request.args.get("next")
             if request.args.get("next") == "edit_post" or request.args.get("next") == "delete_post":
                 post_id = request.args.get("post_id")
+                post_id_needed = True
+                _redirect = True
+            elif request.args.get("next") == "settings" or request.args.get("next") == "edit-settings" or \
+                    request.args.get("next") == "user_edit":
+                user_id = request.args.get("user_id")
+                user_id_needed = True
                 _redirect = True
             else:
                 _redirect = False
@@ -222,8 +230,10 @@ def login():
                     login_user(user, remember=True)
                 else:
                     login_user(user)
-                if _redirect:
+                if _redirect and post_id_needed:
                     return redirect(url_for(next_url, post_id=post_id))
+                elif _redirect and user_id_needed:
+                    return redirect(url_for(next_url, user_id=user_id))
                 else:
                     return redirect(url_for(next_url))
             else:
@@ -384,7 +394,7 @@ def add_new_post():
     user = current_user
     year = datetime.datetime.now().year
     form = CreatePostForm()
-    if user.account_type != "Admin":
+    if user.account_type != "Admin" or user.account_type != "Super-Admin":
         # abort(401, description="Unauthorized access")
         return abort(401, response="aborts/forbidden.html")
     else:
@@ -571,11 +581,15 @@ def song_upload():
 
 
 @app.route("/profile/<int:user_id>/settings", methods=["POST", "GET"])
+@app.endpoint("settings")
+@login_required
+@fresh_login_required
 def settings(user_id):
     title = "Settings | Andrew's Blog"
     year = datetime.datetime.now().year
     auth_user = User.query.get(user_id)
     form = ChangePassword()
+    all_users = User.query.all()
     if form.validate_on_submit():
         user = User.query.get(current_user.id)
         salted_password = generate_password_hash(form.new_password.data, method="pbkdf2:sha256", salt_length=8)
@@ -588,17 +602,23 @@ def settings(user_id):
         else:
             flash("Current password doesn't match.")
             return redirect(url_for("settings", user_id=user.id))
-    return render_template("settings.html",
-                           title=title,
-                           user=auth_user,
-                           is_authenticated=current_user,
-                           form=form,
-                           year=year
-                           )
+    if current_user.id == auth_user.id:
+        return render_template("settings.html",
+                               title=title,
+                               user=auth_user,
+                               is_authenticated=current_user,
+                               form=form,
+                               year=year,
+                               users=all_users,
+                               current_user=current_user
+                               )
+    else:
+        return abort(401)
 
 
 @app.route("/profile/<int:user_id>/settings/edit", methods=["POST", "GET"])
 @login_required
+@fresh_login_required
 def edit_settings(user_id):
     title = "Settings | Andrew's Blog"
     year = datetime.datetime.now().year
@@ -621,12 +641,53 @@ def edit_settings(user_id):
                            )
 
 
+@app.route("/settings/admin/user-edit/<int:user_id>", methods=["POST", "GET"])
+@login_required
+@fresh_login_required
+def user_edit(user_id):
+    admin = current_user
+    user_to_edit = User.query.get(user_id)
+    year = datetime.datetime.now().year
+    title = f"Editing {user_to_edit.name} | Andrew's Blog"
+    form = EditUser()
+    form.name.data = user_to_edit.name
+    form.email.data = user_to_edit.email
+    form.account_type.data = user_to_edit.account_type
+
+    if form.validate_on_submit():
+        for field in request.form.items():
+            if field[0] == "csrf_token" or field[0] == "submit":
+                continue
+            else:
+                if field[1] != "":
+                    if user_to_edit.account_type and field[0]:
+                        user_to_edit.account_type = field[1]
+                    elif user_to_edit.name and field[0]:
+                        user_to_edit.name = field[1]
+                    elif user_to_edit.email and field[0]:
+                        user_to_edit.email = field[1]
+                    elif user_to_edit.password and field[0]:
+                        user_to_edit.password = generate_password_hash(field[1], "pbkdf2:sha256", 8)
+        db.session.commit()
+        return redirect(url_for("settings", user_id=admin.id))
+
+    return render_template("user-edit.html",
+                           current_user=admin,
+                           user=user_to_edit,
+                           year=year,
+                           title=title,
+                           form=form
+                           )
+
+
 # Fresh Login Function
 @login_manager.needs_refresh_handler
 def refresh():
-    flash("Re-authentication required")
+    flash("To protect your account, re-authentication is needed to access this page.")
     if request.endpoint == "edit_post" or request.endpoint == "delete_post":
         return redirect(url_for("login", next=request.endpoint, post_id=request.url[-1]))
+    elif request.endpoint == "settings" or request.endpoint == "user_edit" or request.endpoint == "edit_settings":
+        return redirect(url_for("login", next=request.endpoint, user_id=request.url[-1]))
     else:
         return redirect(url_for("login", next=request.endpoint))
 
@@ -676,4 +737,4 @@ def server_error(e):
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=False)
-    # app.run(host='localhost', port=5000, debug=False)  # for testing
+    # app.run(host='localhost', port=5000, debug=True)  # for testing

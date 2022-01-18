@@ -43,9 +43,8 @@
         <hr>
         {% endfor %}
 
-
         <!-- New Post -->
-        {% if user.account_type == "Admin": %}
+        {% if user.account_type == "Admin" or user.account_type == "Super-Admin": %}
         <div class="clearfix">
           <a class="btn btn-primary float-right" href="{{url_for('add_new_post')}}">Create New Post</a>
         </div>
