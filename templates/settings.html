@@ -20,6 +20,9 @@
   <div id="sidebar">
     <p class="sidebar-cat" data-content="account-overview">Account Overview</p>
     <p class="sidebar-cat" data-content="change-password">Change Password</p>
+    {% if user.account_type == 'Super-Admin' %}
+    <p class="sidebar-cat" data-content="administration">Administration</p>
+    {% endif %}
   </div>
 
   <div class="cat-content">
@@ -40,6 +43,26 @@
       {% endwith %}
       {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}, enctype="multipart/form-data") }}
     </div>
+    {% if user.account_type == "Super-Admin" %}
+    <div class="administration-content">
+      <table>
+        <tr>
+          <th>User</th>
+          <th>Email</th>
+          <th>Account Type</th>
+          <th>Creation Date</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+          <td><a class="user-link" href="{{ url_for('user_edit', user_id=user.id) }}">{{ user.name }}</a></td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.account_type }}</td>
+          <td>{{ user.creation_date }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+    {% endif %}
   </div>
 
 </div>

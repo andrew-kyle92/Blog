@@ -94,3 +94,12 @@ class ChangePassword(FlaskForm):
                                                              ])
     confirm = PasswordField("Confirm", validators=[DataRequired()])
     submit = SubmitField("Change Password")
+
+
+class EditUser(FlaskForm):
+    name = StringField("Name")
+    email = StringField("Email", validators=[Email("Please enter a valid email")])
+    account_type = SelectField("Account Type", choices=["Non-Admin", "Admin", "Super-Admin"])
+    password = PasswordField("New Password", validators=[EqualTo("confirm", "Passwords must match")])
+    confirm = PasswordField("Confirm")
+    submit = SubmitField("Save Edits")
