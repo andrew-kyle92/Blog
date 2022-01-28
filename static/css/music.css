@@ -438,7 +438,7 @@
     }
 
     .song-content {
-        width: 70%;
+        width: 60%;
         margin: auto;
     }
 
@@ -461,7 +461,6 @@
         width: 100%;
     }
 }
-/*
 @media only screen and (max-width: 1024px) and (min-width: 750px){
     #main-player-content {
         margin: 1rem auto;
@@ -494,5 +493,5 @@
         width: 100%;
     }
 }
-*/
+
 /* End Music Player Styling */
