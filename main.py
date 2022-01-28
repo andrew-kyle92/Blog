@@ -146,7 +146,7 @@ class Comment(db.Model):
     time = db.Column(db.String(255), nullable=False)
 
 
-# db.create_all()  # This is for database creation for test environment
+db.create_all()  # This is for database creation for test environment
 
 
 @app.route('/')
