@@ -9,51 +9,65 @@
 </head>
 <body id="main-player-content">
     <div id="main-frame" class="player-frame">
-        <div id="inner-player-top">
-        <div id="song-art" class="artwork">
-            <img class="song-img" src="{{ url_for('static', filename='img/base-music-img.jpg') }}" alt="Song Artwork">
-        </div>
-        <div class="song-content">
-
-            <div id="currentTrackContent">
-                <h2 class="track-info"></h2>
-            </div>
-
-            <div class="song-progress">
-                <span class="seconds-start progress"></span>
-                <div class="progress-bar progress">
-                    <input type="range" min="1" max="100" value="0" class="seek_slider" onchange="seekTo()">
-                </div>
-                <span class="seconds-end progress"></span>
-            </div>
-
-            <div class="buttons">
-                <i id="back-btn" class="fas fa-step-backward"></i>
-                <i id="play-pause-btn" class="fas fa-play-circle"></i>
-                <i id="forward-btn" class="fas fa-step-forward"></i>
-            </div>
-            <div class="volume-buttons">
-                <i class="fas fa-volume-off volume" onclick="volumeDown()"></i>
-                <div class="volume-bar volume">
-                    <input type="range" min="1" max="100" value="100" class="volume_slider" onchange="setVolume()">
-                </div>
-                <i class="fas fa-volume-up volume" onclick="volumeUp()"></i>
-            </div>
-
-        </div>
-      </div>
-        <div id="inner-player-bottom">
+        <div id="artist-list">
+            <button class="artist-btn">Artists <i class="fas fa-bars"></i></button>
             <div class="song-list">
-                {% for song in songs %}
-                <article id="{{ loop.index0 }}"
-                    data-song-artist="{{ song.artist }}"
-                    data-song-name="{{ song.song_name }}"
-                    data-song-artwork="{{ song.album_art }}"
-                    data-song-file="{{ song.song_file }}">
-                    <p class="song-item" onclick="playTrack({{ loop.index0 }})" data-song-id="{{ loop.index0 }}">{{ song.artist }} - {{ song.song_name }} - {{ song.album }}</p>
-                    <hr class="song-hr">
-                </article>
+                {% for artist in artists %}
+                <div id="{{ loop.index0 }}" class="artist-index">
+                        <button class="artist-tab"><i class="fas fa-chevron-up"></i> <span class="artist-text">{{ artist.artist }}</span></button>
+                            <div class="artist-content">
+                                {% for album in artist.albums %}
+                                <button data-artist-id="{{ artist.id }}" class="album-tab"><i class="fas fa-chevron-up"></i> <span class="album-text">{{ album.album }}</span></button>
+                                    <div class="song-tab">
+                                        {% for song in album.songs %}
+                                        <p class="lower-level-tab" data-song='
+                                            {
+                                                "id": "{{ song.id }}",
+                                                "artist": "{{ artist.artist }}",
+                                                "song_name": "{{ song.song_name }}",
+                                                "artwork": "{{ song.album_art }}",
+                                                "song_file": "{{ song.song_file }}"
+                                            }
+                                        '><span class="song-item" data-artist-id="{{ artist.id }}" data-song-id="{{ song.id }}" onclick="playTrack({{ song.id }})">{{ song.song_name }}</span></p>
+                                        {% endfor %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                </div>
                 {% endfor %}
+            </div>
+        </div>
+        <div id="inner-player-top">
+            <div id="song-art" class="artwork">
+                <img class="song-img" src="{{ url_for('static', filename='img/base-music-img.jpg') }}" alt="Song Artwork">
+            </div>
+            <div class="song-content">
+
+                <div id="currentTrackContent">
+                    <h2 class="track-info"></h2>
+                </div>
+
+                <div class="song-progress">
+                    <span class="seconds-start progress"></span>
+                    <div class="progress-bar progress">
+                        <input type="range" min="1" max="100" value="0" class="seek_slider" onchange="seekTo()">
+                    </div>
+                    <span class="seconds-end progress"></span>
+                </div>
+
+                <div class="buttons">
+                    <i id="back-btn" class="fas fa-step-backward"></i>
+                    <i id="play-pause-btn" class="fas fa-play-circle"></i>
+                    <i id="forward-btn" class="fas fa-step-forward"></i>
+                </div>
+                <div class="volume-buttons">
+                    <i class="fas fa-volume-off volume" onclick="volumeDown()"></i>
+                    <div class="volume-bar volume">
+                        <input type="range" min="1" max="100" value="100" class="volume_slider" onchange="setVolume()">
+                    </div>
+                    <i class="fas fa-volume-up volume" onclick="volumeUp()"></i>
+                </div>
+
             </div>
         </div>
     </div>

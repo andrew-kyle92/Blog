@@ -14,6 +14,7 @@ from flask_login import (UserMixin, login_user, LoginManager, login_required, cu
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 
 from functions import create_folder_struct, add_music
 from email_class import SendEmail
@@ -103,13 +104,32 @@ class Profile(db.Model):
     profile_bio = db.Column(db.String(255))
 
 
+class Artist(db.Model):
+    __tablename__ = "artists"
+    id = db.Column(db.Integer, primary_key=True)
+    artist = db.Column(db.String(255), nullable=False)
+    albums = relationship("Album", back_populates="artist")
+    songs = relationship("Song", back_populates="artist")
+
+
+class Album(db.Model):
+    __tablename__ = "albums"
+    id = db.Column(db.Integer, primary_key=True)
+    artist_id = db.Column(db.Integer, db.ForeignKey("artists.id"))
+    artist = relationship("Artist", back_populates="albums")
+    album = db.Column(db.String(255), nullable=False)
+    songs = relationship("Song", back_populates="album")
+
+
 class Song(db.Model):
     __tablename__ = "songs"
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     user = relationship("User", back_populates="songs")
-    artist = db.Column(db.String(255), nullable=True)
-    album = db.Column(db.String(255), nullable=True)
+    artist_id = db.Column(db.Integer, db.ForeignKey("artists.id"))
+    artist = relationship("Artist", back_populates="songs")
+    album_id = db.Column(db.Integer, db.ForeignKey("albums.id"))
+    album = relationship("Album", back_populates="songs")
     album_art = db.Column(db.String(255), nullable=True)
     song_file = db.Column(db.String(255), nullable=True)
     song_name = db.Column(db.String(255), nullable=True)
@@ -524,8 +544,8 @@ def forgot_password(step, arg):
 
 @app.route("/music-player", methods=["POST", "GET"])
 def music_player():
-    all_songs = Song.query.all()
-    return render_template("music-player.html", songs=all_songs)
+    all_artists = Artist.query.all()
+    return render_template("music-player.html", artists=all_artists)
 
 
 @app.route("/song-upload", methods=["POST", "GET"])
@@ -548,27 +568,65 @@ def song_upload():
             root_path = f"static/uploads/users/{user.name.replace(' ', '_').lower()}/data/music"
             artist_dir = f"{root_path}/{form_data['artist'].replace(' ', '_')}"
             album_dir = f"{artist_dir}/{form_data['album'].replace(' ', '_')}"
-            album_art_filename = form_data["album_art"].filename
-            song_filename = form_data["song"].filename
+            album_art_filename = secure_filename(form_data["album_art"].filename)
+            song_filename = secure_filename(form_data["song"].filename)
             if add_song:
                 form_data["album_art"].save(os.path.join(album_dir, album_art_filename))
                 form_data["song"].save(os.path.join(album_dir, song_filename))
                 song = f"{form.song.data.filename}"
                 song = song.replace(" ", "_")
+                song_name = str(form_data["song"].filename)
+                song_name = song_name[:-4]
                 album_art = f"{form.album_art.data.filename}"
                 album_art = album_art.replace(" ", "_")
                 os.replace(f"{album_dir}/{song_filename}", f"{album_dir}/{song}")
                 os.replace(f"{album_dir}/{album_art_filename}", f"{album_dir}/{album_art}")
-                new_song = Song(
-                    user=user,
-                    artist=form_data["artist"],
-                    album=form_data["album"],
-                    album_art=f"{album_dir}/{album_art}",
-                    song_file=f"{album_dir}/{song}",
-                    song_name=song_filename[:-4]
-                )
-                db.session.add(new_song)
-                db.session.commit()
+                artist_obj = Artist.query.filter_by(artist=form_data["artist"]).first()
+                album_obj = Album.query.filter_by(album=form_data["album"]).first()
+                artist_exists = artist_obj
+                if artist_exists:
+                    album_exists = album_obj
+                    if album_exists:
+                        song_exists = Song.query.filter_by(song_name=song).first()
+                        if song_exists:
+                            flash("There was an issue uploading the song.\n"
+                                  "Please verify that the song doesn't already exist and try again.")
+                            return redirect(url_for("song_upload"))
+                        else:
+                            new_song = Song(
+                                user=current_user,
+                                artist=artist_obj,
+                                album=album_obj,
+                                album_art=f"{album_dir}/{album_art}",
+                                song_file=f"{album_dir}/{song}",
+                                song_name=song_name
+                            )
+                            db.session.add(new_song)
+                            db.session.commit()
+                            return redirect(url_for("profile", _id=user.id))
+                    else:
+                        new_song = Song(
+                            user=current_user,
+                            artist=artist_obj,
+                            album=Album(artist=artist_obj, album=form_data["album"]),
+                            album_art=f"{album_dir}/{album_art}",
+                            song_file=f"{album_dir}/{song}",
+                            song_name=song_name
+                        )
+                        db.session.add(new_song)
+                        db.session.commit()
+                        return redirect(url_for("profile", _id=user.id))
+                else:
+                    new_song = Song(
+                        user=current_user,
+                        artist=Artist(artist=form_data["artist"]),
+                        album=Album(artist=artist_obj, album=form_data["album"]),
+                        album_art=f"{album_dir}/{album_art}",
+                        song_file=f"{album_dir}/{song}",
+                        song_name=song_name
+                    )
+                    db.session.add(new_song)
+                    db.session.commit()
                 return redirect(url_for("profile", _id=user.id))
             else:
                 flash("Song either already exists or there was an issue uploading the files\nPlease try again")

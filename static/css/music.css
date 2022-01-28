@@ -16,6 +16,12 @@
     margin: 3rem auto;
 }
 
+.artist-list {
+    margin: auto 0rem;
+    position: absolute;
+    width: auto;
+}
+
 .song-img {
     height: 450px;
 }
@@ -257,15 +263,67 @@
 }
 
 /* End Slider Styling */
+#artist-list {
+    position: absolute;
+    width: 28%;
+}
+
+.artist-btn {
+    background: hsl(0, 0%, 14%);
+    color: hsl(0, 0%, 65%);
+    font-size: 22px;
+    height: 45px;
+    margin: 0rem;
+    text-align: justify;
+    width: fit-content;
+}
+
+.artist-btn:hover {
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.artist-content {
+    display: none;
+}
+
+.artist-tab {
+    background: hsl(0, 0%, 14%);
+    color: hsl(0, 0%, 65%);
+    font-size: 22px;
+    height: 45px;
+    margin: 0rem;
+    text-align: justify;
+    width: 100%;
+}
+
+.artist-tab:hover {
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.album-tab {
+    background: hsl(0, 0%, 65%);
+    color: hsl(0, 0%, 14%);
+    font-size: 22px;
+    height: 45px;
+    margin: 0rem;
+    text-align: justify;
+    text-indent: 1rem;
+    width: 100%;
+}
+
+.song-tab {
+    display: none;
+}
 
 .song-list {
     background-image: linear-gradient(to right, rgba(194, 194, 194), rgba(46, 46, 46));
     border: 1px solid black;
-    margin: auto;
-    max-height: 70px;
+    display: none;
+    margin: auto 0rem;
     overflow: auto;
-    padding-top: 1rem;
-    width: 70%;
+    width: 100%;
     text-align: center;
 }
 
@@ -290,6 +348,12 @@
 
 /* Music Player Responsiveness */
 @media only screen and (max-width: 495px){
+    #artist-list {
+        position: absolute;
+        width: 45%;
+        margin-top: 0px;
+    }
+
     #inner-player-top {
         flex-direction: column;
     }
@@ -328,6 +392,12 @@
 
 
 @media only screen and (max-width: 720px) and (min-width: 500px){
+    #artist-list {
+        position: absolute;
+        width: 75%;
+        margin-top: 257px;
+    }
+
     .artwork{
         margin: auto;
     }
@@ -383,7 +453,7 @@
         width: 100%;
     }
 }
-
+/*
 @media only screen and (max-width: 1024px) and (min-width: 750px){
     #main-player-content {
         margin: 1rem auto;
@@ -416,5 +486,5 @@
         width: 100%;
     }
 }
-
+*/
 /* End Music Player Styling */
