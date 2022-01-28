@@ -349,9 +349,17 @@
 /* Music Player Responsiveness */
 @media only screen and (max-width: 495px){
     #artist-list {
-        position: absolute;
-        width: 45%;
-        margin-top: 0px;
+        margin-top: -2rem;
+        width: 99%;
+    }
+
+    .artist-btn {
+        text-align: center;
+        width: 99%;
+    }
+
+    .artist-tab {
+        width: 99%;
     }
 
     #inner-player-top {
