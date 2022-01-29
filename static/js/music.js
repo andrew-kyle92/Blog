@@ -107,6 +107,7 @@ backBtn.addEventListener("click", function(){
     }
 
     currentTrack.play();
+    playPauseBtn.setAttribute("class", "fas fa-pause-circle");
 });
 
 forwardBtn.addEventListener("click", function(){
