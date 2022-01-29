@@ -61,7 +61,7 @@ function setTrack(s, track_id){
     return currentTrack
 }
 
-var currentTrack = setTrack(songObjects, songObjects["2"]["id"]);
+var currentTrack = setTrack(songObjects, songObjects["1"]["id"]);
 
 playPauseBtn.addEventListener("click", function(){
     if(playPauseBtn.className == "fas fa-play-circle"){
