@@ -9,28 +9,29 @@ var volumeBar = document.getElementsByClassName("volume_slider")[0];
 var songItem = document.getElementsByClassName("song-item");
 var songs = document.getElementsByClassName("lower-level-tab");
 var songImg = document.getElementsByClassName("song-img")[0];
-var songObjects = {};
+var songObjects = [];
 var songPlaying = false;
 
 for(let i = 0; i < songs.length; i++){
-    let json = songs [i].dataset.song;
+    let json = songs[i].dataset.song;
     data = JSON.parse(json);
     song = {
+        "index": i,
         "id": data.id,
         "Artist": data.artist,
         "Song": data.song_name,
         "Album Art": data.artwork,
         "Song File": data.song_file
     }
-    songObjects[data.id] = song;
+    songObjects.push(song);
 }
 
-function setTrack(s, track_id){
-    songImg.setAttribute("src", s[track_id]["Album Art"]);
+function setTrack(s, idx){
+    songImg.setAttribute("src", s[idx]["Album Art"]);
     duration = document.getElementsByClassName("seconds-start")[0];
-    currentTrackInfo.innerText = s[track_id]["Artist"] + " - " + s[track_id]["Song"];
-    currentTrack = new Audio(s[track_id]["Song File"]);
-    currentTrack.id = parseInt(s[track_id]["id"]);
+    currentTrackInfo.innerText = s[idx]["Artist"] + " - " + s[idx]["Song"];
+    currentTrack = new Audio(s[idx]["Song File"]);
+    currentTrack.id = s[idx]["index"].toString();
     songPlaying = true;
     s = parseInt(currentTrack.currentTime % 60);
     m = parseInt((currentTrack.currentTime / 60) % 60);
@@ -53,15 +54,16 @@ function setTrack(s, track_id){
     updateTime();
 
     for(let i = 0; i < songItem.length; i++){
-        if(songItem[i].dataset["songId"] == track_id){
+        if(songItem[i].dataset["songId"] == songObjects[parseInt(currentTrack.id)]["id"]){
             songItem[i].setAttribute("class", "song-item song-playing");
+            break;
         }
     }
 
     return currentTrack
 }
 
-var currentTrack = setTrack(songObjects, songObjects["2"]["id"]);
+var currentTrack = setTrack(songObjects, songObjects[0]["index"]);
 
 playPauseBtn.addEventListener("click", function(){
     if(playPauseBtn.className == "fas fa-play-circle"){
@@ -81,15 +83,20 @@ backBtn.addEventListener("click", function(){
         previousTrack = parseInt(currentTrack.id) - 1;
     }
     else{
-        previousTrack = parseInt(songObjects.at(-1)["id"]);
+        previousTrack = songObjects.at(-1)["index"];
     }
 
     if(currentTrack.currentTime < 5){
         currentTrack.currentTime = currentTrack.duration;
         playPauseBtn.setAttribute("class", "fas fa-play-circle");
-        songItem[parseInt(currentTrack.id)].setAttribute("class", "song-item");
+        for(let i = 0; i < songItem.length; i++){
+            if(songItem[i].dataset["songId"] == songObjects[parseInt(currentTrack.id)]["id"]){
+                songItem[i].setAttribute("class", "song-item");
+                break;
+            }
+        }
         if(previousTrack == 0){
-            setTrack(songObjects, songObjects.at(-1)["id"]);
+            setTrack(songObjects, songObjects.at(-1)["index"]);
         }
         else{
             setTrack(songObjects, previousTrack);
@@ -98,19 +105,26 @@ backBtn.addEventListener("click", function(){
     else{
         currentTrack.currentTime = 0;
     }
+
+    currentTrack.play();
 });
 
 forwardBtn.addEventListener("click", function(){
     currentTrack.currentTime = currentTrack.duration;
     playPauseBtn.setAttribute("class", "fas fa-play-circle");
-    songItem[parseInt(currentTrack.id)].setAttribute("class", "song-item");
+    for(let i = 0; i < songItem.length; i++){
+        if(songItem[i].dataset["songId"] == songObjects[parseInt(currentTrack.id)]["id"]){
+            songItem[i].setAttribute("class", "song-item");
+            break;
+        }
+    }
     if(parseInt(currentTrack.id) < songObjects.length - 1){
-        currentTrack = setTrack(songObjects, songObjects[parseInt(currentTrack.id) + 1]["id"]);
+        currentTrack = setTrack(songObjects, songObjects[parseInt(currentTrack.id) + 1]["index"]);
         currentTrack.play();
         playPauseBtn.setAttribute("class", "fas fa-pause-circle");
     }
     else{
-        currentTrack = setTrack(songObjects, songObjects[0]["id"]);
+        currentTrack = setTrack(songObjects, songObjects[0]["index"]);
         currentTrack.play();
         playPauseBtn.setAttribute("class", "fas fa-pause-circle");
     }
@@ -171,17 +185,23 @@ function updateTime(){
 };
 
 function playTrack(song_id){
+    for(let i = 0; i < songItem.length; i++){
+            if(songItem[i].dataset["songId"] == songObjects[parseInt(currentTrack.id)]["id"]){
+                songItem[i].setAttribute("class", "song-item");
+                break;
+            }
+        }
     if(songPlaying){
         currentTrack.currentTime = currentTrack.duration;
         songPlaying = false;
-        for(let i = 0; i < songItem.length; i++){
-            if(songItem[i].dataset["songId"] == currentTrack.id){
-                songItem[i].setAttribute("class", "song-item");
-            }
-        }
         playPauseBtn.setAttribute("class", "fas fa-play-circle");
     }
-    currentTrack = setTrack(songObjects, songObjects[song_id]["id"]);
+    for(let i = 0; i < songObjects.length; i++){
+         if(songObjects[i]["id"] == song_id){
+            currentTrack = setTrack(songObjects, songObjects[i]["index"]);
+            break;
+         }
+    }
     currentTrack.play();
     playPauseBtn.setAttribute("class", "fas fa-pause-circle");
 };
