@@ -36,6 +36,25 @@ function edit() {
     }
 }
 
-function showSettingContent() {
-
-}
+window.addEventListener("load", () => {
+    submitBtn = document.getElementById("submit");
+    if(document.URL.includes("song-upload")){
+        submitBtn.addEventListener("click", () => {
+            for(let i = 0; i < 60; i++)
+                setTimeout(() => {
+                    if(submitBtn.value == "Loading"){
+                        submitBtn.value = "Loading."
+                    }
+                    else if(submitBtn.value == "Loading."){
+                        submitBtn.value = "Loading.."
+                    }
+                    else if(submitBtn.value == "Loading.."){
+                        submitBtn.value = "Loading..."
+                    }
+                    else{
+                        submitBtn.value = "Loading"
+                    }
+                }, 100)
+        });
+    }
+});
