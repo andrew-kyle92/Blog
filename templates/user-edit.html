@@ -21,9 +21,48 @@
     <p class="overview">Administration</p>
   </div>
 
-  <div class="cat-content">
-    <div class="content-main">
-      {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}, enctype="multipart/form-data") }}
+  <div class="cat-content-admin">
+    <div class="content-main-admin">
+      <img class="admin-pro-pic" src="{{ user.profile[0].profile_picture }}">
+      <form id="user-edit-form" action="{{ url_for('user_edit', user_id=user.id) }}" method="post" enctype="multipart/form-data" novalidate>
+
+        {{ form.csrf_token }}
+        <div class="form-groups">
+          <label class="form-label" for="{{ form.name.name }}">{{ form.name.label.text }}</label>
+          <br>
+          <input class="form-input" name="{{ form.name.name }}" type="text" value="{{ form.name.data }}">
+        </div>
+        <div class="form-groups">
+          <label class="form-label" for="{{ form.email.name }}">{{ form.email.label.text }}</label>
+          <br>
+          <input class="form-input" name="{{ form.email.name }}" type="text" value="{{ form.email.data }}">
+        </div>
+        <div class="form-groups">
+          <label class="form-label" for="{{ form.account_type.name }}">{{ form.account_type.label.text }}</label>
+          <br>
+          <select class="form-input" name="{{ form.account_type.name }}">
+            {% for choice in form.account_type.choices: %}
+              <option value="{{ choice }}">{{ choice }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-groups">
+          <label class="form-label" for="{{ form.password.name }}">{{ form.password.label.text }}</label>
+          <br>
+          <input class="form-input" name="{{ form.password.name }}" type="password">
+          <span class="show-pass"><i class="fas fa-regular fa-eye"></i></span>
+        </div>
+        <div class="form-groups">
+          <label class="form-label" for="{{ form.confirm.name }}">{{ form.confirm.label.text }}</label>
+          <br>
+          <input class="form-input" name="{{ form.confirm.name }}" type="password">
+          <span class="show-pass"><i class="fas fa-regular fa-eye"></i></span>
+        </div>
+        <br>
+        <span class="break"></span>
+        <input class="btn btn-primary" name="{{ form.submit.name }}" type="submit" value="Save Edits">
+      </form>
+<!--      {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}, enctype="multipart/form-data") }}-->
     </div>
   </div>
 

@@ -1,3 +1,4 @@
+/******************** General Styling ********************/
 html {
     margin: 0;
     height: 100%;
@@ -85,8 +86,9 @@ html {
 .dropdown-content a:hover {
     text-decoration: none;
 }
+/******************** End General Styling ********************/
 
-/* Settings Page Styling */
+/******************** Settings Page Styling ********************/
 .edit-btn {
     margin: auto 4rem;
     width: fit-content;
@@ -204,9 +206,60 @@ table {
     text-align: center;
 }
 
-/* End Settings Page Styling */
+/*** Administration Settings Styling ***/
+.cat-content-admin {
+    background-color: #ebebeb;
+    width: 100%;
+}
 
-/* User Profile Styling */
+.content-main-admin {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-pro-pic {
+    border-style: none;
+    border-radius: 25%;
+    margin: 2rem auto;
+    max-height: 250px;
+    max-width: 250px;
+    vertical-align: middle;
+}
+
+#user-edit-form {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 1rem auto;
+    width: 90%;
+}
+
+.form-groups {
+    margin-bottom: 0.5rem;
+}
+
+.form-label {
+    font-weight: 800;
+    margin-bottom: -0.5rem;
+}
+
+.form-input {
+    width: 268px;
+}
+
+.break {
+    flex-basis: 100%;
+}
+
+.show-pass:hover {
+    cursor: pointer;
+}
+
+/******************** End Settings Page Styling ********************/
+
+/********************* User Profile Styling ********************/
 .profile-header {
     display: flex;
     flex-direction: row;
@@ -323,6 +376,10 @@ table {
     width: 710px;
 }
 
+/******************** End User Profile Styling ********************/
+
+/******************** Responsiveness ********************/
+
 @media only screen and (max-width: 600px) and (min-width: 100px){
     .below-img p {
         text-align: center;
@@ -358,7 +415,7 @@ table {
     .current-bio {
         text-align: center;
     }
-    /* Settings Styling */
+    /********************* Settings Styling *********************/
     .main-settings-content {
         flex-direction: column;
         width: 95%;
