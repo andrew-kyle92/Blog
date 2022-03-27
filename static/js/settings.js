@@ -23,21 +23,21 @@ window.addEventListener("load", function(){
         }
     });
 
-    // Show/Hide password
-    var allEyes = document.getElementsByClassName("show-pass");
-    for(let i = 0; i < allEyes.length; i++){
-        let input = allEyes[i].previousElementSibling;
-        let eyeSlash = "fas fa-regular fa-eye-slash";
-        let openEye = "fas fa-regular fa-eye";
-        allEyes[i].addEventListener("click", function(){
-            if(allEyes[i].children[0].className == openEye){
-                allEyes[i].children[0].setAttribute("class", eyeSlash);
-                input.setAttribute("type", "text");
-            }
-            else{
-                allEyes[i].children[0].setAttribute("class", openEye);
-                input.setAttribute("type", "password");
-            }
-        });
-    }
+    // // Show/Hide password
+    // var allEyes = document.getElementsByClassName("show-pass");
+    // for(let i = 0; i < allEyes.length; i++){
+    //     let input = allEyes[i].previousElementSibling;
+    //     let eyeSlash = "fas fa-regular fa-eye-slash";
+    //     let openEye = "fas fa-regular fa-eye";
+    //     allEyes[i].addEventListener("click", function(){
+    //         if(allEyes[i].children[0].className == openEye){
+    //             allEyes[i].children[0].setAttribute("class", eyeSlash);
+    //             input.setAttribute("type", "text");
+    //         }
+    //         else{
+    //             allEyes[i].children[0].setAttribute("class", openEye);
+    //             input.setAttribute("type", "password");
+    //         }
+    //     });
+    // }
 });
