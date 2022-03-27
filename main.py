@@ -5,7 +5,7 @@ from datetime import date, timedelta
 import random as r
 
 from dotenv import dotenv_values
-from flask import Flask, render_template, redirect, url_for, flash, request, abort
+from flask import Flask, render_template, redirect, url_for, flash, request, abort, session
 from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
 from flask_gravatar import Gravatar
@@ -53,7 +53,7 @@ app.add_url_rule("/", endpoint="get_all_posts")
 app.add_url_rule("/new-post", endpoint="add_new_post")
 app.add_url_rule(rule="/edit-post/<int:post_id>", endpoint="edit_post")
 app.add_url_rule(rule="/delete/<int:post_id>", endpoint="delete_post")
-app.add_url_rule("/settings/<int:user_id>", endpoint="settings")
+app.add_url_rule("/profile/<int:user_id>/settings", endpoint="settings")
 db = SQLAlchemy(app)
 
 # #USER LOGIN
@@ -89,6 +89,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(255), unique=True, nullable=False)
     name = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
+    verification_code = db.Column(db.String(6))
     posts = relationship("BlogPost", back_populates="author")
     comments = relationship("Comment", back_populates="author")
     profile = relationship("Profile", back_populates="user")
@@ -506,10 +507,12 @@ def forgot_password(step, arg):
             "name": user.name,
             "email": user.email
         }
-        conf_code = r.randint(100000, 600000)
-        send_email.send_reset_conf(user_data, conf_code)
+        if not request.args.get("email_sent"):
+            conf_code = r.randint(100000, 600000)
+            user.verification_code = conf_code
+            db.session.commit()
+            send_email.send_reset_conf(user_data, conf_code)
         form = CodeConfirmation()
-        form.code.data = conf_code
         form.step.data = step
     else:
         form = EmailPassword()
@@ -521,10 +524,12 @@ def forgot_password(step, arg):
                 req_user = User.query.filter_by(email=user_email).first()
                 if req_user:
                     flash(f"A confirmation code was sent to email: {req_user.email}")
-                    return redirect(url_for("forgot_password", step="Code Confirmation", arg=req_user.email))
+                    return redirect(url_for("forgot_password",
+                                            step="Code Confirmation", arg=req_user.email, email_sent=False))
             elif request.form.get("step") == "Code Confirmation":
                 user_email = arg
-                code = request.form.get("code")
+                user = User.query.filter_by(email=user_email).first()
+                code = user.verification_code
                 sub_code = request.form.get("code_conf")
                 if code == sub_code:
                     return redirect(url_for("forgot_password", step="Password Reset", arg=user_email))
@@ -649,19 +654,21 @@ def settings(user_id):
     auth_user = User.query.get(user_id)
     form = ChangePassword()
     all_users = User.query.all()
-    if form.validate_on_submit():
-        user = User.query.get(current_user.id)
-        salted_password = generate_password_hash(form.new_password.data, method="pbkdf2:sha256", salt_length=8)
-        pass_check = check_password_hash(user.password, form.old_password.data)
-        if pass_check:
-            user.password = salted_password
-            db.session.commit()
-            flash("Password changed successfully.")
-            return redirect(url_for("settings", user_id=user.id))
-        else:
-            flash("Current password doesn't match.")
-            return redirect(url_for("settings", user_id=user.id))
-    if current_user.id == auth_user.id:
+    if request.method == "POST":
+        if form.validate_on_submit():
+            user = User.query.get(current_user.id)
+            salted_password = generate_password_hash(form.new_password.data, method="pbkdf2:sha256", salt_length=8)
+            pass_check = check_password_hash(user.password, form.old_password.data)
+            if pass_check:
+                user.password = salted_password
+                db.session.commit()
+                flash("Password changed successfully.", category="Success")
+                session["redirect_from"] = "Password Change"
+                return redirect(url_for("settings", user_id=user.id))
+            else:
+                flash("Current password doesn't match.", category="Incorrect")
+                return redirect(url_for("settings", user_id=user.id))
+    elif current_user.id == auth_user.id:
         return render_template("settings.html",
                                title=title,
                                user=auth_user,
@@ -712,31 +719,35 @@ def user_edit(user_id):
     form.name.data = user_to_edit.name
     form.email.data = user_to_edit.email
     form.account_type.data = user_to_edit.account_type
+    user_dict = {
+        "account_type": user_to_edit.account_type,
+        "email": user_to_edit.email,
+        "name": user_to_edit.name,
+        "password": user_to_edit.password
+    }
 
-    if form.validate_on_submit():
-        for field in request.form.items():
-            if field[0] == "csrf_token" or field[0] == "submit":
-                continue
-            else:
-                if field[1] != "":
-                    if user_to_edit.account_type and field[0]:
-                        user_to_edit.account_type = field[1]
-                    elif user_to_edit.name and field[0]:
-                        user_to_edit.name = field[1]
-                    elif user_to_edit.email and field[0]:
-                        user_to_edit.email = field[1]
-                    elif user_to_edit.password and field[0]:
-                        user_to_edit.password = generate_password_hash(field[1], "pbkdf2:sha256", 8)
-        db.session.commit()
-        return redirect(url_for("settings", user_id=admin.id))
-
-    return render_template("user-edit.html",
-                           current_user=admin,
-                           user=user_to_edit,
-                           year=year,
-                           title=title,
-                           form=form
-                           )
+    if request.method == "POST":
+        if form.validate_on_submit():
+            for field in request.form.items():
+                if field[0] == "csrf_token" or field[0] == "submit" or field[0] == "confirm":
+                    continue
+                else:
+                    if user_dict[field[0]] != field[1]:
+                        if field[0] == "password":
+                            user_dict[field[0]] = generate_password_hash(field[1], "pbkdf2:sha256", 8)
+                        else:
+                            user_dict[field[0]] = field[1]
+            db.session.commit()
+            session["redirect_from"] = "User-Edit"
+            return redirect(url_for("settings", user_id=admin.id))
+    else:
+        return render_template("user-edit.html",
+                               current_user=admin,
+                               user=user_to_edit,
+                               year=year,
+                               title=title,
+                               form=form
+                               )
 
 
 # Fresh Login Function

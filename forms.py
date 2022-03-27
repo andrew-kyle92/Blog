@@ -54,7 +54,6 @@ class EmailPassword(FlaskForm):
 
 class CodeConfirmation(FlaskForm):
     step = HiddenField("Code Confirmation", validators=[DataRequired()])
-    code = HiddenField("Code", validators=[DataRequired()])
     code_conf = StringField("Enter Confirmation Code", validators=[DataRequired()])
     submit = SubmitField("Confirm")
 

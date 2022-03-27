@@ -27,6 +27,9 @@
   <!-- Favicon for the app -->
   <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon" type="image/x-icon">
 
+  <!-- Font Awesome Kit -->
+  <script src="https://kit.fontawesome.com/aa2109974d.js" crossorigin="anonymous"></script>
+
 </head>
 
 <body>
@@ -68,7 +71,7 @@
             <div class="dropdown-content">
               <a href="{{ url_for('profile', _id=user.id) }}">Profile</a>
               <a href="{{ url_for('song_upload') }}">Upload Song</a>
-              <a href="{{ url_for('settings', user_id=current_user.id) }}">Settings</a>
+              <a href="{{ url_for('settings', user_id=current_user.id, args=None) }}">Settings</a>
             </div>
           </li>
           {% endif %}
