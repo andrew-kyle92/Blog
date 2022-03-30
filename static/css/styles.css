@@ -190,13 +190,16 @@ html {
 }
 
 td {
-    border: 1px solid black;
+    background-color: aliceblue;
+    border: 2px solid black;
     border-collapse: collapse;
     text-align: center;
 }
 
 th {
-    border-bottom: 2px solid black;
+    background-color: #0085A1;
+    border: 2px solid black;
+    color: aliceblue;
     text-align: center;
 }
 
@@ -437,6 +440,14 @@ table {
         margin: auto;
         width: 100%;
     }
+
+    #user-edit-form {
+        width: 100%;
+    }
+
+    .form-groups {
+        margin: auto auto 0.5rem;
+    }
 }
 
 @media only screen and (max-width: 700px) and (min-width: 605px){
@@ -499,6 +510,14 @@ table {
     .overview-content {
         margin: auto;
         width: 100%;
+    }
+
+    #user-edit-form {
+        width: 100%;
+    }
+
+    .form-groups {
+        margin: auto auto 0.5rem;
     }
 }
 
