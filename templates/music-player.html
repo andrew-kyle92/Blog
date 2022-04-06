@@ -9,6 +9,10 @@
 </head>
 <body id="main-player-content">
     <div id="main-frame" class="player-frame">
+        {% if widget == "False": %}
+         <a href="{{ url_for('get_all_posts') }}" style="color: black;">Go Back to Main</a>
+        {% endif %}
+        <br>
         <div id="artist-list">
             <button class="artist-btn">Artists <i class="fas fa-bars"></i></button>
             <div class="song-list">

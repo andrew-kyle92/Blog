@@ -20,8 +20,8 @@ for(let i = 0; i < songs.length; i++){
         "id": data.id,
         "Artist": data.artist,
         "Song": data.song_name,
-        "Album Art": data.artwork,
-        "Song File": data.song_file
+        "Album Art": "/" + data.artwork,
+        "Song File": "/" + data.song_file
     }
     songObjects.push(song);
 }
@@ -33,13 +33,13 @@ function setTrack(s, idx){
     currentTrack = new Audio(s[idx]["Song File"]);
     currentTrack.id = s[idx]["index"].toString();
     songPlaying = true;
-    s = parseInt(currentTrack.currentTime % 60);
-    m = parseInt((currentTrack.currentTime / 60) % 60);
-    if(s < 10){
-        duration.innerText = m + ":0" + s;
+    sec = parseInt(currentTrack.currentTime % 60);
+    min = parseInt((currentTrack.currentTime / 60) % 60);
+    if(sec < 10){
+        duration.innerText = min + ":0" + sec;
     }
     else{
-        duration.innerText = m + ":" + s;
+        duration.innerText = min + ":" + sec;
     }
     endDuration = document.getElementsByClassName("seconds-end")[0];
     songDurationM = parseInt((currentTrack.duration / 60) % 60);

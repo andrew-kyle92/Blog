@@ -61,7 +61,7 @@ class CodeConfirmation(FlaskForm):
 class ResetPassword(FlaskForm):
     step = HiddenField("Password Reset", validators=[DataRequired()])
     password = PasswordField("New Password", validators=[DataRequired(), EqualTo("confirm", "Passwords must match")])
-    confirm = PasswordField("confirm")
+    confirm = PasswordField("Confirm")
     submit = SubmitField("Submit")
 
 

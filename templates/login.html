@@ -22,10 +22,14 @@
     <div class="row">
 
       <div class="col-lg-8 col-md-10 mx-auto content">
-        {% with messages = get_flashed_messages() %}
+        {% with messages = get_flashed_messages(with_categories=True) %}
           {% if messages: %}
-            {% for message in messages: %}
-              <p style="color: red"><em>{{ message }}</em></p>
+            {% for category, message in messages: %}
+              {% if category == "reset_success": %}
+                <p style="color: #368dc7"><em>{{ message }}</em></p>
+              {% else: %}
+                <p style="color: red"><em>{{ message }}</em></p>
+              {% endif %}
             {% endfor %}
           {% endif %}
         {% endwith %}
@@ -33,7 +37,7 @@
         {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
 
         <div class="bottom-links">
-          <a class="under-form" href="{{ url_for('forgot_password', step='Email Confirmation', arg='none') }}">Forgot Password</a>
+          <a class="under-form" href="{{ url_for('forgot_password', step='Email Confirmation', user='none') }}">Forgot Password</a>
           <a class="under-form" href="{{ url_for('register') }}">Create an Account</a>
         </div>
       </div>
