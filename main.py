@@ -61,6 +61,9 @@ login_manager = LoginManager()
 login_manager.session_protection = "basic"
 login_manager.init_app(app)
 
+# #Session Key Add
+# session["incorrect_attempts"] = 0
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -242,7 +245,9 @@ def login():
         password = request.form.get("password")
         user = User.query.filter_by(email=email).first()
         if user is None:
-            flash(f"There is no user with email: {email}. Make sure there are no typos and try again")
+            flash(f"There is no user with email: {email}. Make sure there are no typos and try again",
+                  category="non_member"
+                  )
             return redirect(url_for("login"))
         else:
             if check_password_hash(user.password, password):
@@ -258,7 +263,7 @@ def login():
                 else:
                     return redirect(url_for(next_url))
             else:
-                flash("Your username or password is incorrect", category="Unsuccessful_Login")
+                flash("Your username or password are incorrect", category="unsuccessful_login")
                 return redirect(url_for("login"))
     return render_template("login.html", form=form, user=user, title=title, year=year)
 
@@ -495,23 +500,15 @@ def delete_post(post_id):
     return redirect(url_for('get_all_posts'))
 
 
-@app.route("/reset-password?<string:step>&<string:arg>", methods=["POST", "GET"])
-def forgot_password(step, arg):
+@app.route("/reset-password", methods=["POST", "GET"])
+def forgot_password():
     year = datetime.datetime.now().year
+    step = request.args.get("step")
+    user = request.args.get("user")
     if step == "Password Reset":
         form = ResetPassword()
         form.step.data = step
     elif step == "Code Confirmation":
-        user = User.query.filter_by(email=arg).first()
-        user_data = {
-            "name": user.name,
-            "email": user.email
-        }
-        if not request.args.get("email_sent"):
-            conf_code = r.randint(100000, 600000)
-            user.verification_code = conf_code
-            db.session.commit()
-            send_email.send_reset_conf(user_data, conf_code)
         form = CodeConfirmation()
         form.step.data = step
     else:
@@ -522,35 +519,45 @@ def forgot_password(step, arg):
             if request.form.get("step") == "Email Confirmation":
                 user_email = request.form.get("email")
                 req_user = User.query.filter_by(email=user_email).first()
+                user_data = {
+                    "name": req_user.name,
+                    "email": req_user.email
+                }
                 if req_user:
+                    conf_code = r.randint(100000, 600000)
+                    req_user.verification_code = conf_code
+                    db.session.commit()
+                    send_email.send_reset_conf(user_data, conf_code)
                     flash(f"A confirmation code was sent to email: {req_user.email}")
                     return redirect(url_for("forgot_password",
-                                            step="Code Confirmation", arg=req_user.email, email_sent=False))
+                                            step="Code Confirmation", user=req_user.email))
             elif request.form.get("step") == "Code Confirmation":
-                user_email = arg
+                user_email = user
                 user = User.query.filter_by(email=user_email).first()
                 code = user.verification_code
                 sub_code = request.form.get("code_conf")
                 if code == sub_code:
-                    return redirect(url_for("forgot_password", step="Password Reset", arg=user_email))
+                    return redirect(url_for("forgot_password", step="Password Reset", user=user_email))
             elif request.form.get("step") == "Password Reset":
                 salted_password = generate_password_hash(
                     password=request.form.get("password"),
                     method="pbkdf2:sha256",
                     salt_length=8
                 )
-                req_user = User.query.filter_by(email=arg).first()
+                req_user = User.query.filter_by(email=user).first()
                 req_user.password = salted_password
                 db.session.commit()
-                return redirect(url_for("login"))
+                flash("Your password was successfully reset", category="reset_success")
+                return redirect(url_for("login", reset_successful=True))
 
     return render_template("forgot.html", form=form, year=year)
 
 
 @app.route("/music-player", methods=["POST", "GET"])
 def music_player():
+    widget = request.args.get("widget")
     all_artists = Artist.query.all()
-    return render_template("music-player.html", artists=all_artists)
+    return render_template("music-player.html", artists=all_artists, widget=widget)
 
 
 @app.route("/song-upload", methods=["POST", "GET"])
