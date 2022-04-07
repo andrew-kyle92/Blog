@@ -26,9 +26,9 @@
           {% if messages: %}
             {% for category, message in messages: %}
               {% if category == "reset_success": %}
-                <p style="color: #368dc7"><em>{{ message }}</em></p>
+                <p style="color: #368dc7; text-align: center"><em>{{ message }}</em></p>
               {% else: %}
-                <p style="color: red"><em>{{ message }}</em></p>
+                <p style="color: red; text-align: center"><em>{{ message }}</em></p>
               {% endif %}
             {% endfor %}
           {% endif %}
