@@ -54,7 +54,7 @@ app.add_url_rule("/", endpoint="get_all_posts")
 app.add_url_rule("/new-post", endpoint="add_new_post")
 app.add_url_rule(rule="/edit-post", endpoint="edit_post")
 app.add_url_rule(rule="/delete", endpoint="delete_post")
-app.add_url_rule("/profile/<int:user_id>/settings", endpoint="settings")
+app.add_url_rule("/profile/settings", endpoint="settings")
 db = SQLAlchemy(app)
 
 # #USER LOGIN
@@ -652,11 +652,12 @@ def song_upload():
                            )
 
 
-@app.route("/profile/<int:user_id>/settings", methods=["POST", "GET"])
+@app.route("/profile/settings", methods=["POST", "GET"])
 @app.endpoint("settings")
 @login_required
 @fresh_login_required
-def settings(user_id):
+def settings():
+    user_id = request.args.get("user_id")
     title = "Settings | Andrew's Blog"
     year = datetime.datetime.now().year
     auth_user = User.query.get(user_id)
