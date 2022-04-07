@@ -1,9 +1,16 @@
 window.addEventListener("load", function(){
-
+    var url = new URL(document.URL);
+    var passChange = url.searchParams.get("pass_change_success");
     links = document.getElementById("sidebar");
     content = document.getElementsByClassName("cat-content")[0].children;
-    links.children[0].classList.toggle("cat-active");
-    content[0].style.display = "block";
+    if(url.toString().includes("pass_change_success")){
+        links.children[1].classList.toggle("cat-active");
+        content[1].style.display = "block";
+    }
+    else{
+        links.children[0].classList.toggle("cat-active");
+        content[0].style.display = "block";
+    }
     links.addEventListener("click", function(e){
         for(let i = 0; i < links.children.length; i++){
             if(e.target.dataset["content"] == links.children[i].dataset["content"]){
@@ -22,22 +29,4 @@ window.addEventListener("load", function(){
             }
         }
     });
-
-    // // Show/Hide password
-    // var allEyes = document.getElementsByClassName("show-pass");
-    // for(let i = 0; i < allEyes.length; i++){
-    //     let input = allEyes[i].previousElementSibling;
-    //     let eyeSlash = "fas fa-regular fa-eye-slash";
-    //     let openEye = "fas fa-regular fa-eye";
-    //     allEyes[i].addEventListener("click", function(){
-    //         if(allEyes[i].children[0].className == openEye){
-    //             allEyes[i].children[0].setAttribute("class", eyeSlash);
-    //             input.setAttribute("type", "text");
-    //         }
-    //         else{
-    //             allEyes[i].children[0].setAttribute("class", openEye);
-    //             input.setAttribute("type", "password");
-    //         }
-    //     });
-    // }
 });

@@ -38,11 +38,11 @@
           {% if messages: %}
             {% for category, message in messages: %}
               {% if category == "Success": %}
-                <p style="color: #368dc7"><em>{{ message }}</em></p>
+                <p style="color: #368dc7; text-align: center"><em>{{ message }}</em></p>
               {% elif category == "Incorrect": %}
-                <p style="color: red"><em>{{ message }}</em></p>
+                <p style="color: red; text-align: center"><em>{{ message }}</em></p>
               {% elif category == "error" %}
-                <p style="color: red"><em>{{ message }}</em></p>
+                <p style="color: red; text-align: center"><em>{{ message }}</em></p>
               {% endif %}
             {% endfor %}
           {% endif %}

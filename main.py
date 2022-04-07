@@ -670,11 +670,10 @@ def settings(user_id):
                 user.password = salted_password
                 db.session.commit()
                 flash("Password changed successfully.", category="Success")
-                session["redirect_from"] = "Password Change"
-                return redirect(url_for("settings", user_id=user.id))
+                return redirect(url_for("settings", user_id=user.id, pass_change_success=True))
             else:
                 flash("Current password doesn't match.", category="Incorrect")
-                return redirect(url_for("settings", user_id=user.id))
+                return redirect(url_for("settings", user_id=user.id, pass_change_success=False))
     elif current_user.id == auth_user.id:
         return render_template("settings.html",
                                title=title,
