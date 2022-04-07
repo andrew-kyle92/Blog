@@ -36,6 +36,7 @@ function edit() {
     }
 }
 
+// For Song Upload page
 window.addEventListener("load", () => {
     submitBtn = document.getElementById("submit");
     if(document.URL.includes("song-upload")){
