@@ -49,10 +49,11 @@ app.config['SQLALCHEMY_DATABASE_URI'] = config.get("DATABASE_URL", "postgresql:/
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['REMEMBER_COOKIE_DURATION'] = timedelta(seconds=3600)
 app.config["FORCE_HOST_FOR_REDIRECTS"] = None
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.add_url_rule("/", endpoint="get_all_posts")
 app.add_url_rule("/new-post", endpoint="add_new_post")
-app.add_url_rule(rule="/edit-post/<int:post_id>", endpoint="edit_post")
-app.add_url_rule(rule="/delete/<int:post_id>", endpoint="delete_post")
+app.add_url_rule(rule="/edit-post", endpoint="edit_post")
+app.add_url_rule(rule="/delete", endpoint="delete_post")
 app.add_url_rule("/profile/<int:user_id>/settings", endpoint="settings")
 db = SQLAlchemy(app)
 
@@ -160,7 +161,6 @@ def get_all_posts():
     year = datetime.datetime.now().year
     if current_user.is_authenticated:
         user = User.query.get(current_user.id)
-        # print(user.account_type)
     else:
         user = None
     posts = BlogPost.query.all()
@@ -335,8 +335,9 @@ def edit_profile(_id):
         return abort(401, response="aborts/forbidden.html")
 
 
-@app.route("/post/<int:post_id>", methods=["POST", "GET"])
-def show_post(post_id):
+@app.route("/post", methods=["POST", "GET"])
+def show_post():
+    post_id = request.args.get("post_id")
     user = current_user
     requested_post = BlogPost.query.get(post_id)
     title = f"{requested_post.title} | {requested_post.subtitle} | Andrew's Blog"
@@ -412,7 +413,6 @@ def contact():
 
 
 @app.route("/new-post", methods=["POST", "GET"])
-@app.endpoint("/new-post")
 @login_required
 @fresh_login_required
 def add_new_post():
@@ -446,11 +446,12 @@ def add_new_post():
         return abort(401, response="aborts/forbidden.html")
 
 
-@app.route("/edit-post/<int:post_id>", methods=["POST", "GET"])
+@app.route("/edit-post", methods=["POST", "GET"])
 @app.endpoint("edit_post")
 @login_required
 @fresh_login_required
-def edit_post(post_id):
+def edit_post():
+    post_id = request.args.get("post_id")
     user = current_user
     post = BlogPost.query.get(post_id)
     year = datetime.datetime.now().year
@@ -489,11 +490,11 @@ def edit_post(post_id):
         return abort(401, response="aborts/forbidden.html")
 
 
-@app.route("/delete/<int:post_id>")
-@app.endpoint("delete_post")
+@app.route("/delete", methods=["POST", "GET"])
 @login_required
 @fresh_login_required
-def delete_post(post_id):
+def delete_post():
+    post_id = request.args.get("post_id")
     post_to_delete = BlogPost.query.get(post_id)
     db.session.delete(post_to_delete)
     db.session.commit()
@@ -759,11 +760,16 @@ def user_edit(user_id):
 # Fresh Login Function
 @login_manager.needs_refresh_handler
 def refresh():
+    if request.args.get("user_id"):
+        user_id = request.args.get("user_id")
+    if request.args.get("post_id"):
+        post_id = request.args.get("post_id")
+
     flash("To protect your account, re-authentication is needed to access this page.")
     if request.endpoint == "edit_post" or request.endpoint == "delete_post":
-        return redirect(url_for("login", next=request.endpoint, post_id=request.url[-1]))
+        return redirect(url_for("login", next=request.endpoint, post_id=post_id))
     elif request.endpoint == "settings" or request.endpoint == "user_edit" or request.endpoint == "edit_settings":
-        return redirect(url_for("login", next=request.endpoint, user_id=request.url[-1]))
+        return redirect(url_for("login", next=request.endpoint, user_id=user_id))
     else:
         return redirect(url_for("login", next=request.endpoint))
 
