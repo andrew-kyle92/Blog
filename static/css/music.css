@@ -348,9 +348,13 @@
 
 /* Music Player Responsiveness */
 @media only screen and (max-width: 495px){
+    html {
+        height: 100%;
+    }
+
     #artist-list {
-        margin-top: -2rem;
-        width: 99%;
+        margin-top: 0rem;
+        width: 100%;
     }
 
     .artist-btn {
