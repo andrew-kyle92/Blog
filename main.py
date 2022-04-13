@@ -16,7 +16,7 @@ from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 
-from functions import create_folder_struct, add_music
+from functions import create_folder_struct, add_music, update_account
 from email_class import SendEmail
 from forms import (CreatePostForm, RegisterForm, LoginForm, CommentForm, ContactForm, EmailPassword, CodeConfirmation,
                    ResetPassword, ProfileContent, SongUpload, EditSettings, ChangePassword, EditUser)
@@ -184,8 +184,6 @@ def register():
             flash("You've already signed up with that email, log in instead!")
             return redirect(url_for("login"))
         else:
-            year = datetime.datetime.now().year
-            create_folder_struct(request.form.get("name"))
             salted_password = generate_password_hash(
                 password=request.form.get("password"),
                 method="pbkdf2:sha256",
@@ -209,11 +207,13 @@ def register():
             db.session.add(user_profile)
             db.session.commit()
 
+            create_folder_struct(user)
+
             login_user(new_user)
 
             return redirect(url_for("get_all_posts"))
 
-    return render_template("register.html", form=form, user=user, title=title)
+    return render_template("register.html", form=form, user=user, title=title, year=year)
 
 
 @app.route('/login', methods=["POST", "GET"])
@@ -728,10 +728,10 @@ def user_edit(user_id):
     form.email.data = user_to_edit.email
     form.account_type.data = user_to_edit.account_type
     user_dict = {
-        "account_type": user_to_edit.account_type,
-        "email": user_to_edit.email,
-        "name": user_to_edit.name,
-        "password": user_to_edit.password
+        "account_type": {"value": user_to_edit.account_type, "updated": False},
+        "email": {"value": user_to_edit.email, "updated": False},
+        "name": {"value": user_to_edit.name, "updated": False},
+        "password": {"value": user_to_edit.password, "updated": False}
     }
 
     if request.method == "POST":
@@ -740,14 +740,25 @@ def user_edit(user_id):
                 if field[0] == "csrf_token" or field[0] == "submit" or field[0] == "confirm":
                     continue
                 else:
-                    if user_dict[field[0]] != field[1]:
+                    if user_dict[field[0]]["value"] != field[1]:
                         if field[0] == "password":
-                            user_dict[field[0]] = generate_password_hash(field[1], "pbkdf2:sha256", 8)
+                            if field[1] == "":
+                                continue
+                            else:
+                                user_dict[field[0]]["value"] = generate_password_hash(field[1], "pbkdf2:sha256", 8)
+                                user_dict[field[0]]["updated"] = True
                         else:
-                            user_dict[field[0]] = field[1]
-            db.session.commit()
-            session["redirect_from"] = "User-Edit"
-            return redirect(url_for("settings", user_id=admin.id))
+                            user_dict[field[0]]["value"] = field[1]
+                            user_dict[field[0]]["updated"] = True
+            updated_data = update_account(user_to_edit, user_dict)
+            if len(updated_data) > 0:
+                flash(f"The following has been update for user id {user_to_edit.id}")
+                for field in updated_data:
+                    flash(f"• {field}")
+                db.session.commit()
+            else:
+                flash(f"Nothing was updated")
+            return redirect(url_for("settings", user_id=admin.id, user_updated=True))
     else:
         return render_template("user-edit.html",
                                current_user=admin,
