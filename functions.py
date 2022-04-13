@@ -62,17 +62,17 @@ def update_account(user_data, user_dict):
         if field == "account_type":
             if user_dict[field]["updated"]:
                 user_data.account_type = user_dict[field]["value"]
-                fields_updated.append(field)
+                fields_updated.append("Account Type")
         elif field == "email":
             if user_dict[field]["updated"]:
                 user_data.email = user_dict[field]["value"]
-                fields_updated.append(field)
+                fields_updated.append("Email")
         elif field == "name":
             if user_dict[field]["updated"]:
                 user_data.name = user_dict[field]["value"]
-                fields_updated.append(field)
+                fields_updated.append("Name")
         elif field == "password":
             if user_dict[field]["updated"]:
                 user_data.password = user_dict[field]["value"]
-                fields_updated.append(field)
+                fields_updated.append("Password")
     return fields_updated
