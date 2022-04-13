@@ -1,11 +1,16 @@
 window.addEventListener("load", function(){
     var url = new URL(document.URL);
     var passChange = url.searchParams.get("pass_change_success");
+    var userUpdated = url.searchParams.get("user_updated");
     links = document.getElementById("sidebar");
     content = document.getElementsByClassName("cat-content")[0].children;
     if(url.toString().includes("pass_change_success")){
         links.children[1].classList.toggle("cat-active");
         content[1].style.display = "block";
+    }
+    else if(url.toString().includes("user_updated")){
+        links.children[2].classList.toggle("cat-active");
+        content[2].style.display = "block";
     }
     else{
         links.children[0].classList.toggle("cat-active");

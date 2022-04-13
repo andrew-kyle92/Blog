@@ -73,8 +73,16 @@
     </div>
     {% if user.account_type == "Super-Admin" %}
     <div class="administration-content">
+      {% with messages = get_flashed_messages() %}
+          {% if messages: %}
+            {% for message in messages: %}
+              <p style="color: #368dc7; text-align: center; margin: 0rem auto;"><em>{{ message }}</em></p>
+            {% endfor %}
+          {% endif %}
+      {% endwith %}
       <table>
         <tr>
+          <th>Id</th>
           <th>User</th>
           <th>Email</th>
           <th>Account Type</th>
@@ -82,6 +90,7 @@
         </tr>
         {% for user in users %}
         <tr>
+          <td>{{ user.id }}</td>
           <td><a class="user-link" href="{{ url_for('user_edit', user_id=user.id) }}">{{ user.name }}</a></td>
           <td>{{ user.email }}</td>
           <td>{{ user.account_type }}</td>
