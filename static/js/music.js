@@ -12,6 +12,7 @@ var songImg = document.getElementsByClassName("song-img")[0];
 var songObjects = [];
 var songPlaying = false;
 
+// ################## Gathering all tracks and creating objects ##################
 for(let i = 0; i < songs.length; i++){
     let json = songs[i].dataset.song;
     data = JSON.parse(json);
@@ -25,6 +26,8 @@ for(let i = 0; i < songs.length; i++){
     }
     songObjects.push(song);
 }
+
+// ################## Main functions ##################
 
 function setTrack(s, idx){
     songImg.setAttribute("src", s[idx]["Album Art"]);
@@ -221,7 +224,7 @@ function volumeDown(){
     }
 };
 
-// Artist List Functions
+// ################## Artist List Functions ##################
 var artistBtn = document.getElementsByClassName("artist-btn")
 var artistTabs = document.getElementsByClassName("artist-tab");
 var albumTabs = document.getElementsByClassName("album-tab");
@@ -266,3 +269,16 @@ for(let i = 0; i < albumTabs.length; i++){
         }
     });
 }
+
+// ################## Keypress functionality ##################
+document.addEventListener("keypress", function(e){
+    if(e.code == "KeyB"){
+        backBtn.click();
+    }
+    else if(e.code == "KeyN"){
+        forwardBtn.click();
+    }
+    else if(e.code == "Space"){
+        playPauseBtn.click();
+    }
+});
