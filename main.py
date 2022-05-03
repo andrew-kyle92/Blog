@@ -306,9 +306,9 @@ def edit_profile(_id):
     year = datetime.datetime.now().year
     form = ProfileContent()
     if form.validate_on_submit():
-        pic_dir = f"/static/uploads/users/{user_data.name.replace(' ', '_').lower()}/data/profile-picture"
+        pic_dir = f"/static/uploads/users/{user_data.id}-{user_data.name.replace(' ', '_').lower()}/data/profile-picture"
         root_path = "./static/uploads/users"
-        user_path = f"{user_data.name.replace(' ', '_').lower()}/data/profile-picture"
+        user_path = f"{user_data.id}-{user_data.name.replace(' ', '_').lower()}/data/profile-picture"
         new_picture = form.profile_picture.data
         filename = new_picture.filename
         user_profile = Profile.query.get(_id)
@@ -578,7 +578,7 @@ def song_upload():
                 "song": form.song.data
             }
             add_song = add_music(user, form_data)
-            root_path = f"static/uploads/users/{user.name.replace(' ', '_').lower()}/data/music"
+            root_path = f"static/uploads/users/{user.id}-{user.name.replace(' ', '_').lower()}/data/music"
             artist_dir = f"{root_path}/{form_data['artist'].replace(' ', '_')}"
             album_dir = f"{artist_dir}/{form_data['album'].replace(' ', '_')}"
             album_art_filename = secure_filename(form_data["album_art"].filename)
