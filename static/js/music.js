@@ -3,7 +3,9 @@ const backBtn = document.getElementById("back-btn");
 const forwardBtn = document.getElementById("forward-btn");
 const volumeUpBtn = document.getElementsByClassName("fa-volume-up");
 const volumeDownBtn = document.getElementsByClassName("fa-volume-off");
-var currentTrackInfo = document.getElementsByClassName("track-info")[0];
+var songInfo = document.getElementsByClassName("track-info song")[0];
+var artistInfo = document.getElementsByClassName("track-info artist")[0];
+var albumInfo = document.getElementsByClassName("track-info album")[0];
 var progressBar = document.getElementsByClassName("seek_slider")[0];
 var volumeBar = document.getElementsByClassName("volume_slider")[0];
 var songItem = document.getElementsByClassName("song-item");
@@ -19,6 +21,7 @@ for(let i = 0; i < songs.length; i++){
     song = {
         "index": i,
         "id": data.id,
+        "Album": data.album,
         "Artist": data.artist,
         "Song": data.song_name,
         "Album Art": "/" + data.artwork,
@@ -32,7 +35,9 @@ for(let i = 0; i < songs.length; i++){
 function setTrack(s, idx){
     songImg.setAttribute("src", s[idx]["Album Art"]);
     duration = document.getElementsByClassName("seconds-start")[0];
-    currentTrackInfo.innerText = s[idx]["Artist"] + " - " + s[idx]["Song"];
+    songInfo.innerText = s[idx]["Song"];
+    artistInfo.innerText = s[idx]["Artist"];
+    albumInfo.innerText = s[idx]["Album"];
     currentTrack = new Audio(s[idx]["Song File"]);
     currentTrack.id = s[idx]["index"].toString();
     songPlaying = true;

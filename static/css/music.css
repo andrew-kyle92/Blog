@@ -48,6 +48,14 @@
     width: fit-content;
 }
 
+.artist {
+    color: #cfcfcf;
+}
+
+.album {
+    color: #b3b1b1;
+}
+
 .fa-step-backward, .fa-step-forward, .fa-play-circle, .fa-pause-circle{
     font-size: 70px!important;
     width: 12rem;

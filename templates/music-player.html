@@ -17,17 +17,18 @@
         <div id="artist-list">
             <button class="artist-btn">Artists <i class="fas fa-bars"></i></button>
             <div class="song-list">
-                {% for artist in artists %}
+                {% for artist in artists | sort(attribute="artist") %}
                 <div id="{{ loop.index0 }}" class="artist-index">
                         <button class="artist-tab"><i class="fas fa-chevron-up"></i> <span class="artist-text">{{ artist.artist }}</span></button>
                             <div class="artist-content">
-                                {% for album in artist.albums %}
+                                {% for album in artist.albums | sort(attribute="album") %}
                                 <button data-artist-id="{{ artist.id }}" class="album-tab"><i class="fas fa-chevron-up"></i> <span class="album-text">{{ album.album }}</span></button>
                                     <div class="song-tab">
-                                        {% for song in album.songs %}
+                                        {% for song in album.songs | sort(attribute="song_name") %}
                                         <p class="lower-level-tab" data-song='
                                             {
                                                 "id": "{{ song.id }}",
+                                                "album": "{{ album.album }}",
                                                 "artist": "{{ artist.artist }}",
                                                 "song_name": "{{ song.song_name }}",
                                                 "artwork": "{{ song.album_art }}",
@@ -49,7 +50,9 @@
             <div class="song-content">
 
                 <div id="currentTrackContent">
-                    <h2 class="track-info"></h2>
+                    <h2 class="track-info song"></h2>
+                    <h3 class="track-info artist"></h3>
+                    <h3 class="track-info album"></h3>
                 </div>
 
                 <div class="song-progress">
