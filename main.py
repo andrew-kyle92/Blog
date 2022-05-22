@@ -17,6 +17,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 
 from functions import create_folder_struct, add_music, update_account
+from sql_queries import get_user_songs, delete_song
 from email_class import SendEmail
 from forms import (CreatePostForm, RegisterForm, LoginForm, CommentForm, ContactForm, EmailPassword, CodeConfirmation,
                    ResetPassword, ProfileContent, SongUpload, EditSettings, ChangePassword, EditUser)
@@ -652,6 +653,22 @@ def song_upload():
                            )
 
 
+@app.route("/remove-song", methods=["POST", "GET"])
+@login_required
+def remove_song():
+    if int(request.args.get("id")) == current_user.id:
+        deleted_song = delete_song(request.args.get("id"), request.args.get("song_id"))
+        if not deleted_song[0]:
+            flash(f"There was an error deleting song: {deleted_song[1]}", category="Deletion_Error")
+            return redirect(url_for("settings", user_id=request.args.get("id")))
+        else:
+            flash(f"Track: {deleted_song[1]} was deleted", category="Deletion_Success")
+            return redirect(url_for("settings", user_id=request.args.get("id")))
+    else:
+        flash("User ID doesn't match the current user's account ID.", category="Invalid")
+        return redirect(url_for("settings", user_id=request.args.get("id")))
+
+
 @app.route("/profile/settings", methods=["POST", "GET"])
 @app.endpoint("settings")
 @login_required
@@ -663,6 +680,13 @@ def settings():
     auth_user = User.query.get(user_id)
     form = ChangePassword()
     all_users = User.query.all()
+    song_query = get_user_songs(auth_user.id)
+    if song_query is not False:
+        user_songs = {song[0]: {"Artist": song[1], "Album": song[2], "Song": song[3], "Song File": song[4]}
+                      for song in song_query}
+    else:
+        user_songs = None
+
     if request.method == "POST":
         if form.validate_on_submit():
             user = User.query.get(current_user.id)
@@ -680,6 +704,7 @@ def settings():
         return render_template("settings.html",
                                title=title,
                                user=auth_user,
+                               user_songs=user_songs,
                                is_authenticated=current_user,
                                form=form,
                                year=year,

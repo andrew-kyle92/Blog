@@ -76,3 +76,25 @@ def update_account(user_data, user_dict):
                 user_data.password = user_dict[field]["value"]
                 fields_updated.append("Password")
     return fields_updated
+
+
+def check_music_dir(user_data, song_data):
+    """ Checks an album after a song has been deleted.
+     Will delete the album directory if there are no more songs.
+     Then, delete the artist directory if there are no more albums. """
+
+    user_path = f"static/uploads/users/{user_data['id']}-{user_data['name'].lower().replace(' ', '_')}"
+    music_path = f"{user_path}/data/music"
+    artist_dir = f"{song_data['artist'].lower().replace(' ', '_')}"
+    album_dir = f"{song_data['album'].lower().replace(' ', '_')}"
+    user = user_data
+    song_path = song_data["song_file"]
+
+    # Deleting the song file at its path
+    os.remove(song_path)
+
+    # checking if the song was deleted or not
+    if os.path.isfile(song_path):
+        return False
+    else:
+        return True, song_data["song_name"]
