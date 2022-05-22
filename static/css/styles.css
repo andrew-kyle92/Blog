@@ -143,8 +143,9 @@ html {
 
 .overview-content {
     display: none;
-    margin: auto 0rem auto auto;
+    margin: auto;
     width: 90%;
+    text-align: center;
 }
 
 .overview-content p {
