@@ -1,4 +1,5 @@
 import os
+import shutil
 
 ALLOWED_EXTENSIONS = {"jpg", "png"}
 
@@ -85,8 +86,8 @@ def check_music_dir(user_data, song_data):
 
     user_path = f"static/uploads/users/{user_data['id']}-{user_data['name'].lower().replace(' ', '_')}"
     music_path = f"{user_path}/data/music"
-    artist_dir = f"{song_data['artist'].lower().replace(' ', '_')}"
-    album_dir = f"{song_data['album'].lower().replace(' ', '_')}"
+    artist_dir = f"{music_path}/{song_data['artist'].lower().replace(' ', '_')}"
+    album_dir = f"{artist_dir}/{song_data['album'].lower().replace(' ', '_')}"
     user = user_data
     song_path = song_data["song_file"]
 
@@ -97,4 +98,10 @@ def check_music_dir(user_data, song_data):
     if os.path.isfile(song_path):
         return False
     else:
-        return True, song_data["song_name"]
+        # checking if there are any more songs in the album directory
+        album_files = os.listdir(f"{album_dir}")
+        if len(album_files) > 1:
+            return True, song_data["song_name"], 0
+        else:
+            shutil.rmtree(album_dir, ignore_errors=False)
+            return True, song_data["song_name"], 1

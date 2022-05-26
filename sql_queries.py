@@ -59,6 +59,7 @@ def delete_song(user_id, song_id):
                     SELECT 
                         s.id id,
                         art.artist,
+                        alb.id as album_id,
                         alb.album,
                         s.song_name,
                         s.song_file
@@ -95,7 +96,19 @@ def delete_song(user_id, song_id):
                 """
                 cur.execute(delete_query)
 
-        return check_music_dir(user_data, song_data)
+        check_dir = check_music_dir(user_data, song_data)
+
+        if check_dir[2] == 1:
+            with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+                with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+                    album_dir_delete_query = f"""
+                        DELETE FROM
+                            albums
+                        WHERE albums.id = {song_data["album_id"]}
+                    """
+                    cur.execute(album_dir_delete_query)
+
+        return check_dir
 
     except psycopg2.Error as error:
         print(f"An error occurred:\n{error}")
