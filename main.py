@@ -5,7 +5,7 @@ from datetime import date, timedelta
 import random as r
 
 from dotenv import dotenv_values
-from flask import Flask, render_template, redirect, url_for, flash, request, abort, session
+from flask import Flask, render_template, redirect, url_for, flash, request, abort
 from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
 from flask_gravatar import Gravatar

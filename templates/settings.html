@@ -52,7 +52,6 @@
       <p><span class="label-text">Song Count:</span> {{ user_songs | length }}</p>
       <table>
             <tr>
-              <th>Id</th>
               <th>Artist</th>
               <th>Album</th>
               <th>Song</th>
@@ -61,7 +60,6 @@
       {% if user_songs %}
         {% for song in user_songs.keys() | sort(attribute="Album") %}
             <tr>
-              <td>{{ song }}</td>
               <td>{{ user_songs[song]["Artist"] }}</td>
               <td>{{ user_songs[song]["Album"] }}</td>
               <td>{{ user_songs[song]["Song"] }}</td>
@@ -119,13 +117,15 @@
       {% endwith %}
       <table>
         <tr>
+          <th>Id</th>
           <th>User</th>
           <th>Email</th>
           <th>Account Type</th>
           <th>Creation Date</th>
         </tr>
-        {% for user in users | sort(attribute=f"{user.name}") %}
+        {% for user in users | sort(attribute=user.name) %}
         <tr>
+          <td>{{ user.id }}</td>
           <td><a class="user-link" href="{{ url_for('user_edit', user_id=user.id) }}">{{ user.name }}</a></td>
           <td>{{ user.email }}</td>
           <td>{{ user.account_type }}</td>
