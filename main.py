@@ -3,6 +3,7 @@ import os
 import time as t
 from datetime import date, timedelta
 import random as r
+import secrets
 
 from dotenv import dotenv_values
 from flask import Flask, render_template, redirect, url_for, flash, request, abort
@@ -45,8 +46,8 @@ gravatar = Gravatar(app,
                     base_url=None)
 
 # #CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = config.get("DATABASE_URL", "postgresql:///blog.db")
-# app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql:///blogdb"  # This is for testing
+# app.config['SQLALCHEMY_DATABASE_URI'] = config.get("DATABASE_URL", "postgresql:///blog.db")
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql:///blogdb"  # This is for testing
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['REMEMBER_COOKIE_DURATION'] = timedelta(seconds=3600)
 app.config["FORCE_HOST_FOR_REDIRECTS"] = None
@@ -130,6 +131,7 @@ class Album(db.Model):
 class Song(db.Model):
     __tablename__ = "songs"
     id = db.Column(db.Integer, primary_key=True)
+    ref_id = db.Column(db.String(255), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     user = relationship("User", back_populates="songs")
     artist_id = db.Column(db.Integer, db.ForeignKey("artists.id"))
@@ -613,7 +615,8 @@ def song_upload():
                                 album=album_obj,
                                 album_art=f"{album_dir}/{album_art}",
                                 song_file=f"{album_dir}/{song}",
-                                song_name=song_name
+                                song_name=song_name,
+                                ref_id=secrets.token_hex(12)
                             )
                             db.session.add(new_song)
                             db.session.commit()
@@ -625,7 +628,8 @@ def song_upload():
                             album=Album(artist=artist_obj, album=form_data["album"]),
                             album_art=f"{album_dir}/{album_art}",
                             song_file=f"{album_dir}/{song}",
-                            song_name=song_name
+                            song_name=song_name,
+                            ref_id=secrets.token_hex(12)
                         )
                         db.session.add(new_song)
                         db.session.commit()
@@ -637,7 +641,8 @@ def song_upload():
                         album=Album(artist=artist_obj, album=form_data["album"]),
                         album_art=f"{album_dir}/{album_art}",
                         song_file=f"{album_dir}/{song}",
-                        song_name=song_name
+                        song_name=song_name,
+                        ref_id=secrets.token_hex(12)
                     )
                     db.session.add(new_song)
                     db.session.commit()
