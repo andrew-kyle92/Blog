@@ -21,6 +21,7 @@ for(let i = 0; i < songs.length; i++){
     song = {
         "index": i,
         "id": data.id,
+        "ref_id": data.ref_id,
         "Album": data.album,
         "Artist": data.artist,
         "Song": data.song_name,
@@ -40,6 +41,7 @@ function setTrack(s, idx){
     albumInfo.innerText = s[idx]["Album"];
     currentTrack = new Audio(s[idx]["Song File"]);
     currentTrack.id = s[idx]["index"].toString();
+    setTrackUrl(s[idx]["Song"], s[idx]["ref_id"]);
     songPlaying = true;
     sec = parseInt(currentTrack.currentTime % 60);
     min = parseInt((currentTrack.currentTime / 60) % 60);
@@ -71,7 +73,24 @@ function setTrack(s, idx){
     return currentTrack
 }
 
-var currentTrack = setTrack(songObjects, songObjects[0]["index"]);
+function setTrackUrl(trackName, songId){
+    const state = { "widget": "False", "track_id": songId };
+    const url = "music-player?widget=False&track_id=" + songId;
+    window.history.pushState(state, "", url);
+}
+var currentTrack = null;
+var queryString = document.location.search;
+var urlParams = new URLSearchParams(queryString);
+if(!urlParams.get("track_id")){
+    currentTrack = setTrack(songObjects, songObjects[0]["index"]);
+}
+else{
+    for(let i = 0; i < songObjects.length; i++){
+        if(songObjects[i]["ref_id"] == urlParams.get("track_id")){
+            currentTrack = setTrack(songObjects, songObjects[i]["index"]);
+        }
+    }
+}
 
 playPauseBtn.addEventListener("click", function(){
     if(playPauseBtn.className == "fas fa-play-circle"){
