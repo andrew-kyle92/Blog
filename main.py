@@ -46,8 +46,8 @@ gravatar = Gravatar(app,
                     base_url=None)
 
 # #CONNECT TO DB
-# app.config['SQLALCHEMY_DATABASE_URI'] = config.get("DATABASE_URL", "postgresql:///blog.db")
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql:///blogdb"  # This is for testing
+app.config['SQLALCHEMY_DATABASE_URI'] = config.get("DATABASE_URL", "postgresql:///blog.db")
+# app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql:///blogdb"  # This is for testing
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['REMEMBER_COOKIE_DURATION'] = timedelta(seconds=3600)
 app.config["FORCE_HOST_FOR_REDIRECTS"] = None
