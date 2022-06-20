@@ -141,6 +141,7 @@ class Song(db.Model):
     album_art = db.Column(db.String(255), nullable=True)
     song_file = db.Column(db.String(255), nullable=True)
     song_name = db.Column(db.String(255), nullable=True)
+    track_number = db.Column(db.Integer, nullable=True)
 
 
 class Comment(db.Model):
@@ -578,7 +579,8 @@ def song_upload():
                 "artist": form.artist.data,
                 "album": form.album.data,
                 "album_art": form.album_art.data,
-                "song": form.song.data
+                "song": form.song.data,
+                "track_number": form.track_number.data
             }
             add_song = add_music(user, form_data)
             root_path = f"static/uploads/users/{user.id}-{user.name.replace(' ', '_').lower()}/data/music"
@@ -616,7 +618,8 @@ def song_upload():
                                 album_art=f"{album_dir}/{album_art}",
                                 song_file=f"{album_dir}/{song}",
                                 song_name=song_name,
-                                ref_id=secrets.token_hex(12)
+                                ref_id=secrets.token_hex(12),
+                                track_number=form_data["track_number"]
                             )
                             db.session.add(new_song)
                             db.session.commit()
@@ -629,7 +632,8 @@ def song_upload():
                             album_art=f"{album_dir}/{album_art}",
                             song_file=f"{album_dir}/{song}",
                             song_name=song_name,
-                            ref_id=secrets.token_hex(12)
+                            ref_id=secrets.token_hex(12),
+                            track_number=form_data["track_number"]
                         )
                         db.session.add(new_song)
                         db.session.commit()
@@ -642,7 +646,8 @@ def song_upload():
                         album_art=f"{album_dir}/{album_art}",
                         song_file=f"{album_dir}/{song}",
                         song_name=song_name,
-                        ref_id=secrets.token_hex(12)
+                        ref_id=secrets.token_hex(12),
+                        track_number=form_data["track_number"]
                     )
                     db.session.add(new_song)
                     db.session.commit()

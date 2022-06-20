@@ -24,7 +24,7 @@
                                 {% for album in artist.albums | sort(attribute="album") %}
                                 <button data-artist-id="{{ artist.id }}" class="album-tab"><i class="fas fa-chevron-up"></i> <span class="album-text">{{ album.album }}</span></button>
                                     <div class="song-tab">
-                                        {% for song in album.songs | sort(attribute="song_name") %}
+                                        {% for song in album.songs | sort(attribute="track_number") %}
                                         <p class="lower-level-tab" data-song='
                                             {
                                                 "id": "{{ song.id }}",

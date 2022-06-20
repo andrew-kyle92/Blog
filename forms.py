@@ -77,6 +77,8 @@ class SongUpload(FlaskForm):
     album_art = FileField("Album Art", validators=[FileAllowed(["jpg", "png"], "Images only!")])
     song = FileField("Song", validators=[FileAllowed(["wav", "mp3", "m4a"],
                                                      "Only .wav, .mp3, and .m4a files are accepted")])
+    track_number = SelectField("Track Number", choices=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+                                                    11, 12, 13, 14, 15, 16, 17, 18, 19, 20])
     submit = SubmitField("Submit")
 
 
