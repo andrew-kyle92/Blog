@@ -104,3 +104,12 @@ class EditUser(FlaskForm):
     password = PasswordField("New Password", validators=[EqualTo("confirm", "Passwords must match")])
     confirm = PasswordField("Confirm")
     submit = SubmitField("Save Edits")
+
+
+class TabUpload(FlaskForm):
+    artist = StringField("Artist", validators=[DataRequired()])
+    album = StringField("Album", validators=[DataRequired()])
+    song_name = StringField("Song Name", validators=[DataRequired()])
+    song_file = FileField("Song File", validators=[DataRequired(), FileAllowed(["gp3", "gp4", "gp5", "gpx", "gp"],
+                                                     "Only guitar-pro files are allowed")])
+    submit = SubmitField("Upload")

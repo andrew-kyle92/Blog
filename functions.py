@@ -105,3 +105,25 @@ def check_music_dir(user_data, song_data):
         else:
             shutil.rmtree(album_dir, ignore_errors=False)
             return True, song_data["song_name"], 1
+
+
+def upload_tab_file(data):
+    tab_root = "static/uploads/tab-files"
+    artist_path = f"{data['artist']}"
+    album_path = f"{data['album']}"
+    file_path = f"{data['tab_file']}"
+    full_path = f"/{tab_root}/{artist_path}/{album_path}/{file_path}"
+
+    if os.path.exists(f"{tab_root}/{artist_path}"):
+        if os.path.exists(f"{tab_root}/{artist_path}/{album_path}"):
+            if os.path.exists(f"{tab_root}/{artist_path}/{album_path}/{file_path}"):
+                return False
+            else:
+                return True, full_path
+        else:
+            os.mkdir(os.path.join(f"{tab_root}/{artist_path}/{album_path}"))
+            return True, full_path
+    else:
+        os.mkdir(f"{tab_root}/{artist_path}")
+        os.mkdir(f"{tab_root}/{artist_path}/{album_path}")
+        return True, full_path

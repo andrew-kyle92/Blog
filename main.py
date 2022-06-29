@@ -18,13 +18,13 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 
 from functions import create_folder_struct, add_music, update_account
-from sql_queries import get_user_songs, delete_song
+from sql_queries import get_user_songs, delete_song, get_all_tabs, upload_tab
 from email_class import SendEmail
 from forms import (CreatePostForm, RegisterForm, LoginForm, CommentForm, ContactForm, EmailPassword, CodeConfirmation,
-                   ResetPassword, ProfileContent, SongUpload, EditSettings, ChangePassword, EditUser)
+                   ResetPassword, ProfileContent, SongUpload, EditSettings, ChangePassword, EditUser, TabUpload)
 
-UPLOAD_FOLDER = "static/uploads/users"
-ALLOWED_EXTENSIONS = {"jpg", "png"}
+UPLOAD_FOLDER = "static/uploads"
+ALLOWED_EXTENSIONS = {"jpg", "png", "gp3", "gp4", "gp5", "gpx", "gp"}
 app = Flask(__name__)
 config = dotenv_values(".env")
 app.config['SECRET_KEY'] = config.get("SECRET_KEY")
@@ -802,6 +802,47 @@ def user_edit(user_id):
                                title=title,
                                form=form
                                )
+
+
+@app.route("/guitar-tabs", methods=["POST", "GET"])
+@login_required
+def guitar_tabs():
+    title = "Guitar Tabs | Andrew's Guitar Tabs"
+    all_tabs = get_all_tabs()
+    return render_template("guitar-tabs.html", title=title, all_tabs=all_tabs)
+
+
+@app.route("/guitar-tabs/Guitar-Tab", methods=["POST", "GET"])
+@login_required
+def tab():
+    title = f"{request.args.get('song_name')} | Andrew's Guitar Tabs"
+    return render_template("song-tab.html", title=title)
+
+
+@app.route("/guitar-tabs/tab-upload", methods=["POST", "GET"])
+@login_required
+def tab_upload():
+    title = "Tab Upload | Andrew's Guitar Tabs"
+    form = TabUpload()
+    if form.validate_on_submit():
+        form_data = {
+            'artist': form.artist.data,
+            'album': form.album.data,
+            'tab_name': form.song_name.data,
+            'tab_file': form.song_file.data.filename
+        }
+        tab_filename = form.song_file.data
+        can_upload = upload_tab(form_data)
+        if can_upload:
+            file_dir = f"static/uploads/tab-files/{form_data['artist']}/{form_data['album']}"
+            tab_file = secure_filename(tab_filename.filename)
+            tab_filename.save(os.path.join(file_dir, tab_file))
+            return redirect(url_for("guitar_tabs"))
+        else:
+            flash("Unable to upload tab, please try again or contact an admin")
+            return redirect(url_for("tab_upload"))
+    else:
+        return render_template("tab-upload.html", title=title, form=form)
 
 
 # Fresh Login Function

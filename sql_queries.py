@@ -1,7 +1,7 @@
 import psycopg2
 import psycopg2.extras
 from dotenv import dotenv_values
-from functions import check_music_dir
+from functions import check_music_dir, upload_tab_file
 import os
 
 config = dotenv_values(".env")
@@ -112,3 +112,41 @@ def delete_song(user_id, song_id):
 
     except psycopg2.Error as error:
         print(f"An error occurred:\n{error}")
+
+
+def get_all_tabs():
+    """
+        Queries the song_tabs table and pulls all the data and stores it into a dictionary
+    """
+    with psycopg2.connect(dbname="blogdb", user="postgres", password=config.get("TEST_DB_PASSWORD")) as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            tab_query = f"""
+                SELECT * FROM song_tabs
+            """
+            cur.execute(tab_query)
+            all_tabs = cur.fetchall()
+
+    tab_dict = {}
+    for tab in all_tabs:
+        current_artist = tab['artist']
+        tab_dict[tab['artist']] = {'songs': [[tab['tab_name'], tab['tab_file']] for tab in all_tabs
+                                             if tab['artist'] == current_artist]}
+    return tab_dict
+
+
+def upload_tab(form_data):
+    can_upload = upload_tab_file(form_data)
+    song_path = f"static/uploads/tab-files"
+    if can_upload[0]:
+        with psycopg2.connect(dbname="blogdb", user="postgres", password=config.get("TEST_DB_PASSWORD")) as conn:
+            with conn.cursor() as cur:
+                upload_query = f"""
+                    INSERT INTO song_tabs
+                        (artist, tab_name, tab_file)
+                    VALUES
+                        ('{form_data['artist']}', '{form_data['tab_name']}', '{can_upload[1]}');
+                """
+                cur.execute(upload_query)
+                return True
+    else:
+        return False

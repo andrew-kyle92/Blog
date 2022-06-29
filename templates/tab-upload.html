@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+{% import "bootstrap/wtf.html" as wtf %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, width=device-width">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/guitar-tabs.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/guitar.ico') }}" type="image/x-icon">
+    <script src="https://kit.fontawesome.com/aa2109974d.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="page-top">
+        <div class="left-top">
+            <a class="blog-home-btn" href="{{ url_for('guitar_tabs') }}">Tabs Home</a>
+        </div>
+        <div class="middle-top">
+            <p>Guitar Tabs</p>
+        </div>
+        <div class="right-top">
+            <a class="tab-upload" href="{{ url_for('tab_upload') }}">Upload a tab</a>
+        </div>
+    </div>
+
+    <hr>
+    {% with messages = get_flashed_messages() %}
+    {% if messages: %}
+    {% for message in messages: %}
+    <p style="color: #ba2b2b; font-size: 25px; font-family: sans-serif;">{{ message }}</p>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('tab_upload') }}" method="POST" enctype="multipart/form-data" novalidate>
+
+        {{ form.csrf_token }}
+
+        <div class="form-group">
+            <label class="form-label" for="{{ form.artist.name }}">{{ form.artist.label.text }}</label>
+            <br>
+            <input class="form-input" name="{{ form.artist.name }}" type="text">
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="{{ form.album.name }}">{{ form.album.label.text }}</label>
+            <br>
+            <input class="form-input" name="{{ form.album.name }}" type="text">
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="{{ form.song_name.name }}">{{ form.song_name.label.text }}</label>
+            <br>
+            <input class="form-input" name="{{ form.song_name.name }}" type="text">
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="{{ form.song_file.name}}">{{ form.song_file.label.text }}</label>
+            <br>
+            <input class="form-input" name="{{ form.song_file.name }}" type="file">
+        </div>
+        <input class="submit-btn" type="submit" name="{{ form.submit.name }}" value="{{ form.submit.label.text }}">
+    </form>
+
+</body>
+</html>

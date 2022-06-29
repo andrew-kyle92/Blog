@@ -1,0 +1,22 @@
+{
+  "name": "static",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andrew-kyle92/Blog.git"
+  },
+  "author": "Andrew Kyle",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andrew-kyle92/Blog/issues"
+  },
+  "homepage": "https://github.com/andrew-kyle92/Blog#readme",
+  "dependencies": {
+    "@coderline/alphatab": "^1.2.2"
+  }
+}
