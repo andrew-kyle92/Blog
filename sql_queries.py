@@ -118,7 +118,7 @@ def get_all_tabs():
     """
         Queries the song_tabs table and pulls all the data and stores it into a dictionary
     """
-    with psycopg2.connect(dbname="blogdb", user="postgres", password=config.get("TEST_DB_PASSWORD")) as conn:
+    with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             tab_query = f"""
                 SELECT * FROM song_tabs
