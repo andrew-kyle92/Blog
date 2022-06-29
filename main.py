@@ -46,8 +46,8 @@ gravatar = Gravatar(app,
                     base_url=None)
 
 # #CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = config.get("DATABASE_URL", "postgresql:///blog.db")
-# app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql:///blogdb"  # This is for testing
+# app.config['SQLALCHEMY_DATABASE_URI'] = config.get("DATABASE_URL", "postgresql:///blog.db")
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql:///blogdb"  # This is for testing
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['REMEMBER_COOKIE_DURATION'] = timedelta(seconds=3600)
 app.config["FORCE_HOST_FOR_REDIRECTS"] = None
@@ -837,6 +837,7 @@ def tab_upload():
             file_dir = f"static/uploads/tab-files/{form_data['artist']}/{form_data['album']}"
             tab_file = secure_filename(tab_filename.filename)
             tab_filename.save(os.path.join(file_dir, tab_file))
+            os.rename(f"{file_dir}/{form_data['tab_file'].replace(' ', '_')}", f"{file_dir}/{form_data['tab_file']}")
             return redirect(url_for("guitar_tabs"))
         else:
             flash("Unable to upload tab, please try again or contact an admin")
@@ -906,5 +907,5 @@ def server_error(e):
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000, debug=False)
-    # app.run(host='localhost', port=5000, debug=True)  # for testing
+    # app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(host='localhost', port=5000, debug=True)  # for testing
