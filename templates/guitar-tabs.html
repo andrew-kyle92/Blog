@@ -59,13 +59,15 @@
             <div class="inner-list">
                 {% for key in all_tabs.keys() %}
                 {% if key.startswith('A') %}
-                <div class="artist-list">
-                    <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
-                </div>
-                <div class="tab-list">
-                    {% for song in all_tabs[key]['songs'] %}
-                    <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
-                    {% endfor %}
+                <div class="artist-song-list">
+                    <div class="artist-list">
+                        <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
+                    </div>
+                    <div class="tab-list">
+                        {% for song in all_tabs[key]['songs'] %}
+                        <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -77,13 +79,15 @@
             <div class="inner-list">
             {% for key in all_tabs.keys() %}
                 {% if key.startswith('B') %}
-                <div class="artist-list">
-                    <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
-                </div>
-                <div class="tab-list">
-                    {% for song in all_tabs[key]['songs'] %}
-                    <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
-                    {% endfor %}
+                <div class="artist-song-list">
+                    <div class="artist-list">
+                        <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
+                    </div>
+                    <div class="tab-list">
+                        {% for song in all_tabs[key]['songs'] %}
+                        <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -95,13 +99,15 @@
             <div class="inner-list">
             {% for key in all_tabs.keys() %}
                 {% if key.startswith('C') %}
-                <div class="artist-list">
-                    <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
-                </div>
-                <div class="tab-list">
-                    {% for song in all_tabs[key]['songs'] %}
-                    <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
-                    {% endfor %}
+                <div class="artist-song-list">
+                    <div class="artist-list">
+                        <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
+                    </div>
+                    <div class="tab-list">
+                        {% for song in all_tabs[key]['songs'] %}
+                        <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -113,13 +119,15 @@
             <div class="inner-list">
             {% for key in all_tabs.keys() %}
                 {% if key.startswith('D') %}
-                <div class="artist-list">
-                    <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
-                </div>
-                <div class="tab-list">
-                    {% for song in all_tabs[key]['songs'] %}
-                    <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
-                    {% endfor %}
+                <div class="artist-song-list">
+                    <div class="artist-list">
+                        <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
+                    </div>
+                    <div class="tab-list">
+                        {% for song in all_tabs[key]['songs'] %}
+                        <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -131,13 +139,15 @@
             <div class="inner-list">
             {% for key in all_tabs.keys() %}
                 {% if key.startswith('E') %}
-                <div class="artist-list">
-                    <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
-                </div>
-                <div class="tab-list">
-                    {% for song in all_tabs[key]['songs'] %}
-                    <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
-                    {% endfor %}
+                <div class="artist-song-list">
+                    <div class="artist-list">
+                        <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
+                    </div>
+                    <div class="tab-list">
+                        {% for song in all_tabs[key]['songs'] %}
+                        <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -149,13 +159,15 @@
             <div class="inner-list">
             {% for key in all_tabs.keys() %}
                 {% if key.startswith('F') %}
-                <div class="artist-list">
-                    <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
-                </div>
-                <div class="tab-list">
-                    {% for song in all_tabs[key]['songs'] %}
-                    <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
-                    {% endfor %}
+                <div class="artist-song-list">
+                    <div class="artist-list">
+                        <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
+                    </div>
+                    <div class="tab-list">
+                        {% for song in all_tabs[key]['songs'] %}
+                        <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -167,13 +179,15 @@
             <div class="inner-list">
             {% for key in all_tabs.keys() %}
                 {% if key.startswith('G') %}
-                <div class="artist-list">
-                    <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
-                </div>
-                <div class="tab-list">
-                    {% for song in all_tabs[key]['songs'] %}
-                    <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
-                    {% endfor %}
+                <div class="artist-song-list">
+                    <div class="artist-list">
+                        <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
+                    </div>
+                    <div class="tab-list">
+                        {% for song in all_tabs[key]['songs'] %}
+                        <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -185,13 +199,15 @@
             <div class="inner-list">
             {% for key in all_tabs.keys() %}
                 {% if key.startswith('H') %}
-                <div class="artist-list">
-                    <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
-                </div>
-                <div class="tab-list">
-                    {% for song in all_tabs[key]['songs'] %}
-                    <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
-                    {% endfor %}
+                <div class="artist-song-list">
+                    <div class="artist-list">
+                        <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
+                    </div>
+                    <div class="tab-list">
+                        {% for song in all_tabs[key]['songs'] %}
+                        <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -203,13 +219,15 @@
             <div class="inner-list">
             {% for key in all_tabs.keys() %}
                 {% if key.startswith('I') %}
-                <div class="artist-list">
-                    <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
-                </div>
-                <div class="tab-list">
-                    {% for song in all_tabs[key]['songs'] %}
-                    <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
-                    {% endfor %}
+                <div class="artist-song-list">
+                    <div class="artist-list">
+                        <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
+                    </div>
+                    <div class="tab-list">
+                        {% for song in all_tabs[key]['songs'] %}
+                        <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -221,13 +239,15 @@
             <div class="inner-list">
             {% for key in all_tabs.keys() %}
                 {% if key.startswith('J') %}
-                <div class="artist-list">
-                    <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
-                </div>
-                <div class="tab-list">
-                    {% for song in all_tabs[key]['songs'] %}
-                    <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
-                    {% endfor %}
+                <div class="artist-song-list">
+                    <div class="artist-list">
+                        <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
+                    </div>
+                    <div class="tab-list">
+                        {% for song in all_tabs[key]['songs'] %}
+                        <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -239,13 +259,15 @@
             <div class="inner-list">
             {% for key in all_tabs.keys() %}
                 {% if key.startswith('K') %}
-                <div class="artist-list">
-                    <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
-                </div>
-                <div class="tab-list">
-                    {% for song in all_tabs[key]['songs'] %}
-                    <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
-                    {% endfor %}
+                <div class="artist-song-list">
+                    <div class="artist-list">
+                        <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
+                    </div>
+                    <div class="tab-list">
+                        {% for song in all_tabs[key]['songs'] %}
+                        <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -257,13 +279,15 @@
             <div class="inner-list">
             {% for key in all_tabs.keys() %}
                 {% if key.startswith('L') %}
-                <div class="artist-list">
-                    <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
-                </div>
-                <div class="tab-list">
-                    {% for song in all_tabs[key]['songs'] %}
-                    <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
-                    {% endfor %}
+                <div class="artist-song-list">
+                    <div class="artist-list">
+                        <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
+                    </div>
+                    <div class="tab-list">
+                        {% for song in all_tabs[key]['songs'] %}
+                        <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -275,13 +299,15 @@
             <div class="inner-list">
             {% for key in all_tabs.keys() %}
                 {% if key.startswith('M') %}
-                <div class="artist-list">
-                    <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
-                </div>
-                <div class="tab-list">
-                    {% for song in all_tabs[key]['songs'] %}
-                    <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
-                    {% endfor %}
+                <div class="artist-song-list">
+                    <div class="artist-list">
+                        <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
+                    </div>
+                    <div class="tab-list">
+                        {% for song in all_tabs[key]['songs'] %}
+                        <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -293,13 +319,15 @@
             <div class="inner-list">
             {% for key in all_tabs.keys() %}
                 {% if key.startswith('N') %}
-                <div class="artist-list">
-                    <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
-                </div>
-                <div class="tab-list">
-                    {% for song in all_tabs[key]['songs'] %}
-                    <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
-                    {% endfor %}
+                <div class="artist-song-list">
+                    <div class="artist-list">
+                        <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
+                    </div>
+                    <div class="tab-list">
+                        {% for song in all_tabs[key]['songs'] %}
+                        <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -311,13 +339,15 @@
             <div class="inner-list">
             {% for key in all_tabs.keys() %}
                 {% if key.startswith('O') %}
-                <div class="artist-list">
-                    <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
-                </div>
-                <div class="tab-list">
-                    {% for song in all_tabs[key]['songs'] %}
-                    <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
-                    {% endfor %}
+                <div class="artist-song-list">
+                    <div class="artist-list">
+                        <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
+                    </div>
+                    <div class="tab-list">
+                        {% for song in all_tabs[key]['songs'] %}
+                        <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -329,13 +359,15 @@
             <div class="inner-list">
             {% for key in all_tabs.keys() %}
                 {% if key.startswith('P') %}
-                <div class="artist-list">
-                    <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
-                </div>
-                <div class="tab-list">
-                    {% for song in all_tabs[key]['songs'] %}
-                    <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
-                    {% endfor %}
+                <div class="artist-song-list">
+                    <div class="artist-list">
+                        <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
+                    </div>
+                    <div class="tab-list">
+                        {% for song in all_tabs[key]['songs'] %}
+                        <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -347,13 +379,15 @@
             <div class="inner-list">
             {% for key in all_tabs.keys() %}
                 {% if key.startswith('Q') %}
-                <div class="artist-list">
-                    <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
-                </div>
-                <div class="tab-list">
-                    {% for song in all_tabs[key]['songs'] %}
-                    <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
-                    {% endfor %}
+                <div class="artist-song-list">
+                    <div class="artist-list">
+                        <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
+                    </div>
+                    <div class="tab-list">
+                        {% for song in all_tabs[key]['songs'] %}
+                        <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -365,13 +399,15 @@
             <div class="inner-list">
             {% for key in all_tabs.keys() %}
                 {% if key.startswith('R') %}
-                <div class="artist-list">
-                    <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
-                </div>
-                <div class="tab-list">
-                    {% for song in all_tabs[key]['songs'] %}
-                    <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
-                    {% endfor %}
+                <div class="artist-song-list">
+                    <div class="artist-list">
+                        <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
+                    </div>
+                    <div class="tab-list">
+                        {% for song in all_tabs[key]['songs'] %}
+                        <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -383,13 +419,15 @@
             <div class="inner-list">
             {% for key in all_tabs.keys() %}
                 {% if key.startswith('S') %}
-                <div class="artist-list">
-                    <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
-                </div>
-                <div class="tab-list">
-                    {% for song in all_tabs[key]['songs'] %}
-                    <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
-                    {% endfor %}
+                <div class="artist-song-list">
+                    <div class="artist-list">
+                        <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
+                    </div>
+                    <div class="tab-list">
+                        {% for song in all_tabs[key]['songs'] %}
+                        <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -401,13 +439,15 @@
             <div class="inner-list">
             {% for key in all_tabs.keys() %}
                 {% if key.startswith('T') %}
-                <div class="artist-list">
-                    <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
-                </div>
-                <div class="tab-list">
-                    {% for song in all_tabs[key]['songs'] %}
-                    <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
-                    {% endfor %}
+                <div class="artist-song-list">
+                    <div class="artist-list">
+                        <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
+                    </div>
+                    <div class="tab-list">
+                        {% for song in all_tabs[key]['songs'] %}
+                        <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -419,13 +459,15 @@
             <div class="inner-list">
             {% for key in all_tabs.keys() %}
                 {% if key.startswith('U') %}
-                <div class="artist-list">
-                    <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
-                </div>
-                <div class="tab-list">
-                    {% for song in all_tabs[key]['songs'] %}
-                    <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
-                    {% endfor %}
+                <div class="artist-song-list">
+                    <div class="artist-list">
+                        <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
+                    </div>
+                    <div class="tab-list">
+                        {% for song in all_tabs[key]['songs'] %}
+                        <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -437,13 +479,15 @@
             <div class="inner-list">
             {% for key in all_tabs.keys() %}
                 {% if key.startswith('V') %}
-                <div class="artist-list">
-                    <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
-                </div>
-                <div class="tab-list">
-                    {% for song in all_tabs[key]['songs'] %}
-                    <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
-                    {% endfor %}
+                <div class="artist-song-list">
+                    <div class="artist-list">
+                        <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
+                    </div>
+                    <div class="tab-list">
+                        {% for song in all_tabs[key]['songs'] %}
+                        <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -455,13 +499,15 @@
             <div class="inner-list">
             {% for key in all_tabs.keys() %}
                 {% if key.startswith('W') %}
-                <div class="artist-list">
-                    <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
-                </div>
-                <div class="tab-list">
-                    {% for song in all_tabs[key]['songs'] %}
-                    <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
-                    {% endfor %}
+                <div class="artist-song-list">
+                    <div class="artist-list">
+                        <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
+                    </div>
+                    <div class="tab-list">
+                        {% for song in all_tabs[key]['songs'] %}
+                        <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -473,13 +519,15 @@
             <div class="inner-list">
             {% for key in all_tabs.keys() %}
                 {% if key.startswith('X') %}
-                <div class="artist-list">
-                    <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
-                </div>
-                <div class="tab-list">
-                    {% for song in all_tabs[key]['songs'] %}
-                    <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
-                    {% endfor %}
+                <div class="artist-song-list">
+                    <div class="artist-list">
+                        <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
+                    </div>
+                    <div class="tab-list">
+                        {% for song in all_tabs[key]['songs'] %}
+                        <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -491,13 +539,15 @@
             <div class="inner-list">
             {% for key in all_tabs.keys() %}
                 {% if key.startswith('Y') %}
-                <div class="artist-list">
-                    <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
-                </div>
-                <div class="tab-list">
-                    {% for song in all_tabs[key]['songs'] %}
-                    <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
-                    {% endfor %}
+                <div class="artist-song-list">
+                    <div class="artist-list">
+                        <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
+                    </div>
+                    <div class="tab-list">
+                        {% for song in all_tabs[key]['songs'] %}
+                        <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
@@ -509,13 +559,15 @@
             <div class="inner-list">
             {% for key in all_tabs.keys() %}
                 {% if key.startswith('Z') %}
-                <div class="artist-list">
-                    <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
-                </div>
-                <div class="tab-list">
-                    {% for song in all_tabs[key]['songs'] %}
-                    <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
-                    {% endfor %}
+                <div class="artist-song-list">
+                    <div class="artist-list">
+                        <span class="artist-span"><i class="fas fa-solid fa-record-vinyl"></i></i> {{ key }} - </span>
+                    </div>
+                    <div class="tab-list">
+                        {% for song in all_tabs[key]['songs'] %}
+                        <a class="tab-anchor" href="{{ url_for('tab', song_file=song[1], song_name=song[0]) }}">{{ song[0] }}</a>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             {% endfor %}
