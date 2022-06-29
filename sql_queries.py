@@ -138,7 +138,7 @@ def upload_tab(form_data):
     can_upload = upload_tab_file(form_data)
     song_path = f"static/uploads/tab-files"
     if can_upload[0]:
-        with psycopg2.connect(dbname="blogdb", user="postgres", password=config.get("TEST_DB_PASSWORD")) as conn:
+        with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
             with conn.cursor() as cur:
                 upload_query = f"""
                     INSERT INTO song_tabs
