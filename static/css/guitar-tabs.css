@@ -23,6 +23,7 @@ body {
     height: 50px;
     position: fixed;
     right: 4rem;
+    text-align: center;
     width: 65px;
 }
 
@@ -173,10 +174,26 @@ form {
     background-color: #2e2d2d;
 }
 
-/* Screen Responsivness */
+/* Screen Responsiveness */
 @media only screen and (max-width: 700px) and (min-width: 200px){
     form {
         width: 100%;
+    }
+
+    #main-content {
+        width: 100%;
+    }
+
+    .inner-list {
+        width: 100%;
+    }
+
+    .artist-song-list {
+        flex-direction: column;
+    }
+
+    .form-group {
+        width: 75%;
     }
 }
 

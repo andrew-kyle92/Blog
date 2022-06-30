@@ -135,8 +135,12 @@ def get_all_tabs():
 
 
 def upload_tab(form_data):
+    """
+    Uploads the tablature file into the server and adds it the db.
+    :param form_data:
+    :return:
+    """
     can_upload = upload_tab_file(form_data)
-    song_path = f"static/uploads/tab-files"
     if can_upload[0]:
         with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
             with conn.cursor() as cur:
