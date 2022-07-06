@@ -247,7 +247,7 @@ def login():
             next_url = "get_all_posts"
         email = request.form.get("email")
         password = request.form.get("password")
-        user = User.query.filter_by(email=email).first()
+        user = User.query.filter_by(email=email.lower()).first()
         if user is None:
             flash(f"There is no user with email: {email}. Make sure there are no typos and try again",
                   category="non_member"
