@@ -48,16 +48,6 @@ html {
     text-align: center;
 }
 
-.bottom-links {
-    margin: 1rem 0rem;
-    display: flex;
-    flex-direction: column;
-}
-
-.under-form {
-    width: fit-content;
-}
-
 .dropdown-content {
     box-shadow: -10px 5px 10px black;
     background: #ffffff;
@@ -87,6 +77,61 @@ html {
     text-decoration: none;
 }
 /******************** End General Styling ********************/
+
+/******************** Form Error Styling ********************/
+.field-error {
+    color: #c40a0a;
+    font-size: 16px;
+    font-style: italic;
+}
+
+/******************** End Form Error Styling ********************/
+
+/******************** Login Page ********************/
+#form {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    width: fit-content;
+}
+
+.bottom-links {
+    display: flex;
+    flex-direction: column;
+    margin: 1rem auto;
+    width: fit-content;
+}
+
+.submit-btn {
+    margin: auto;
+    width: fit-content;
+}
+
+.submit-btn input {
+    background-color: #0085A1;
+    border: 1px solid #0085A1;
+    color: #fff;
+    height: 50px;
+    width: 95px;
+}
+
+.submit-btn input:hover {
+    background-color: #00657b !important;
+    border-color: #00657b !important;
+}
+
+.fa-eye-slash:before, .fa-eye:before {
+    margin-left: -40px;
+}
+
+.fa-eye-slash:hover, .fa-eye:before {
+    cursor: pointer;
+}
+
+.under-form {
+    text-align: center;
+}
+/******************** End Login Page Styling ********************/
 
 /******************** Settings Page Styling ********************/
 .edit-btn {
@@ -241,7 +286,7 @@ table {
 }
 
 .form-groups {
-    margin-bottom: 0.5rem;
+    margin: 0.5rem auto;
 }
 
 .form-label {
@@ -250,7 +295,7 @@ table {
 }
 
 .form-input {
-    width: 268px;
+    width: 20vw;
 }
 
 .break {
@@ -447,7 +492,7 @@ table {
     }
 
     .form-groups {
-        margin: auto auto 0.5rem;
+        margin: auto 0.5rem;
     }
 }
 
