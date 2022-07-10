@@ -1,0 +1,101 @@
+{% macro make_form(action="", form="") %}
+<!--suppress ALL -->
+<form id="form" action="{{ action }}" method="post" novalidate>
+    {% for field in form %}
+    {% if field.name == "csrf_token" %}
+    {{ form.csrf_token }}
+    {% elif field.type == "HiddenField" %}
+    <input name="{{ field.name }}" type="hidden" value="">
+    {% elif field.type == "BooleanField" %}
+    <div class="form-group">
+    <input type="checkbox" name="{{ field.name }}">
+    <label class="form-label">{{ field.label.text }}</label>
+    </div>
+    {% elif field.type == "SubmitField" %}
+    <br>
+    <div class="submit-btn">
+        <input id="submit" type="submit" name="{{ field.name }}" value="{{ field.label.text }}">
+    </div>
+    {% elif field.type == "PasswordField" %}
+    <div class="form-groups">
+        <label class="form-label" for="{{ field.name }}">{{ field.label.text }}</label>
+        <br>
+        <input class="form-input" type="password" name="{{ field.name }}" required>
+        <span class="show-pass"><i class="fas fa-regular fa-eye"></i></span>
+        {% if field.errors %}
+        {% for error in field.errors %}
+        <br>
+        <span class="field-error">{{ error }}</span>
+        {% endfor %}
+        {% endif %}
+    </div>
+    {% elif field.type == "CKEditorField" %}
+    <label class="form-label" for{{ field.name }}>{{ field.label.text }}</label>
+    <br>
+    <textarea class="ckeditor" id="message" name="message" required></textarea>
+    {% elif field.type == "SelectField" %}
+    <div class="form-groups">
+        <label class="form-label" for="{{ field.name }}">{{ field.label.text }}</label>
+        <br>
+        {% if "required" in field|string() %}
+        <select class="form-input" name="{{ field.name }}" required>
+            {% for option in field %}
+            {{ option }}
+            {% endfor %}
+        </select>
+        {% else %}
+        <select class="form-input" name="{{ field.name }}">
+            {% for option in field %}
+            {{ option }}
+            {% endfor %}
+        </select>
+        {% endif %}
+        {% if field.errors %}
+        {% for error in field.errors %}
+        <br>
+        <span class="field-error">{{ error }}</span>
+        {% endfor %}
+        {% endif %}
+    </div>
+    {% elif field.type == "FileField" %}
+    <div class="form-groups">
+        <label class="form-label" for="{{ field.name }}">{{ field.label.text }}</label>
+        <br>
+        <input class="form-input" name="{{ field.name }}" type="file">
+        {% if field.errors %}
+        {% for error in field.errors %}
+        <br>
+        <span class="field-error">{{ error }}</span>
+        {% endfor %}
+        {% endif %}
+    </div>
+    {% else %}
+        {% if "required" in field|string() %}
+    <div class="form-groups">
+        <label class="form-label" for="{{ field.name }}">{{ field.label.text }}</label>
+        <br>
+        <input class="form-input" name="{{ field.name }}" type="text" required>
+        {% if field.errors %}
+        {% for error in field.errors %}
+        <br>
+        <span class="field-error">{{ error }}</span>
+        {% endfor %}
+        {% endif %}
+    </div>
+        {% else %}
+    <div class="form-groups">
+        <label class="form-label" for="{{ field.name }}">{{ field.label.text }}</label>
+        <br>
+        <input class="form-input" name="{{ field.name }}" type="text" required>
+        {% if field.errors %}
+        {% for error in field.errors %}
+        <br>
+        <span class="field-error">{{ error }}</span>
+        {% endfor %}
+        {% endif %}
+    </div>
+        {% endif %}
+    {% endif %}
+    {% endfor %}
+</form>
+{% endmacro %}

@@ -6,7 +6,7 @@ import random as r
 import secrets
 
 from dotenv import dotenv_values
-from flask import Flask, render_template, redirect, url_for, flash, request, abort
+from flask import Flask, render_template, redirect, url_for, flash, request, abort, session
 from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
 from flask_gravatar import Gravatar
@@ -16,7 +16,6 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-
 from functions import create_folder_struct, add_music, update_account
 from sql_queries import get_user_songs, delete_song, get_all_tabs, upload_tab
 from email_class import SendEmail
@@ -63,9 +62,6 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.session_protection = "basic"
 login_manager.init_app(app)
-
-# #Session Key Add
-# session["incorrect_attempts"] = 0
 
 
 @login_manager.user_loader
@@ -182,8 +178,8 @@ def register():
     title = "Register | Andrew's Blog"
     user = current_user
     year = datetime.datetime.now().year
-    form = RegisterForm()
-    if form.validate_on_submit():
+    form = RegisterForm(request.form, meta={"csrf_context": session})
+    if form.validate():
         if User.query.filter_by(email=form.email.data).first():
             flash("You've already signed up with that email, log in instead!")
             return redirect(url_for("login"))
@@ -224,9 +220,9 @@ def register():
 def login():
     title = "Login | Andrew's Blog"
     user = current_user
-    form = LoginForm()
+    form = LoginForm(request.form, meta={"csrf_context": session})
     year = datetime.datetime.now().year
-    if request.method == "POST":
+    if request.method == "POST" and form.validate():
         _redirect = False
         post_id_needed = False
         user_id_needed = False
@@ -308,8 +304,8 @@ def edit_profile(_id):
     title = f"Edit Profile | Andrew's Blog"
     user = current_user
     year = datetime.datetime.now().year
-    form = ProfileContent()
-    if form.validate_on_submit():
+    form = ProfileContent(request.form, meta={"csrf_context": session})
+    if form.validate():
         pic_dir = f"/static/uploads/users/{user_data.id}-{user_data.name.replace(' ', '_').lower()}/data/profile-picture"
         root_path = "./static/uploads/users"
         user_path = f"{user_data.id}-{user_data.name.replace(' ', '_').lower()}/data/profile-picture"
@@ -347,10 +343,10 @@ def show_post():
     title = f"{requested_post.title} | {requested_post.subtitle} | Andrew's Blog"
     comments = Comment.query.all()
     year = datetime.datetime.now().year
-    form = CommentForm()
+    form = CommentForm(request.form, meta={"csrf_context": session})
     struct_time = t.localtime(t.time())
     time_now = t.strftime("%I:%M %p", struct_time)
-    if form.validate_on_submit():
+    if form.validate():
         if not user.is_authenticated:
             flash("You need to log in or register to comment.")
             return redirect(url_for("login"))
@@ -389,7 +385,7 @@ def about():
 @app.route("/contact", methods=["POST", "GET"])
 def contact():
     title = "Contact | Andrew's Blog"
-    form = ContactForm()
+    form = ContactForm(request.form, meta={"csrf_context": session})
     user = current_user
     year = datetime.datetime.now().year
 
@@ -397,7 +393,7 @@ def contact():
         form.name.data = user.name
         form.email.data = user.email
 
-    if form.validate_on_submit():
+    if request.method == "POST" and form.validate():
         msg_info = {
             "name": form.name.data,
             "email": form.email.data,
@@ -423,9 +419,9 @@ def add_new_post():
     title = "New Post | Andrew's Blog"
     user = User.query.get(current_user.id)
     year = datetime.datetime.now().year
-    form = CreatePostForm()
+    form = CreatePostForm(request.form, meta={"csrf_context": session})
     if user.account_type == "Admin" or user.account_type == "Super-Admin":
-        if form.validate_on_submit():
+        if form.validate():
             new_post = BlogPost(
                 title=form.title.data,
                 subtitle=form.subtitle.data,
@@ -465,10 +461,11 @@ def edit_post():
             title=post.title,
             subtitle=post.subtitle,
             img_url=post.img_url,
-            body=post.body
+            body=post.body,
+            meta={"csrf_context": session}
         )
         if request.method == "POST":
-            if edit_form.validate_on_submit():
+            if edit_form.validate():
                 post.title = edit_form.title.data
                 post.subtitle = edit_form.subtitle.data
                 post.img_url = edit_form.img_url.data
@@ -511,16 +508,16 @@ def forgot_password():
     step = request.args.get("step")
     user = request.args.get("user")
     if step == "Password Reset":
-        form = ResetPassword()
+        form = ResetPassword(request.form, meta={"csrf_context": session})
         form.step.data = step
     elif step == "Code Confirmation":
-        form = CodeConfirmation()
+        form = CodeConfirmation(request.form, meta={"csrf_context": session})
         form.step.data = step
     else:
-        form = EmailPassword()
+        form = EmailPassword(request.form, meta={"csrf_context": session})
         form.step.data = step
     if request.method == "POST":
-        if form.validate_on_submit():
+        if form.validate():
             if request.form.get("step") == "Email Confirmation":
                 user_email = request.form.get("email")
                 req_user = User.query.filter_by(email=user_email).first()
@@ -569,12 +566,12 @@ def music_player():
 @login_required
 def song_upload():
     user = User.query.get(current_user.id)
-    form = SongUpload()
+    form = SongUpload(request.form, meta={"csrf_context": session})
     year = datetime.datetime.now().year
     is_authenticated = current_user.is_authenticated
     title = "Upload a new song | Andrew's Blog"
     if request.method == "POST":
-        if form.validate_on_submit():
+        if form.validate():
             form_data = {
                 "artist": form.artist.data,
                 "album": form.album.data,
@@ -688,7 +685,7 @@ def settings():
     title = "Settings | Andrew's Blog"
     year = datetime.datetime.now().year
     auth_user = User.query.get(user_id)
-    form = ChangePassword()
+    form = ChangePassword(request.form, meta={"csrf_context": session})
     all_users = User.query.all()
     song_query = get_user_songs(auth_user.id)
     if song_query is not False:
@@ -698,7 +695,7 @@ def settings():
         user_songs = None
 
     if request.method == "POST":
-        if form.validate_on_submit():
+        if form.validate():
             user = User.query.get(current_user.id)
             salted_password = generate_password_hash(form.new_password.data, method="pbkdf2:sha256", salt_length=8)
             pass_check = check_password_hash(user.password, form.old_password.data)
@@ -732,8 +729,8 @@ def edit_settings(user_id):
     title = "Settings | Andrew's Blog"
     year = datetime.datetime.now().year
     auth_user = User.query.get(user_id)
-    form = EditSettings()
-    if form.validate_on_submit():
+    form = EditSettings(request.form, meta={"csrf_context": session})
+    if form.validate():
         user = User.query.get(current_user.id)
         user.name = form.name.data
         user.email = form.email.data
@@ -758,7 +755,7 @@ def user_edit(user_id):
     user_to_edit = User.query.get(user_id)
     year = datetime.datetime.now().year
     title = f"Editing {user_to_edit.name} | Andrew's Blog"
-    form = EditUser()
+    form = EditUser(request.form, meta={"csrf_context": session})
     form.name.data = user_to_edit.name
     form.email.data = user_to_edit.email
     form.account_type.data = user_to_edit.account_type
@@ -770,7 +767,7 @@ def user_edit(user_id):
     }
 
     if request.method == "POST":
-        if form.validate_on_submit():
+        if form.validate():
             for field in request.form.items():
                 if field[0] == "csrf_token" or field[0] == "submit" or field[0] == "confirm":
                     continue
@@ -823,8 +820,8 @@ def tab():
 @login_required
 def tab_upload():
     title = "Tab Upload | Andrew's Guitar Tabs"
-    form = TabUpload()
-    if form.validate_on_submit():
+    form = TabUpload(request.form, meta={"csrf_context": session})
+    if form.validate():
         form_data = {
             'artist': form.artist.data,
             'album': form.album.data,
