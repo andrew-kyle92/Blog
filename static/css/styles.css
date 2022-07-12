@@ -112,7 +112,7 @@ html {
     border: 1px solid #0085A1;
     color: #fff;
     height: 50px;
-    width: 95px;
+    width: fit-content;
 }
 
 .submit-btn input:hover {
@@ -291,6 +291,10 @@ table {
 
 .form-input {
     width: 20vw;
+}
+
+.submit-btn input {
+
 }
 
 .break {
