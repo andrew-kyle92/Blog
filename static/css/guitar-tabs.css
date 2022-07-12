@@ -129,12 +129,12 @@ body {
 }
 
 /* Styling for the form on tab-upload.html */
-form {
+#form {
     display: flex;
     flex-direction: column;
     margin: 5rem auto;
     justify-content: center;
-    width: 45%;
+    width: 60%;
 }
 
 .form-groups {
@@ -185,7 +185,13 @@ form {
 }
 
 /* Screen Responsiveness */
-@media only screen and (max-width: 700px) and (min-width: 200px){
+@media only screen and (max-width: 900px) and (min-width: 700px){
+    #form {
+        width: 75%;
+    }
+}
+
+@media only screen and (max-width: 700px) and (min-width: 400px){
     form {
         width: 100%;
     }
@@ -202,13 +208,13 @@ form {
         flex-direction: column;
     }
 
-    .form-group {
-        width: 75%;
+    .form-groups {
+        width: 100%;
     }
 }
 
-@media only screen and (max-width: 900px) and (min-width: 700px){
-    form {
-        width: 75%;
+@media only screen and (max-width: 475px) {
+    #form {
+        width: 80%;
     }
 }

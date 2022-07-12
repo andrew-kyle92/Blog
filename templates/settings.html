@@ -1,5 +1,5 @@
 {% include 'header.html' %}
-{% import "bootstrap/wtf.html" as wtf %}
+{% from "_macro.html" import make_form %}
 
 <!-- Page Header -->
 <!--suppress ALL -->
@@ -83,28 +83,7 @@
             {% endfor %}
           {% endif %}
       {% endwith %}
-      <form id="password-form" class="pass-change-form" action="{{ url_for('settings', user_id=user.id) }}" method="post" enctype="multipart/form-data" novalidate>
-        {{ form.csrf_token }}
-        <div class="form-groups">
-          <label class="form-label" for="{{ form.old_password.name }}">{{ form.old_password.label }}</label>
-          <br>
-          <input class="form-input" name="old_password" required type="password" value="">
-          <span class="show-pass"><i class="fas fa-regular fa-eye"></i></span>
-        </div>
-        <div class="form-groups">
-          <label class="form-label" for="{{ form.new_password.name }}">{{ form.new_password.label }}</label>
-          <br>
-          <input class="form-input" name="new_password" required type="password" value="">
-          <span class="show-pass"><i class="fas fa-regular fa-eye"></i></span>
-        </div>
-        <div class="form-groups">
-          <label class="form-label" for="{{ form.confirm.name }}">{{ form.confirm.label }}</label>
-          <br>
-          <input class="form-input" name="confirm" required type="password" value="">
-          <span class="show-pass"><i class="fas fa-regular fa-eye"></i></span>
-        </div>
-        <input class="btn btn-primary" name="submit" type="submit" value="Change Password">
-      </form>
+      {{ make_form(form=form) }}
     </div>
     {% if user.account_type == "Super-Admin" %}
     <div class="administration-content">

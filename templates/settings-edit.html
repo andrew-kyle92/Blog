@@ -1,5 +1,5 @@
 {% include 'header.html' %}
-{% import "bootstrap/wtf.html" as wtf %}
+{% from "_macro.html" import make_form %}
 
 <!-- Page Header -->
 <header class="masthead" style="background-image: url({{ url_for('static', filename='img/settings-beach.jpg')}})">
@@ -23,7 +23,7 @@
 
   <div class="cat-content">
     <div class="content-main">
-      {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}, enctype="multipart/form-data") }}
+      {{ make_form(form=form) }}
     </div>
   </div>
 
