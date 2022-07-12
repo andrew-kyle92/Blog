@@ -289,11 +289,6 @@ table {
     margin: 0.5rem auto;
 }
 
-.form-label {
-    font-weight: 800;
-    margin-bottom: -0.5rem;
-}
-
 .form-input {
     width: 20vw;
 }
@@ -428,71 +423,52 @@ table {
 /******************** End User Profile Styling ********************/
 
 /******************** Responsiveness ********************/
-
-@media only screen and (max-width: 600px) and (min-width: 100px){
-    .below-img p {
-        text-align: center;
-    }
-
-    #music-iframe {
-        width: 100%;
-    }
-
-    #music-player {
-        height: 650px;
-        width: 100%;
-    }
-
-    .profile-header {
-        flex-direction: column;
-    }
-    .profile-img-block{
+@media only screen and (max-width: 1500px) and (min-width: 1005px) {
+    #form {
         width: 75%;
-        margin: auto;
-    }
-    .profile-bio {
-        text-align: center;
-        margin: auto;
-        width: 100%;
-        max-width: fit-content;
-    }
-
-    .post-h2 {
-        text-align: center;
-    }
-
-    .current-bio {
-        text-align: center;
-    }
-    /********************* Settings Styling *********************/
-    .main-settings-content {
-        flex-direction: column;
-        width: 95%;
-    }
-
-    .cat-active {
-        border-right: 2px solid #9c9c9c!important;
-        border-bottom: 0px!important;
-    }
-
-    #sidebar {
-        border-bottom: 0px;
-        border-right: 2px groove #9c9c9c;
-        flex-direction: row;
-        width: 100%;
-    }
-
-    .overview-content {
-        margin: auto;
-        width: 100%;
-    }
-
-    #user-edit-form {
-        width: 100%;
     }
 
     .form-groups {
-        margin: auto 0.5rem;
+        width: 80%;
+    }
+
+    .form-input {
+        width: 100%;
+    }
+
+    .form-password {
+        display: flex;
+    }
+}
+
+@media only screen and (max-width: 1000px) and (min-width: 705px) {
+    #sidebar {
+        border: 1px solid black;
+        width: 100%;
+    }
+
+    #sidebar p {
+        border: none;
+    }
+
+    .main-settings-content {
+        flex-direction: column;
+    }
+
+    .cat-content-admin {
+        flex-direction: column;
+    }
+
+    #form {
+        width: 80%;
+    }
+
+    .form-groups, .form-input {
+        width: 100%;
+    }
+
+    .form-password {
+        display: flex;
     }
 }
 
@@ -562,8 +538,104 @@ table {
         width: 100%;
     }
 
+    #form {
+        width: 100%;
+    }
+
     .form-groups {
         margin: auto auto 0.5rem;
+        width: 100%;
+    }
+
+    .form-input {
+        width: 100%;
+    }
+
+    .form-password {
+        display: flex;
+    }
+
+    .submit-btn input {
+        width: fit-content;
+    }
+}
+
+@media only screen and (max-width: 600px) and (min-width: 100px){
+    .below-img p {
+        text-align: center;
+    }
+
+    #music-iframe {
+        width: 100%;
+    }
+
+    #music-player {
+        height: 650px;
+        width: 100%;
+    }
+
+    .profile-header {
+        flex-direction: column;
+    }
+    .profile-img-block{
+        width: 75%;
+        margin: auto;
+    }
+    .profile-bio {
+        text-align: center;
+        margin: auto;
+        width: 100%;
+        max-width: fit-content;
+    }
+
+    .post-h2 {
+        text-align: center;
+    }
+
+    .current-bio {
+        text-align: center;
+    }
+    /********************* Settings Styling *********************/
+    .main-settings-content {
+        flex-direction: column;
+        width: 95%;
+    }
+
+    .cat-active {
+        border-right: 2px solid #9c9c9c!important;
+        border-bottom: 0px!important;
+    }
+
+    #sidebar {
+        border-bottom: 0px;
+        border-right: 2px groove #9c9c9c;
+        flex-direction: row;
+        width: 100%;
+    }
+
+    .overview-content {
+        margin: auto;
+        width: 100%;
+    }
+
+    #user-edit-form {
+        width: 100%;
+    }
+
+    .form-groups {
+        width: 100%;
+    }
+
+    .form-input {
+        width: 100%;
+    }
+
+    .form-password {
+        display: flex;
+    }
+
+    .submit-btn input {
+        width: fit-content;
     }
 }
 
