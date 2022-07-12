@@ -1,6 +1,7 @@
-{% macro make_form(action="", form="") %}
+{% macro make_form(action="", form="", has_file=False) %}
+{# This macro is for the basic forms #}
 <!--suppress ALL -->
-<form id="form" action="{{ action }}" method="post" novalidate>
+<form id="form" action="{{ action }}" method="post" {% if has_file %} enctype="multipart/form-data" {% endif %} novalidate>
     {% for field in form %}
     {% if field.name == "csrf_token" %}
     {{ form.csrf_token }}
@@ -61,7 +62,11 @@
     <div class="form-groups">
         <label class="form-label" for="{{ field.name }}">{{ field.label.text }}</label>
         <br>
+        {% if "required" in field|string() %}
+        <input class="form-input" name="{{ field.name }}" type="file" required>
+        {% else %}
         <input class="form-input" name="{{ field.name }}" type="file">
+        {% endif %}
         {% if field.errors %}
         {% for error in field.errors %}
         <br>

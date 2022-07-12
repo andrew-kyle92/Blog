@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% import "bootstrap/wtf.html" as wtf %}
+{% from "_macro.html" import make_form %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -31,32 +32,7 @@
     {% endif %}
     {% endwith %}
 
-    <form action="{{ url_for('tab_upload') }}" method="POST" enctype="multipart/form-data" novalidate>
-
-        {{ form.csrf_token }}
-
-        <div class="form-group">
-            <label class="form-label" for="{{ form.artist.name }}">{{ form.artist.label.text }}</label>
-            <br>
-            <input class="form-input" name="{{ form.artist.name }}" type="text">
-        </div>
-        <div class="form-group">
-            <label class="form-label" for="{{ form.album.name }}">{{ form.album.label.text }}</label>
-            <br>
-            <input class="form-input" name="{{ form.album.name }}" type="text">
-        </div>
-        <div class="form-group">
-            <label class="form-label" for="{{ form.song_name.name }}">{{ form.song_name.label.text }}</label>
-            <br>
-            <input class="form-input" name="{{ form.song_name.name }}" type="text">
-        </div>
-        <div class="form-group">
-            <label class="form-label" for="{{ form.song_file.name}}">{{ form.song_file.label.text }}</label>
-            <br>
-            <input class="form-input" name="{{ form.song_file.name }}" type="file">
-        </div>
-        <input class="submit-btn" type="submit" name="{{ form.submit.name }}" value="{{ form.submit.label.text }}">
-    </form>
+    {{ make_form(form=form, has_file=True) }}
 
 </body>
 </html>

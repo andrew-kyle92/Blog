@@ -14,6 +14,7 @@ from flask_login import (UserMixin, login_user, LoginManager, login_required, cu
                          fresh_login_required)
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
+from werkzeug.datastructures import CombinedMultiDict
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from functions import create_folder_struct, add_music, update_account
@@ -304,9 +305,10 @@ def edit_profile(_id):
     title = f"Edit Profile | Andrew's Blog"
     user = current_user
     year = datetime.datetime.now().year
-    form = ProfileContent(request.form, meta={"csrf_context": session})
+    form = ProfileContent(CombinedMultiDict((request.files, request.form)), meta={"csrf_context": session})
     if form.validate():
-        pic_dir = f"/static/uploads/users/{user_data.id}-{user_data.name.replace(' ', '_').lower()}/data/profile-picture"
+        pic_dir = f"/static/uploads/users/" \
+                  f"{user_data.id}-{user_data.name.replace(' ', '_').lower()}/data/profile-picture"
         root_path = "./static/uploads/users"
         user_path = f"{user_data.id}-{user_data.name.replace(' ', '_').lower()}/data/profile-picture"
         new_picture = form.profile_picture.data
@@ -316,7 +318,7 @@ def edit_profile(_id):
             user_profile.profile_picture = user_profile.profile_picture
         else:
             user_profile.profile_picture = f"{pic_dir}/{filename}"
-            new_picture.save(os.path.join(root_path, user_path, filename))
+            request.files['profile_picture'].save(os.path.join(root_path, user_path, filename))
         if form.profile_bio.data == "":
             user_profile.profile_bio = user_profile.profile_bio
         else:
@@ -566,7 +568,7 @@ def music_player():
 @login_required
 def song_upload():
     user = User.query.get(current_user.id)
-    form = SongUpload(request.form, meta={"csrf_context": session})
+    form = SongUpload(CombinedMultiDict((request.files, request.form)), meta={"csrf_context": session})
     year = datetime.datetime.now().year
     is_authenticated = current_user.is_authenticated
     title = "Upload a new song | Andrew's Blog"
@@ -586,8 +588,8 @@ def song_upload():
             album_art_filename = secure_filename(form_data["album_art"].filename)
             song_filename = secure_filename(form_data["song"].filename)
             if add_song:
-                form_data["album_art"].save(os.path.join(album_dir, album_art_filename))
-                form_data["song"].save(os.path.join(album_dir, song_filename))
+                request.files['album_art'].save(os.path.join(album_dir, album_art_filename))
+                request.files['song'].save(os.path.join(album_dir, song_filename))
                 song = f"{form.song.data.filename}"
                 song = song.replace(" ", "_")
                 song_name = str(form_data["song"].filename)
@@ -820,20 +822,19 @@ def tab():
 @login_required
 def tab_upload():
     title = "Tab Upload | Andrew's Guitar Tabs"
-    form = TabUpload(request.form, meta={"csrf_context": session})
-    if form.validate():
+    form = TabUpload(CombinedMultiDict((request.files, request.form)), meta={"csrf_context": session})
+    if request.method == "POST" and form.validate():
         form_data = {
             'artist': form.artist.data,
             'album': form.album.data,
             'tab_name': form.song_name.data,
             'tab_file': form.song_file.data.filename
         }
-        tab_filename = form.song_file.data
         can_upload = upload_tab(form_data)
         if can_upload:
             file_dir = f"static/uploads/tab-files/{form_data['artist']}/{form_data['album']}"
-            tab_file = secure_filename(tab_filename.filename)
-            tab_filename.save(os.path.join(file_dir, tab_file))
+            tab_file = secure_filename(request.files['song_file'].filename)
+            request.files['song_file'].save(os.path.join(file_dir, tab_file))
             os.rename(f"{file_dir}/{form_data['tab_file'].replace(' ', '_')}", f"{file_dir}/{form_data['tab_file']}")
             return redirect(url_for("guitar_tabs"))
         else:

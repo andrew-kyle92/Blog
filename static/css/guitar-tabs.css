@@ -132,12 +132,12 @@ body {
 form {
     display: flex;
     flex-direction: column;
-    margin: 2rem auto;
+    margin: 5rem auto;
     justify-content: center;
     width: 45%;
 }
 
-.form-group {
+.form-groups {
     margin: 0.5rem auto;
     width: 50%;
 }
@@ -155,7 +155,7 @@ form {
     width: 100%;
 }
 
-.submit-btn {
+#submit {
     border-radius: 5px;
     color: #ba2b2b;
     font-family: 'PunkKid';
@@ -165,13 +165,23 @@ form {
     width: fit-content;
 }
 
-.submit-btn:hover {
+#submit:hover {
     background-color: #d4d0cf;
     cursor: pointer;
 }
 
-.submit-btn:active {
+#submit:active {
     background-color: #2e2d2d;
+}
+
+.submit-btn {
+    margin: auto;
+    width: fit-content;
+}
+
+.field-error {
+    color: #ba2b2b;
+    font-style: italic;
 }
 
 /* Screen Responsiveness */
