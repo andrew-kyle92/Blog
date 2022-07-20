@@ -5,8 +5,14 @@
     {% for field in form %}
     {% if field.name == "csrf_token" %}
     {{ form.csrf_token }}
+    {% if field.errors %}
+        {% for error in field.errors %}
+        <br>
+        <span class="field-error">{{ error }}</span>
+        {% endfor %}
+        {% endif %}
     {% elif field.type == "HiddenField" %}
-    <input name="{{ field.name }}" type="hidden" value="">
+    <input name="{{ field.name }}" type="hidden" value>
     {% elif field.type == "BooleanField" %}
     <div class="form-groups">
     <input type="checkbox" name="{{ field.name }}">
@@ -33,21 +39,33 @@
         {% endif %}
     </div>
     {% elif field.type == "CKEditorField" %}
-    <label class="form-label" for{{ field.name }}>{{ field.label.text }}</label>
-    <br>
-    <textarea class="ckeditor" id="message" name="message" required></textarea>
+    <div class="form-groups">
+        <label class="form-label" for{{ field.name }}>{{ field.label.text }}</label>
+        <br>
+            {% if "required" in field|string() %}
+        <textarea class="ckeditor" id="message" name="message" required>{% if field.data != "" %} {{ field.data }} {% endif %}</textarea>
+            {% else %}
+        <textarea class="ckeditor" id="message" name="message">{% if field.data != "" %} {{ field.data }} {% endif %}</textarea>
+            {% endif %}
+        {% if field.errors %}
+        {% for error in field.errors %}
+        <br>
+        <span class="field-error">{{ error }}</span>
+        {% endfor %}
+        {% endif %}
+    </div>
     {% elif field.type == "SelectField" %}
     <div class="form-groups">
         <label class="form-label" for="{{ field.name }}">{{ field.label.text }}</label>
         <br>
         {% if "required" in field|string() %}
-        <select class="form-input" name="{{ field.name }}" required>
+        <select class="form-input" name="{{ field.name }}" {% if field.data != "" %} value="{{ field.data }}" {% endif %} required>
             {% for option in field %}
             {{ option }}
             {% endfor %}
         </select>
         {% else %}
-        <select class="form-input" name="{{ field.name }}">
+        <select class="form-input" name="{{ field.name }}" {% if field.data != "" %} value="{{ field.data }}" {% endif %}>
             {% for option in field %}
             {{ option }}
             {% endfor %}
@@ -81,7 +99,7 @@
     <div class="form-groups">
         <label class="form-label" for="{{ field.name }}">{{ field.label.text }}</label>
         <br>
-        <input class="form-input" name="{{ field.name }}" type="text" required>
+        <input class="form-input" name="{{ field.name }}" type="text" {% if field.data != "" %} value="{{ field.data }}" {% endif %} required>
         {% if field.errors %}
         {% for error in field.errors %}
         <br>
@@ -93,7 +111,7 @@
     <div class="form-groups">
         <label class="form-label" for="{{ field.name }}">{{ field.label.text }}</label>
         <br>
-        <input class="form-input" name="{{ field.name }}" type="text" required>
+        <input class="form-input" name="{{ field.name }}" type="text" {% if field.data != "" %} value="{{ field.data }}" {% endif %} required>
         {% if field.errors %}
         {% for error in field.errors %}
         <br>
