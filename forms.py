@@ -1,4 +1,3 @@
-from flask import session
 from flask_wtf.file import FileAllowed
 from wtforms import Form, StringField, SubmitField, PasswordField, SelectField, BooleanField, HiddenField, FileField
 from wtforms.validators import DataRequired, URL, Email, EqualTo, Length, InputRequired

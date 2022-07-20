@@ -1,5 +1,5 @@
 {% include "header.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
+{% from "_macro.html" import make_form %}
 
 {% block content %}
 
@@ -26,8 +26,7 @@
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
         {{ ckeditor.load() }}
-<!--        {{ ckeditor.config(name='body') }}-->
-        {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+        {{ make_form(form=form) }}
       </div>
     </div>
   </div>

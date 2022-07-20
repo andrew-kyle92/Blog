@@ -459,35 +459,28 @@ def edit_post():
     year = datetime.datetime.now().year
     title = f"Edit {post.title} | {post.subtitle} | Andrew's Blog"
     if post.author_id == user.id:
-        edit_form = CreatePostForm(
-            title=post.title,
-            subtitle=post.subtitle,
-            img_url=post.img_url,
-            body=post.body,
-            meta={"csrf_context": session}
-        )
-        if request.method == "POST":
-            if edit_form.validate():
-                post.title = edit_form.title.data
-                post.subtitle = edit_form.subtitle.data
-                post.img_url = edit_form.img_url.data
-                post.body = edit_form.body.data
-                db.session.commit()
-                return redirect(url_for("show_post", post_id=post.id))
-            else:
-                print("Didn't work")
-        # else:
-        #     print("Get, not POST")
-
-        return render_template(
-            "make-post.html",
-            form=edit_form,
-            is_authenticated=user.is_authenticated,
-            is_edit=True,
-            user=user,
-            title=title,
-            year=year
-        )
+        form = CreatePostForm(request.form, meta={"csrf_context": session})
+        if request.method == "POST" and form.validate():
+            post.title = form.title.data
+            post.subtitle = form.subtitle.data
+            post.img_url = form.img_url.data
+            post.body = form.body.data
+            db.session.commit()
+            return redirect(url_for("show_post", post_id=post.id))
+        else:
+            form.title.data = post.title
+            form.subtitle.data = post.subtitle
+            form.img_url.data = post.img_url
+            form.body.data = post.body
+            return render_template(
+                "make-post.html",
+                form=form,
+                is_authenticated=user.is_authenticated,
+                is_edit=True,
+                user=user,
+                title=title,
+                year=year
+            )
     else:
         # print(f"User ID: {user.id}\nAuthor ID: {post.author_id}")
         return abort(401, response="aborts/forbidden.html")
