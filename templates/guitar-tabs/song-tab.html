@@ -1,26 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>{{ title }}</title>
-    <script src="https://cdn.jsdelivr.net/npm/@coderline/alphatab@latest/dist/alphaTab.js"></script>
-    <script src="https://kit.fontawesome.com/aa2109974d.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/tabs.css') }}">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='img/guitar.ico') }}" type="image/x-icon">
-  </head>
-  <body>
-    <div id="page-top">
-        <div class="left-top">
-            <a class="blog-home-btn" href="{{ url_for('guitar_tabs') }}">Tabs Home</a>
-        </div>
-        <div class="middle-top">
-            <p>Guitar Tabs</p>
-        </div>
-        <div class="right-top">
-            <a class="tab-upload" href="{{ url_for('tab_upload') }}">Upload a tab</a>
-        </div>
-    </div>
-    <hr>
+{% include "guitar-tabs/tab-header.html" %}
+
+  <a class="artist-home" href="{{ url_for('artist_index', artist=artist) }}">Back to Artist</a>
+
     <div class="at-wrap">
       <div class="at-overlay">
         <div class="at-overlay-content">
@@ -101,5 +82,5 @@
     </template>
 
     <script src="{{ url_for('static', filename='js/tabs.js') }}"></script>
-  </body>
-</html>
+
+{% include "guitar-tabs/footer.html" %}

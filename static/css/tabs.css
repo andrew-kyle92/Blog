@@ -21,6 +21,19 @@ body {
     color: aliceblue;
 }
 
+.artist-home {
+    color: #9c2e1e;
+    font-size: 25px;
+    font-family: 'PunkKid';
+    margin: auto 0.5rem;
+    text-decoration: none;
+}
+
+.artist-home:hover {
+    color: aliceblue;
+    text-decoration: underline;
+}
+
 .left-top a{
     color: #ba2b2b;
     font-size: 35px;

@@ -5,8 +5,9 @@ from datetime import date, timedelta
 import random as r
 import secrets
 
+import flask
 from dotenv import dotenv_values
-from flask import Flask, render_template, redirect, url_for, flash, request, abort, session
+from flask import Flask, render_template, redirect, url_for, flash, request, abort
 from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
 from flask_gravatar import Gravatar
@@ -18,7 +19,7 @@ from werkzeug.datastructures import CombinedMultiDict
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from functions import create_folder_struct, add_music, update_account
-from sql_queries import get_user_songs, delete_song, get_all_tabs, upload_tab
+from sql_queries import get_user_songs, delete_song, get_all_artists, upload_tab, get_all_songs
 from email_class import SendEmail
 from forms import (CreatePostForm, RegisterForm, LoginForm, CommentForm, ContactForm, EmailPassword, CodeConfirmation,
                    ResetPassword, ProfileContent, SongUpload, EditSettings, ChangePassword, EditUser, TabUpload)
@@ -31,6 +32,7 @@ app.config['SECRET_KEY'] = config.get("SECRET_KEY")
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["ALLOWED_EXTENSIONS"] = ALLOWED_EXTENSIONS
 app.config["MAX_CONTENT_LENGTH"] = 1000 * 1024 * 1024  # 1000mb
+app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
 ckeditor = CKEditor(app)
 Bootstrap(app)
 send_email = SendEmail()
@@ -179,7 +181,7 @@ def register():
     title = "Register | Andrew's Blog"
     user = current_user
     year = datetime.datetime.now().year
-    form = RegisterForm(request.form, meta={"csrf_context": session})
+    form = RegisterForm(request.form, meta={"csrf_context": flask.session})
     if form.validate():
         if User.query.filter_by(email=form.email.data).first():
             flash("You've already signed up with that email, log in instead!")
@@ -221,7 +223,7 @@ def register():
 def login():
     title = "Login | Andrew's Blog"
     user = current_user
-    form = LoginForm(request.form, meta={"csrf_context": session})
+    form = LoginForm(request.form, meta={"csrf_context": flask.session})
     year = datetime.datetime.now().year
     if request.method == "POST" and form.validate():
         _redirect = False
@@ -305,7 +307,7 @@ def edit_profile(_id):
     title = f"Edit Profile | Andrew's Blog"
     user = current_user
     year = datetime.datetime.now().year
-    form = ProfileContent(CombinedMultiDict((request.files, request.form)), meta={"csrf_context": session})
+    form = ProfileContent(CombinedMultiDict((request.files, request.form)), meta={"csrf_context": flask.session})
     if form.validate():
         pic_dir = f"/static/uploads/users/" \
                   f"{user_data.id}-{user_data.name.replace(' ', '_').lower()}/data/profile-picture"
@@ -345,10 +347,10 @@ def show_post():
     title = f"{requested_post.title} | {requested_post.subtitle} | Andrew's Blog"
     comments = Comment.query.all()
     year = datetime.datetime.now().year
-    form = CommentForm(request.form, meta={"csrf_context": session})
+    form = CommentForm(request.form, meta={"csrf_context": flask.session})
     struct_time = t.localtime(t.time())
     time_now = t.strftime("%I:%M %p", struct_time)
-    if form.validate():
+    if request.method == "POST" and form.validate():
         if not user.is_authenticated:
             flash("You need to log in or register to comment.")
             return redirect(url_for("login"))
@@ -387,7 +389,7 @@ def about():
 @app.route("/contact", methods=["POST", "GET"])
 def contact():
     title = "Contact | Andrew's Blog"
-    form = ContactForm(request.form, meta={"csrf_context": session})
+    form = ContactForm(request.form, meta={"csrf_context": flask.session})
     user = current_user
     year = datetime.datetime.now().year
 
@@ -421,7 +423,7 @@ def add_new_post():
     title = "New Post | Andrew's Blog"
     user = User.query.get(current_user.id)
     year = datetime.datetime.now().year
-    form = CreatePostForm(request.form, meta={"csrf_context": session})
+    form = CreatePostForm(request.form, meta={"csrf_context": flask.session})
     if user.account_type == "Admin" or user.account_type == "Super-Admin":
         if form.validate():
             new_post = BlogPost(
@@ -459,7 +461,7 @@ def edit_post():
     year = datetime.datetime.now().year
     title = f"Edit {post.title} | {post.subtitle} | Andrew's Blog"
     if post.author_id == user.id:
-        form = CreatePostForm(request.form, meta={"csrf_context": session})
+        form = CreatePostForm(request.form, meta={"csrf_context": flask.session})
         if request.method == "POST" and form.validate():
             post.title = form.title.data
             post.subtitle = form.subtitle.data
@@ -503,13 +505,13 @@ def forgot_password():
     step = request.args.get("step")
     user = request.args.get("user")
     if step == "Password Reset":
-        form = ResetPassword(request.form, meta={"csrf_context": session})
+        form = ResetPassword(request.form, meta={"csrf_context": flask.session})
         form.step.data = step
     elif step == "Code Confirmation":
-        form = CodeConfirmation(request.form, meta={"csrf_context": session})
+        form = CodeConfirmation(request.form, meta={"csrf_context": flask.session})
         form.step.data = step
     else:
-        form = EmailPassword(request.form, meta={"csrf_context": session})
+        form = EmailPassword(request.form, meta={"csrf_context": flask.session})
         form.step.data = step
     if request.method == "POST":
         if form.validate():
@@ -561,7 +563,7 @@ def music_player():
 @login_required
 def song_upload():
     user = User.query.get(current_user.id)
-    form = SongUpload(CombinedMultiDict((request.files, request.form)), meta={"csrf_context": session})
+    form = SongUpload(CombinedMultiDict((request.files, request.form)), meta={"csrf_context": flask.session})
     year = datetime.datetime.now().year
     is_authenticated = current_user.is_authenticated
     title = "Upload a new song | Andrew's Blog"
@@ -680,7 +682,7 @@ def settings():
     title = "Settings | Andrew's Blog"
     year = datetime.datetime.now().year
     auth_user = User.query.get(user_id)
-    form = ChangePassword(request.form, meta={"csrf_context": session})
+    form = ChangePassword(request.form, meta={"csrf_context": flask.session})
     all_users = User.query.all()
     song_query = get_user_songs(auth_user.id)
     if song_query is not False:
@@ -724,7 +726,7 @@ def edit_settings(user_id):
     title = "Settings | Andrew's Blog"
     year = datetime.datetime.now().year
     auth_user = User.query.get(user_id)
-    form = EditSettings(request.form, meta={"csrf_context": session})
+    form = EditSettings(request.form, meta={"csrf_context": flask.session})
     if form.validate():
         user = User.query.get(current_user.id)
         user.name = form.name.data
@@ -750,7 +752,7 @@ def user_edit(user_id):
     user_to_edit = User.query.get(user_id)
     year = datetime.datetime.now().year
     title = f"Editing {user_to_edit.name} | Andrew's Blog"
-    form = EditUser(request.form, meta={"csrf_context": session})
+    form = EditUser(request.form, meta={"csrf_context": flask.session})
     form.name.data = user_to_edit.name
     form.email.data = user_to_edit.email
     form.account_type.data = user_to_edit.account_type
@@ -800,22 +802,23 @@ def user_edit(user_id):
 @login_required
 def guitar_tabs():
     title = "Guitar Tabs | Andrew's Guitar Tabs"
-    all_tabs = get_all_tabs()
-    return render_template("guitar-tabs.html", title=title, all_tabs=all_tabs)
+    all_artists = get_all_artists()
+    return render_template("guitar-tabs/guitar-tabs.html", title=title, all_artists=all_artists)
 
 
 @app.route("/guitar-tabs/Guitar-Tab", methods=["POST", "GET"])
 @login_required
 def tab():
     title = f"{request.args.get('song_name')} | Andrew's Guitar Tabs"
-    return render_template("song-tab.html", title=title)
+    artist = request.args.get('artist')
+    return render_template("guitar-tabs/song-tab.html", title=title, artist=artist)
 
 
 @app.route("/guitar-tabs/tab-upload", methods=["POST", "GET"])
 @login_required
 def tab_upload():
     title = "Tab Upload | Andrew's Guitar Tabs"
-    form = TabUpload(CombinedMultiDict((request.files, request.form)), meta={"csrf_context": session})
+    form = TabUpload(CombinedMultiDict((request.files, request.form)), meta={"csrf_context": flask.session})
     if request.method == "POST" and form.validate():
         form_data = {
             'artist': form.artist.data,
@@ -834,7 +837,15 @@ def tab_upload():
             flash("Unable to upload tab, please try again or contact an admin")
             return redirect(url_for("tab_upload"))
     else:
-        return render_template("tab-upload.html", title=title, form=form)
+        return render_template("guitar-tabs/tab-upload.html", title=title, form=form)
+
+
+@app.route("/guitar-tabs/Artist/<string:artist>", methods=["POST", "GET"])
+@login_required
+def artist_index(artist):
+    title = f"{artist} | Andrew's Guitar Tabs"
+    all_songs = get_all_songs(artist)
+    return render_template("guitar-tabs/artist.html", artist=artist, title=title, all_songs=all_songs)
 
 
 # Fresh Login Function
@@ -899,4 +910,4 @@ def server_error(e):
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=False)
-    # app.run(host='localhost', port=5000, debug=True)  # for testing
+    # app.run(host='127.0.0.1', port=5000, debug=True)  # for testing
