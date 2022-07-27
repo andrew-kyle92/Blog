@@ -26,4 +26,19 @@
         </div>
     </div>
 
+    <div id="mobile-header">
+        <div class="mobile-title">
+            <a href="{{ url_for('guitar_tabs') }}">Guitar Tabs</a>
+        </div>
+        <div class="links-min collapsed">
+            <button class="nav-menu-btn">Menu <i class="fas fa-solid fa-bars"></i></button>
+        </div>
+        <div class="links-content">
+            <ul class="mobile-ul">
+                <li><a class="collapse-a" href="{{ url_for('get_all_posts') }}">Blog Home</a></li>
+                <li><a class="collapse-a" href="{{ url_for('tab_upload') }}">Upload a tab</a></li>
+            </ul>
+        </div>
+    </div>
+
     <hr>

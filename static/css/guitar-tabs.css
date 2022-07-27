@@ -3,6 +3,10 @@
     src: url(../fonts/punk\ kid.ttf)
 }
 
+hr {
+    width: 90%;
+}
+
 html {
     width: 100%;
     overflow: auto;
@@ -10,6 +14,8 @@ html {
 
 body {
     background: #2e2d2d;
+    margin: 0;
+    overflow: hidden;
 }
 
 #scrollToTop {
@@ -34,7 +40,9 @@ body {
 #page-top {
     display: flex;
     flex-direction: row;
+    margin: 1rem auto 0rem;
     justify-content: space-between;
+    width: 90%;
 }
 
 #page-top a:hover {
@@ -43,7 +51,8 @@ body {
 
 #page-index {
     margin: 1rem auto;
-    width: fit-content;
+    text-align: center;
+    width: 90%;
 }
 
 #page-index a {
@@ -60,7 +69,7 @@ body {
 
 #main-content {
     margin: 1rem auto;
-    width: 80%;
+    width: 90%;
 }
 
 #main-content p {
@@ -116,11 +125,6 @@ body {
 .artist-a:hover {
     color: aliceblue;
     text-decoration: underline;
-}
-
-.artist {
-    display: flex;
-    flex-direction: row;
 }
 
 .tab-anchor {
@@ -198,6 +202,7 @@ table {
 }
 
 thead {
+    background-color: #525050;
     color: aliceblue;
     font-size: 25px;
     text-align: justify;
@@ -212,7 +217,6 @@ thead {
     color: #ba2b2b;
     font-family: 'PunkKid';
     font-size: 35px;
-    margin: 1rem;
     text-align: justify;
     width: fit-content;
 }
@@ -224,6 +228,69 @@ color: #9c2e1e;
     margin: auto 0.5rem;
 }
 
+/* Header responsiveness */
+#mobile-header {
+    display: flex;
+    margin: 1rem auto 0;
+    justify-content: space-between;
+    width: 90%;
+}
+
+.mobile-title a {
+    color: #ba2b2b;
+    font-family: 'PunkKid';
+    font-size: 35px;
+}
+
+.mobile-title a:hover {
+    color: aliceblue;
+}
+
+.nav-menu-btn {
+    background-color: #2e2d2d;
+    border: 1px solid;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 13px;
+    text-transform: uppercase;
+    color: #ba2b2b;
+}
+
+.nav-menu-btn:hover{
+    color: aliceblue;
+}
+
+.active {
+    color: aliceblue;
+}
+
+.links-content {
+    background: #2e2d2d;
+    margin: 3rem auto;
+    max-height: 0;
+    overflow: hidden;
+    position: absolute;
+    transition: max-height 0.2s ease-out;
+    width: 90%;
+}
+
+.links-content li a {
+    color: #ba2b2b;
+    font-family: 'PunkKid';
+    font-size: 25px;
+    text-decoration: none;
+}
+
+.links-content li a:hover {
+    color: aliceblue;
+}
+
+.mobile-ul {
+    list-style: none;
+    margin-top: 0;
+    padding-left: 0;
+}
+
 /* Screen Responsiveness */
 @media only screen and (max-width: 900px) and (min-width: 700px){
     #form {
@@ -232,16 +299,16 @@ color: #9c2e1e;
 }
 
 @media only screen and (max-width: 700px) and (min-width: 400px){
-    form {
-        width: 100%;
+    #form {
+        width: 90%;
     }
 
     #main-content {
-        width: 100%;
+        width: 90%;
     }
 
     .inner-list {
-        width: 100%;
+        width: 90%;
     }
 
     .artist-song-list {
@@ -249,12 +316,20 @@ color: #9c2e1e;
     }
 
     .form-groups {
-        width: 100%;
+        width: 90%;
+    }
+
+    .main-content {
+        width: 90%;
     }
 }
 
 @media only screen and (max-width: 475px) {
     #form {
-        width: 80%;
+        width: 90%;
+    }
+
+    .inner-list {
+        flex-direction: column;
     }
 }

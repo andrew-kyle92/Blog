@@ -9,6 +9,10 @@ body {
     font-size: 12px;
 }
 
+hr {
+    width: 90%;
+}
+
 #page-top {
     display: flex;
     flex-direction: row;
@@ -25,7 +29,7 @@ body {
     color: #9c2e1e;
     font-size: 25px;
     font-family: 'PunkKid';
-    margin: auto 0.5rem;
+    margin: auto 2rem;
     text-decoration: none;
 }
 
@@ -285,4 +289,67 @@ body {
 /* Defines the color of the music symbols when they are being played (svg) */
 fill: #0078ff;
 stroke: #0078ff;
+}
+
+/* Header responsiveness */
+#mobile-header {
+    display: flex;
+    margin: 1rem auto 0;
+    justify-content: space-between;
+    width: 90%;
+}
+
+.mobile-title a {
+    color: #ba2b2b;
+    font-family: 'PunkKid';
+    font-size: 35px;
+}
+
+.mobile-title a:hover {
+    color: aliceblue;
+}
+
+.nav-menu-btn {
+    background-color: #2e2d2d;
+    border: 1px solid;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 13px;
+    text-transform: uppercase;
+    color: #ba2b2b;
+}
+
+.nav-menu-btn:hover{
+    color: aliceblue;
+}
+
+.active {
+    color: aliceblue;
+}
+
+.links-content {
+    background: #2e2d2d;
+    margin: 3rem auto;
+    max-height: 0;
+    overflow: hidden;
+    position: absolute;
+    transition: max-height 0.2s ease-out;
+    width: 90%;
+}
+
+.links-content li a {
+    color: #ba2b2b;
+    font-family: 'PunkKid';
+    font-size: 25px;
+    text-decoration: none;
+}
+
+.links-content li a:hover {
+    color: aliceblue;
+}
+
+.mobile-ul {
+    list-style: none;
+    margin-top: 0;
+    padding-left: 0;
 }
