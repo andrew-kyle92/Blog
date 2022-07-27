@@ -18,7 +18,9 @@ hr {
     flex-direction: row;
     font-family: 'PunkKid'!important;
     font-size: 25px!important;
+    margin: auto;
     justify-content: space-between;
+    width: 90%;
 }
 
 #page-top a:hover {
@@ -352,4 +354,10 @@ stroke: #0078ff;
     list-style: none;
     margin-top: 0;
     padding-left: 0;
+}
+
+/* Mobile Responsiveness */
+
+@media only screen and (max-width: 700px) and (min-width: 400px) {
+
 }
