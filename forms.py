@@ -13,7 +13,7 @@ class MyBaseForm(Form):
     class Meta:
         csrf = True
         csrf_class = SessionCSRF
-        csrf_secret = os.urandom(16)
+        csrf_secret = bytearray(config.get("SECRET_KEY"), 'utf-8')
         csrf_time_limit = timedelta(minutes=20)
 
 

@@ -1,29 +1,30 @@
 {% macro make_form(action="", form="", has_file=False) %}
 {# This macro is for the basic forms #}
 <!--suppress ALL -->
-<form id="form" action="{{ action }}" method="post" {% if has_file %} enctype="multipart/form-data" {% endif %} novalidate>
-    {% for field in form %}
-    {% if field.name == "csrf_token" %}
+<form id="form" action="{{ action }}" method="post" {% if has_file %} enctype="multipart/form-data" {% else %} enctype="application/x-www-form-urlencoded" {% endif %} novalidate>
     {{ form.csrf_token }}
-    {% if field.errors %}
-        {% for error in field.errors %}
+    {% if form.csrf_token.errors %}
+        {% for error in form.csrf_token.errors %}
         <br>
         <span class="field-error">{{ error }}</span>
         {% endfor %}
-        {% endif %}
-    {% elif field.type == "HiddenField" %}
+    {% endif %}
+    {% for field in form %}
+        {% if field.name == "csrf_token" %}
+
+        {% elif field.type == "HiddenField" %}
     <input name="{{ field.name }}" type="hidden" value>
-    {% elif field.type == "BooleanField" %}
+        {% elif field.type == "BooleanField" %}
     <div class="form-groups">
     <input type="checkbox" name="{{ field.name }}">
     <label class="form-label">{{ field.label.text }}</label>
     </div>
-    {% elif field.type == "SubmitField" %}
+        {% elif field.type == "SubmitField" %}
     <br>
     <div class="submit-btn">
         <input id="submit" type="submit" name="{{ field.name }}" value="{{ field.label.text }}">
     </div>
-    {% elif field.type == "PasswordField" %}
+        {% elif field.type == "PasswordField" %}
     <div class="form-groups">
         <label class="form-label" for="{{ field.name }}">{{ field.label.text }}</label>
         <br>
@@ -31,96 +32,92 @@
         <input class="form-input" type="password" name="{{ field.name }}" required>
         <span class="show-pass"><i class="fas fa-regular fa-eye"></i></span>
         </div>
-        {% if field.errors %}
-        {% for error in field.errors %}
+            {% if field.errors %}
+                {% for error in field.errors %}
         <br>
         <span class="field-error">{{ error }}</span>
-        {% endfor %}
-        {% endif %}
+                {% endfor %}
+            {% endif %}
     </div>
-    {% elif field.type == "CKEditorField" %}
+        {% elif field.type == "CKEditorField" %}
     <div class="form-groups">
-        <label class="form-label" for{{ field.name }}>{{ field.label.text }}</label>
+        <label class="form-label" for="{{ field.name }}">{{ field.label.text }}</label>
+        <br>
+        {{ field }}
+            {% if field.errors %}
+                {% for error in field.errors %}
+        <br>
+        <span class="field-error">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+    </div>
+        {% elif field.type == "SelectField" %}
+    <div class="form-groups">
+        <label class="form-label" for="{{ field.name }}">{{ field.label.text }}</label>
         <br>
             {% if "required" in field|string() %}
-        <textarea class="ckeditor" id="message" name="message" required>{% if field.data != "" %} {{ field.data }} {% endif %}</textarea>
+        <select class="form-input" name="{{ field.name }}" {% if field.data %} value="{{ field.data }}" {% endif %} required>
+                {% for option in field %}
+            {{ option }}
+                {% endfor %}
+        </select>
             {% else %}
-        <textarea class="ckeditor" id="message" name="message">{% if field.data != "" %} {{ field.data }} {% endif %}</textarea>
+        <select class="form-input" name="{{ field.name }}" {% if field.data %} value="{{ field.data }}" {% endif %}>
+                {% for option in field %}
+            {{ option }}
+                {% endfor %}
+        </select>
             {% endif %}
-        {% if field.errors %}
-        {% for error in field.errors %}
+            {% if field.errors %}
+                {% for error in field.errors %}
         <br>
         <span class="field-error">{{ error }}</span>
-        {% endfor %}
-        {% endif %}
+                {% endfor %}
+            {% endif %}
     </div>
-    {% elif field.type == "SelectField" %}
+        {% elif field.type == "FileField" %}
     <div class="form-groups">
         <label class="form-label" for="{{ field.name }}">{{ field.label.text }}</label>
         <br>
-        {% if "required" in field|string() %}
-        <select class="form-input" name="{{ field.name }}" {% if field.data != "" %} value="{{ field.data }}" {% endif %} required>
-            {% for option in field %}
-            {{ option }}
-            {% endfor %}
-        </select>
-        {% else %}
-        <select class="form-input" name="{{ field.name }}" {% if field.data != "" %} value="{{ field.data }}" {% endif %}>
-            {% for option in field %}
-            {{ option }}
-            {% endfor %}
-        </select>
-        {% endif %}
-        {% if field.errors %}
-        {% for error in field.errors %}
-        <br>
-        <span class="field-error">{{ error }}</span>
-        {% endfor %}
-        {% endif %}
-    </div>
-    {% elif field.type == "FileField" %}
-    <div class="form-groups">
-        <label class="form-label" for="{{ field.name }}">{{ field.label.text }}</label>
-        <br>
-        {% if "required" in field|string() %}
+            {% if "required" in field|string() %}
         <input class="form-input" name="{{ field.name }}" type="file" required>
-        {% else %}
+            {% else %}
         <input class="form-input" name="{{ field.name }}" type="file">
-        {% endif %}
-        {% if field.errors %}
-        {% for error in field.errors %}
+            {% endif %}
+            {% if field.errors %}
+                {% for error in field.errors %}
         <br>
         <span class="field-error">{{ error }}</span>
-        {% endfor %}
-        {% endif %}
-    </div>
-    {% else %}
-        {% if "required" in field|string() %}
-    <div class="form-groups">
-        <label class="form-label" for="{{ field.name }}">{{ field.label.text }}</label>
-        <br>
-        <input class="form-input" name="{{ field.name }}" type="text" {% if field.data != "" %} value="{{ field.data }}" {% endif %} required>
-        {% if field.errors %}
-        {% for error in field.errors %}
-        <br>
-        <span class="field-error">{{ error }}</span>
-        {% endfor %}
-        {% endif %}
+                {% endfor %}
+            {% endif %}
     </div>
         {% else %}
+            {% if "required" in field|string() %}
     <div class="form-groups">
         <label class="form-label" for="{{ field.name }}">{{ field.label.text }}</label>
         <br>
-        <input class="form-input" name="{{ field.name }}" type="text" {% if field.data != "" %} value="{{ field.data }}" {% endif %} required>
-        {% if field.errors %}
-        {% for error in field.errors %}
+        <input class="form-input" name="{{ field.name }}" type="text" {% if field.data %} value="{{ field.data }}" {% endif %} required>
+            {% if field.errors %}
+                {% for error in field.errors %}
         <br>
         <span class="field-error">{{ error }}</span>
-        {% endfor %}
-        {% endif %}
+                {% endfor %}
+            {% endif %}
     </div>
+            {% else %}
+    <div class="form-groups">
+        <label class="form-label" for="{{ field.name }}">{{ field.label.text }}</label>
+        <br>
+        <input class="form-input" name="{{ field.name }}" type="text" {% if field.data %} value="{{ field.data }}" {% endif %} required>
+            {% if field.errors %}
+                {% for error in field.errors %}
+        <br>
+        <span class="field-error">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+    </div>
+            {% endif %}
         {% endif %}
-    {% endif %}
     {% endfor %}
 </form>
 {% endmacro %}

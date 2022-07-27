@@ -96,22 +96,29 @@ body {
 
 .inner-list {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: flex-start;
     margin: auto;
     width: 90%;
 }
 
 .artist-list {
-    margin: auto 0rem;
+    margin: auto 0.5rem;
 }
 
-.artist-span {
+.artist-a {
     color: #9c2e1e;
     font-family: sans-serif;
     font-size: 25px;
+    text-decoration: none;
 }
 
-.artist-song-list {
+.artist-a:hover {
+    color: aliceblue;
+    text-decoration: underline;
+}
+
+.artist {
     display: flex;
     flex-direction: row;
 }
@@ -182,6 +189,39 @@ body {
 .field-error {
     color: #ba2b2b;
     font-style: italic;
+}
+
+/* Styling for Artist Index */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+thead {
+    color: aliceblue;
+    font-size: 25px;
+    text-align: justify;
+}
+
+.main-content {
+    margin: auto;
+    width: 65%;
+}
+
+.artist-title {
+    color: #ba2b2b;
+    font-family: 'PunkKid';
+    font-size: 35px;
+    margin: 1rem;
+    text-align: justify;
+    width: fit-content;
+}
+
+.inner-td {
+color: #9c2e1e;
+    font-size: 25px;
+    font-family: sans-serif;
+    margin: auto 0.5rem;
 }
 
 /* Screen Responsiveness */

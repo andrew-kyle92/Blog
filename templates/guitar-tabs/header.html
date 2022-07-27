@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-{% import "bootstrap/wtf.html" as wtf %}
-{% from "_macro.html" import make_form %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,9 +9,14 @@
     <script src="https://kit.fontawesome.com/aa2109974d.js" crossorigin="anonymous"></script>
 </head>
 <body>
+
     <div id="page-top">
         <div class="left-top">
+            {% if request.endpoint != "guitar_tabs" %}
             <a class="blog-home-btn" href="{{ url_for('guitar_tabs') }}">Tabs Home</a>
+            {% else %}
+            <a class="blog-home-btn" href="{{ url_for('get_all_posts') }}">Blog Home</a>
+            {% endif %}
         </div>
         <div class="middle-top">
             <p>Guitar Tabs</p>
@@ -24,15 +27,3 @@
     </div>
 
     <hr>
-    {% with messages = get_flashed_messages() %}
-    {% if messages: %}
-    {% for message in messages: %}
-    <p style="color: #ba2b2b; font-size: 25px; font-family: sans-serif;">{{ message }}</p>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
-
-    {{ make_form(form=form, has_file=True) }}
-
-</body>
-</html>
