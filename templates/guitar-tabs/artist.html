@@ -2,13 +2,12 @@
 
 <div class="main-content">
     <p class="artist-title">{{ artist }}</p>
-    <hr>
     <div class="song-content">
         <table>
             <thead>
                 <tr>
                     <td style="width: 60%">Song</td>
-                    <td>Album</td>
+                    <td style="width: fit-content">Album</td>
                     <td>Format</td>
                 </tr>
             </thead>
@@ -27,6 +26,6 @@
 </div>
 
 
-
+<script src="{{ url_for('static', filename='js/guitar-tabs.js') }}"></script>
 
 {% include "guitar-tabs/footer.html" %}
