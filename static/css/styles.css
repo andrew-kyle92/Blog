@@ -236,7 +236,6 @@ html {
 }
 
 td {
-    background-color: aliceblue;
     border: 2px solid black;
     border-collapse: collapse;
     text-align: center;
@@ -253,6 +252,14 @@ table {
     margin: 1rem auto;
     width: 100%;
     text-align: center;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f0f8ff;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #d2d6d9;
 }
 
 /*** Administration Settings Styling ***/

@@ -308,7 +308,7 @@ def edit_profile(_id):
     user = current_user
     year = datetime.datetime.now().year
     form = ProfileContent(CombinedMultiDict((request.files, request.form)), meta={"csrf_context": flask.session})
-    if form.validate():
+    if request.method == "POST" and form.validate():
         pic_dir = f"/static/uploads/users/" \
                   f"{user_data.id}-{user_data.name.replace(' ', '_').lower()}/data/profile-picture"
         root_path = "./static/uploads/users"
@@ -425,7 +425,7 @@ def add_new_post():
     year = datetime.datetime.now().year
     form = CreatePostForm(request.form, meta={"csrf_context": flask.session})
     if user.account_type == "Admin" or user.account_type == "Super-Admin":
-        if form.validate():
+        if request.method == "POST" and form.validate():
             new_post = BlogPost(
                 title=form.title.data,
                 subtitle=form.subtitle.data,
@@ -727,7 +727,7 @@ def edit_settings(user_id):
     year = datetime.datetime.now().year
     auth_user = User.query.get(user_id)
     form = EditSettings(request.form, meta={"csrf_context": flask.session})
-    if form.validate():
+    if request.method == "POST" and form.validate():
         user = User.query.get(current_user.id)
         user.name = form.name.data
         user.email = form.email.data

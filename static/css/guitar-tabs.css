@@ -222,10 +222,19 @@ thead {
 }
 
 .inner-td {
-color: #9c2e1e;
+    color: #9c2e1e;
     font-size: 25px;
     font-family: sans-serif;
     margin: auto 0.5rem;
+    padding: 5px 0px;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #878686;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #999696;
 }
 
 /* Header responsiveness */
