@@ -79,12 +79,21 @@ html {
 /******************** End General Styling ********************/
 
 /******************** Form Error Styling ********************/
+.error label{
+    color: #c40a0a;
+}
+
+.error input {
+    border-color: #c40a0a;
+    border-style: solid;
+    border-radius: 2px;
+}
+
 .field-error {
     color: #c40a0a;
     font-size: 16px;
     font-style: italic;
 }
-
 /******************** End Form Error Styling ********************/
 
 /******************** Login Page ********************/
