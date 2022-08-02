@@ -170,3 +170,24 @@ def upload_tab(form_data):
                 return True
     else:
         return False
+
+
+def get_song(artist, song_name):
+    """
+    Gets the songFile based on the song and artist name
+    :param artist:
+    :param song_name:
+    :return:
+    query of the song path
+    """
+    with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+        with conn.cursor() as cur:
+            query = f"""
+                SELECT tab_file
+                FROM song_tabs
+                WHERE artist = '{artist}'
+                AND tab_name = '{song_name}'
+            """
+            cur.execute(query)
+            song_file = cur.fetchone()
+            return song_file[0]

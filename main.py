@@ -19,7 +19,7 @@ from werkzeug.datastructures import CombinedMultiDict
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from functions import create_folder_struct, add_music, update_account
-from sql_queries import get_user_songs, delete_song, get_all_artists, upload_tab, get_all_songs
+from sql_queries import get_user_songs, delete_song, get_all_artists, upload_tab, get_all_songs, get_song
 from email_class import SendEmail
 from forms import (CreatePostForm, RegisterForm, LoginForm, CommentForm, ContactForm, EmailPassword, CodeConfirmation,
                    ResetPassword, ProfileContent, SongUpload, EditSettings, ChangePassword, EditUser, TabUpload)
@@ -809,9 +809,11 @@ def guitar_tabs():
 @app.route("/guitar-tabs/Guitar-Tab", methods=["POST", "GET"])
 @login_required
 def tab():
-    title = f"{request.args.get('song_name')} | Andrew's Guitar Tabs"
     artist = request.args.get('artist')
-    return render_template("guitar-tabs/song-tab.html", title=title, artist=artist)
+    song_name = request.args.get("song_name")
+    title = f"{song_name} | Andrew's Guitar Tabs"
+    song_file = get_song(artist, song_name)
+    return render_template("guitar-tabs/song-tab.html", title=title, artist=artist, songFile=song_file)
 
 
 @app.route("/guitar-tabs/tab-upload", methods=["POST", "GET"])
