@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/guitar.ico') }}" type="image/x-icon">
   </head>
 
- <body>
+ <body data-song-file="{{ songFile }}">
     <div id="page-top">
         <div class="left-top">
             {% if request.endpoint != "guitar_tabs" %}

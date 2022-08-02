@@ -3,14 +3,7 @@ const wrapper = document.querySelector(".at-wrap");
 const main = wrapper.querySelector(".at-main");
 
 // Getting the song file
-var queryString = document.location.search;
-var urlParams = new URLSearchParams(queryString);
-if(!urlParams.get("song_file")){
-    var gpFile = null
-}
-else{
-    var gpFile = urlParams.get("song_file");
-}
+const gpFile = document.querySelector("body").dataset.songFile;
 
 // initialize alphatab
 const settings = {

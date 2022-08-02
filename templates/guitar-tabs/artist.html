@@ -14,7 +14,7 @@
             <tbody>
                 {% for song in all_songs.keys() | sort(attribute="song") %}
                 <tr>
-                    <td class="inner-td"><a class="tab-anchor" href="{{ url_for('tab', song_file=all_songs[song]['file'], song_name=song, artist=artist) }}">{{ song }}</a></td>
+                    <td class="inner-td"><a class="tab-anchor" href="{{ url_for('tab', song_name=song, artist=artist) }}">{{ song }}</a></td>
                     <td class="inner-td">{{ all_songs[song]['album'] }}</td>
                     <td class="inner-td">Guitar Pro</td>
                 </tr>
