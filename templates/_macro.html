@@ -15,7 +15,11 @@
         {% elif field.type == "HiddenField" %}
     <input name="{{ field.name }}" type="hidden" value>
         {% elif field.type == "BooleanField" %}
+            {% if field.errors %}
+    <div class="form-groups error">
+            {% else %}
     <div class="form-groups">
+            {% endif %}
     <input type="checkbox" name="{{ field.name }}">
     <label class="form-label">{{ field.label.text }}</label>
     </div>
@@ -25,7 +29,11 @@
         <input id="submit" type="submit" name="{{ field.name }}" value="{{ field.label.text }}">
     </div>
         {% elif field.type == "PasswordField" %}
+            {% if field.errors %}
+    <div class="form-groups error">
+            {% else %}
     <div class="form-groups">
+            {% endif %}
         <label class="form-label" for="{{ field.name }}">{{ field.label.text }}</label>
         <br>
         <div class="form-password">
@@ -40,7 +48,11 @@
             {% endif %}
     </div>
         {% elif field.type == "CKEditorField" %}
+            {% if field.errors %}
+    <div class="form-groups error">
+            {% else %}
     <div class="form-groups">
+            {% endif %}
         <label class="form-label" for="{{ field.name }}">{{ field.label.text }}</label>
         <br>
         {{ field }}
@@ -52,7 +64,11 @@
             {% endif %}
     </div>
         {% elif field.type == "SelectField" %}
+            {% if field.errors %}
+    <div class="form-groups error">
+            {% else %}
     <div class="form-groups">
+            {% endif %}
         <label class="form-label" for="{{ field.name }}">{{ field.label.text }}</label>
         <br>
             {% if "required" in field|string() %}
@@ -76,7 +92,11 @@
             {% endif %}
     </div>
         {% elif field.type == "FileField" %}
+            {% if field.errors %}
+    <div class="form-groups error">
+            {% else %}
     <div class="form-groups">
+            {% endif %}
         <label class="form-label" for="{{ field.name }}">{{ field.label.text }}</label>
         <br>
             {% if "required" in field|string() %}
@@ -92,23 +112,18 @@
             {% endif %}
     </div>
         {% else %}
-            {% if "required" in field|string() %}
-    <div class="form-groups">
-        <label class="form-label" for="{{ field.name }}">{{ field.label.text }}</label>
-        <br>
-        <input class="form-input" name="{{ field.name }}" type="text" {% if field.data %} value="{{ field.data }}" {% endif %} required>
             {% if field.errors %}
-                {% for error in field.errors %}
-        <br>
-        <span class="field-error">{{ error }}</span>
-                {% endfor %}
-            {% endif %}
-    </div>
+    <div class="form-groups error">
             {% else %}
     <div class="form-groups">
+            {% endif %}
         <label class="form-label" for="{{ field.name }}">{{ field.label.text }}</label>
         <br>
+            {% if "required" in field|string() %}
         <input class="form-input" name="{{ field.name }}" type="text" {% if field.data %} value="{{ field.data }}" {% endif %} required>
+            {% else %}
+        <input class="form-input" name="{{ field.name }}" type="text" {% if field.data %} value="{{ field.data }}" {% endif %} required>
+            {% endif %}
             {% if field.errors %}
                 {% for error in field.errors %}
         <br>
@@ -116,7 +131,6 @@
                 {% endfor %}
             {% endif %}
     </div>
-            {% endif %}
         {% endif %}
     {% endfor %}
 </form>
