@@ -99,8 +99,15 @@ def check_music_dir(user_data, song_data):
         return False
     else:
         # checking if there are any more songs in the album directory
+        music_exts = [".mp3", ".m4a", ".wav"]
+        song_exists = False
         album_files = os.listdir(f"{album_dir}")
-        if len(album_files) > 1:
+        for file in album_files:
+            song_ext = file[len(file)-4:]
+            if song_ext in music_exts:
+                song_exists = True
+                break
+        if song_exists:
             return True, song_data["song_name"], 0
         else:
             shutil.rmtree(album_dir, ignore_errors=False)
