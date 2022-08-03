@@ -86,8 +86,8 @@ def check_music_dir(user_data, song_data):
 
     user_path = f"static/uploads/users/{user_data['id']}-{user_data['name'].lower().replace(' ', '_')}"
     music_path = f"{user_path}/data/music"
-    artist_dir = f"{music_path}/{song_data['artist'].lower().replace(' ', '_')}"
-    album_dir = f"{artist_dir}/{song_data['album'].lower().replace(' ', '_')}"
+    artist_dir = f"{music_path}/{song_data['artist'].replace(' ', '_')}"
+    album_dir = f"{artist_dir}/{song_data['album'].replace(' ', '_')}"
     user = user_data
     song_path = song_data["song_file"]
 
