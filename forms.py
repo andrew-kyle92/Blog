@@ -86,7 +86,7 @@ class ProfileContent(MyBaseForm):
 class SongUpload(MyBaseForm):
     artist = StringField("Artist", validators=[DataRequired()])
     album = StringField("Album", validators=[DataRequired()])
-    album_art = FileField("Album Art", validators=[FileAllowed(["jpg", "png"], "Images only!")])
+    album_art = FileField("Album Art", validators=[DataRequired(), FileAllowed(["jpg", "png"], "Images only!")])
     song = FileField("Song", validators=[FileAllowed(["wav", "mp3", "m4a"],
                                                      "Only .wav, .mp3, and .m4a files are accepted"),
                                          DataRequired()])
