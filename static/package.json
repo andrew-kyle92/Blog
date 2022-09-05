@@ -17,7 +17,6 @@
   },
   "homepage": "https://github.com/andrew-kyle92/Blog#readme",
   "dependencies": {
-    "@coderline/alphatab": "^1.2.2",
-    "pg": "^8.7.3"
+    "@coderline/alphatab": "^1.2.2"
   }
 }
