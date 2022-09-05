@@ -19,7 +19,7 @@ from werkzeug.datastructures import CombinedMultiDict
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from functions import create_folder_struct, add_music, update_account
-from sql_queries import get_user_songs, delete_song, get_all_artists, upload_tab, get_all_songs, get_song
+from sql_queries import get_user_songs, delete_song, get_all_artists, upload_tab, get_all_songs, get_song, query_users
 from email_class import SendEmail
 from forms import (CreatePostForm, RegisterForm, LoginForm, CommentForm, ContactForm, EmailPassword, CodeConfirmation,
                    ResetPassword, ProfileContent, SongUpload, EditSettings, ChangePassword, EditUser, TabUpload)
@@ -59,6 +59,8 @@ app.add_url_rule("/new-post", endpoint="add_new_post")
 app.add_url_rule(rule="/edit-post", endpoint="edit_post")
 app.add_url_rule(rule="/delete", endpoint="delete_post")
 app.add_url_rule("/profile/settings", endpoint="settings")
+app.add_url_rule(rule="/profile/settings/edit", endpoint="settings_edit")
+app.add_url_rule(rule="/profile/edit-profile", endpoint="edit_profile")
 db = SQLAlchemy(app)
 
 # #USER LOGIN
@@ -299,10 +301,13 @@ def profile(_id):
     )
 
 
-@app.route('/profile/<int:_id>/edit-profile', methods=["POST", "GET"])
+@app.route('/profile/edit-profile', methods=["POST", "GET"])
+@app.endpoint("edit_profile")
 @login_required
 @fresh_login_required
-def edit_profile(_id):
+def edit_profile():
+    _id = request.args.get("_id")
+    print(request.args)
     user_data = User.query.get(_id)
     title = f"Edit Profile | Andrew's Blog"
     user = current_user
@@ -683,7 +688,7 @@ def settings():
     year = datetime.datetime.now().year
     auth_user = User.query.get(user_id)
     form = ChangePassword(request.form, meta={"csrf_context": flask.session})
-    all_users = User.query.all()
+    all_users = query_users()
     song_query = get_user_songs(auth_user.id)
     if song_query is not False:
         user_songs = {song[0]: {"Artist": song[1], "Album": song[2], "Song": song[3], "Song File": song[4]}
@@ -853,16 +858,23 @@ def artist_index(artist):
 # Fresh Login Function
 @login_manager.needs_refresh_handler
 def refresh():
+    user_id = None
+    _id = None
+    post_id = None
     if request.args.get("user_id"):
         user_id = request.args.get("user_id")
     if request.args.get("post_id"):
         post_id = request.args.get("post_id")
+    if request.args.get("_id"):
+        _id = request.args.get("_id")
 
     flash("To protect your account, re-authentication is needed to access this page.")
-    if request.endpoint == "edit_post" or request.endpoint == "delete_post":
-        return redirect(url_for("login", next=request.endpoint, post_id=post_id))
-    elif request.endpoint == "settings" or request.endpoint == "user_edit" or request.endpoint == "edit_settings":
+    if user_id:
         return redirect(url_for("login", next=request.endpoint, user_id=user_id))
+    elif post_id:
+        return redirect(url_for("login", next=request.endpoint, post_id=post_id))
+    elif _id:
+        return redirect(url_for("login", next=request.endpoint, _id=_id))
     else:
         return redirect(url_for("login", next=request.endpoint))
 

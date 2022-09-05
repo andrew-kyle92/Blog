@@ -102,7 +102,7 @@
           <th>Account Type</th>
           <th>Creation Date</th>
         </tr>
-        {% for user in users | sort(attribute=user.name) %}
+        {% for user in users %}
         <tr>
           <td>{{ user.id }}</td>
           <td><a class="user-link" href="{{ url_for('user_edit', user_id=user.id) }}">{{ user.name }}</a></td>

@@ -2,12 +2,33 @@ import psycopg2
 import psycopg2.extras
 from dotenv import dotenv_values
 from functions import check_music_dir, upload_tab_file
-import os
 
 config = dotenv_values(".env")
 
 # Test DB Params = dbname="blogdb", user="postgres", password=config.get("TEST_DB_PASSWORD")
 # Prod DB Params = dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")
+
+
+def query_users():
+    """ Fetches all users in the db"""
+    conn = None
+    try:
+        with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+            with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+                user_query = """
+                    SELECT * FROM users
+                    ORDER BY id ASC;
+                """
+                cur.execute(user_query)
+                data = cur.fetchall()
+                cur.close()
+                return data
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        return False
+    finally:
+        if conn is not None:
+            conn.close()
 
 
 def get_user_songs(user_id):
@@ -153,8 +174,6 @@ def get_all_songs(artist):
 def upload_tab(form_data):
     """
     Uploads the tablature file into the server and adds it the db.
-    :param form_data:
-    :return:
     """
     can_upload = upload_tab_file(form_data)
     if can_upload[0]:
