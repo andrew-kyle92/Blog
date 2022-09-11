@@ -26,7 +26,7 @@
             {% for message in messages: %}
               <div class="alert-message block-message email-success">
                 <a class="close" onclick="closeMessage()">x</a>
-                <p style="color: red"><em>{{ message }}</em></p>
+                <p style="color: red; text-align: 'center';"><em>{{ message }}</em></p>
               </div>
             {% endfor %}
           {% endif %}
@@ -35,7 +35,7 @@
         {% with messages = get_flashed_messages() %}
           {% if messages: %}
             {% for message in messages: %}
-              <p style="color: #368dc7"><em>{{ message }}</em></p>
+              <p style="color: #368dc7; text-align: 'center';"><em>{{ message }}</em></p>
             {% endfor %}
           {% endif %}
         {% endwith %}

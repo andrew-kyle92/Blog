@@ -520,7 +520,7 @@ def forgot_password():
         form.step.data = step
     if request.method == "POST":
         if form.validate():
-            if request.form.get("step") == "Email Confirmation":
+            if step == "Email Confirmation":
                 user_email = request.form.get("email")
                 req_user = User.query.filter_by(email=user_email).first()
                 user_data = {
@@ -535,14 +535,14 @@ def forgot_password():
                     flash(f"A confirmation code was sent to email: {req_user.email}")
                     return redirect(url_for("forgot_password",
                                             step="Code Confirmation", user=req_user.email))
-            elif request.form.get("step") == "Code Confirmation":
+            elif step == "Code Confirmation":
                 user_email = user
                 user = User.query.filter_by(email=user_email).first()
                 code = user.verification_code
                 sub_code = request.form.get("code_conf")
                 if code == sub_code:
                     return redirect(url_for("forgot_password", step="Password Reset", user=user_email))
-            elif request.form.get("step") == "Password Reset":
+            elif step == "Password Reset":
                 salted_password = generate_password_hash(
                     password=request.form.get("password"),
                     method="pbkdf2:sha256",
