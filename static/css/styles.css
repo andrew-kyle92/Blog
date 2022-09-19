@@ -638,6 +638,10 @@ tbody tr:nth-child(odd) {
         width: 100%;
     }
 
+    #form {
+        width: 100%;
+    }
+
     #user-edit-form {
         width: 100%;
     }
