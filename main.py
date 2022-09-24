@@ -19,7 +19,8 @@ from werkzeug.datastructures import CombinedMultiDict
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from functions import create_folder_struct, add_music, update_account
-from sql_queries import get_user_songs, delete_song, get_all_artists, upload_tab, get_all_songs, get_song, query_users
+from sql_queries import get_user_songs, delete_song, get_all_artists_tabs, upload_tab, get_all_song_tabs, get_song,\
+    query_users, get_all_songs_audio, get_all_artists_audio
 from email_class import SendEmail
 from forms import (CreatePostForm, RegisterForm, LoginForm, CommentForm, ContactForm, EmailPassword, CodeConfirmation,
                    ResetPassword, ProfileContent, SongUpload, EditSettings, ChangePassword, EditUser, TabUpload)
@@ -807,7 +808,7 @@ def user_edit(user_id):
 @login_required
 def guitar_tabs():
     title = "Guitar Tabs | Andrew's Guitar Tabs"
-    all_artists = get_all_artists()
+    all_artists = get_all_artists_tabs()
     return render_template("guitar-tabs/guitar-tabs.html", title=title, all_artists=all_artists)
 
 
@@ -851,8 +852,18 @@ def tab_upload():
 @login_required
 def artist_index(artist):
     title = f"{artist} | Andrew's Guitar Tabs"
-    all_songs = get_all_songs(artist)
+    all_songs = get_all_song_tabs(artist)
     return render_template("guitar-tabs/artist.html", artist=artist, title=title, all_songs=all_songs)
+
+
+# Fetch Routes
+@app.route("/fetch-songs", methods=["POST", "GET"])
+def fetch_songs():
+    all_artists = get_all_artists_audio()
+    all_songs = {}
+    for artist in all_artists:
+        all_songs[artist] = get_all_songs_audio(artist)
+    return all_songs
 
 
 # Fresh Login Function

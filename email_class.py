@@ -1,7 +1,6 @@
 import smtplib
 from email.message import EmailMessage
 from email.headerregistry import Address
-from email.utils import make_msgid
 from dotenv import dotenv_values
 
 config = dotenv_values(".env")
@@ -69,7 +68,8 @@ class SendEmail:
                     <body>
                         <p>Hello {user_data["name"]},</p>
                         <br>
-                        <p>This email was sent because a password reset was requested. Your confirmation number is: {conf_code}<p> 
+                        <p>This email was sent because a password reset was requested. Your confirmation number is: 
+                        <strong>{conf_code}</strong><p> 
                         <br>
                         <p>If you did not submit this request, then just ignore this email.<p>
                         <br>

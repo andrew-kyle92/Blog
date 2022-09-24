@@ -135,7 +135,52 @@ def delete_song(user_id, song_id):
         print(f"An error occurred:\n{error}")
 
 
-def get_all_artists():
+def get_all_artists_audio():
+    """ Queries all audio artists in the DB """
+    with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+        with conn.cursor() as cur:
+            query = """
+                SELECT artist FROM artists
+            """
+            cur.execute(query)
+            res = cur.fetchall()
+            all_artists = [artist for artist in res[0]]
+            return all_artists
+
+
+def get_all_songs_audio(artist):
+    """ Queries all audio songs from the database """
+    with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            query = f"""
+                SELECT 
+                    al.album,
+                    s.song_name,
+                    s.song_file,
+                    s.album_art,
+                    s.ref_id
+                FROM songs s
+                INNER JOIN albums al
+                    ON al.id = s.album_id
+                INNER JOIN artists ar
+                    ON ar.id = s.artist_id
+                WHERE ar.artist = '{artist}'
+                ORDER BY album
+            """
+            cur.execute(query)
+            all_songs = cur.fetchall()
+            songs_dict = {
+                song["song_name"]: {
+                    "album": song["album"],
+                    "album_art": song["album_art"],
+                    "song_file": song["song_file"],
+                    "ref_id": song["ref_id"]
+                }
+                for song in all_songs}
+            return songs_dict
+
+
+def get_all_artists_tabs():
     """
         Queries the song_tabs table and pulls all the data and stores it into a dictionary
     """
@@ -152,7 +197,7 @@ def get_all_artists():
     return artist_list
 
 
-def get_all_songs(artist):
+def get_all_song_tabs(artist):
     """
     Pulls all tabs related to the artist requested
     :return:
