@@ -93,13 +93,13 @@ else{
 }
 
 playPauseBtn.addEventListener("click", function(){
-    if(playPauseBtn.className == "fas fa-play-circle"){
+    if(playPauseBtn.className == "fa-solid fa-circle-play"){
         songPlaying = true;
-        playPauseBtn.setAttribute("class", "fas fa-pause-circle");
+        playPauseBtn.setAttribute("class", "fa-solid fa-circle-pause");
         currentTrack.play();
     }
     else{
-        playPauseBtn.setAttribute("class", "fas fa-play-circle");
+        playPauseBtn.setAttribute("class", "fa-solid fa-circle-play");
         songPlaying = false;
         currentTrack.pause();
     }
@@ -115,7 +115,7 @@ backBtn.addEventListener("click", function(){
 
     if(currentTrack.currentTime < 5){
         currentTrack.currentTime = currentTrack.duration;
-        playPauseBtn.setAttribute("class", "fas fa-play-circle");
+        playPauseBtn.setAttribute("class", "fa-solid fa-circle-play");
         for(let i = 0; i < songItem.length; i++){
             if(songItem[i].dataset["songId"] == songObjects[parseInt(currentTrack.id)]["id"]){
                 songItem[i].setAttribute("class", "song-item");
@@ -134,12 +134,12 @@ backBtn.addEventListener("click", function(){
     }
 
     currentTrack.play();
-    playPauseBtn.setAttribute("class", "fas fa-pause-circle");
+    playPauseBtn.setAttribute("class", "fa-solid fa-circle-play");
 });
 
 forwardBtn.addEventListener("click", function(){
     currentTrack.currentTime = currentTrack.duration;
-    playPauseBtn.setAttribute("class", "fas fa-play-circle");
+    playPauseBtn.setAttribute("class", "fa-solid fa-circle-play");
     for(let i = 0; i < songItem.length; i++){
         if(songItem[i].dataset["songId"] == songObjects[parseInt(currentTrack.id)]["id"]){
             songItem[i].setAttribute("class", "song-item");
@@ -149,12 +149,12 @@ forwardBtn.addEventListener("click", function(){
     if(parseInt(currentTrack.id) < songObjects.length - 1){
         currentTrack = setTrack(songObjects, songObjects[parseInt(currentTrack.id) + 1]["index"]);
         currentTrack.play();
-        playPauseBtn.setAttribute("class", "fas fa-pause-circle");
+        playPauseBtn.setAttribute("class", "fa-solid fa-circle-pause");
     }
     else{
         currentTrack = setTrack(songObjects, songObjects[0]["index"]);
         currentTrack.play();
-        playPauseBtn.setAttribute("class", "fas fa-pause-circle");
+        playPauseBtn.setAttribute("class", "fa-solid fa-circle-pause");
     }
 });
 
@@ -174,7 +174,7 @@ function updateTime(){
         if(currentTrack.ended){
             currentTrack.currentTime = 0;
             songPlaying = false;
-            playPauseBtn.setAttribute("class", "fas fa-play-circle");
+            playPauseBtn.setAttribute("class", "fa-solid fa-circle-play");
         }
         else{
             duration = document.getElementsByClassName("seconds-start")[0];
@@ -222,7 +222,7 @@ function playTrack(song_id){
     if(songPlaying){
         currentTrack.currentTime = currentTrack.duration;
         songPlaying = false;
-        playPauseBtn.setAttribute("class", "fas fa-play-circle");
+        playPauseBtn.setAttribute("class", "fa-solid fa-circle-play");
     }
     for(let i = 0; i < songObjects.length; i++){
          if(songObjects[i]["id"] == song_id){
@@ -231,7 +231,7 @@ function playTrack(song_id){
          }
     }
     currentTrack.play();
-    playPauseBtn.setAttribute("class", "fas fa-pause-circle");
+    playPauseBtn.setAttribute("class", "fa-solid fa-circle-pause");
 };
 
 function volumeUp(){
@@ -271,11 +271,11 @@ for(let i = 0; i < artistTabs.length; i++){
         content = this.nextElementSibling;
         if(content.style.display == "block"){
             content.style.display = "none";
-            this.children[0].setAttribute("class", "fas fa-chevron-up");
+            this.children[0].setAttribute("class", "fa-solid fa-chevron-up");
         }
         else{
             content.style.display = "block";
-            this.children[0].setAttribute("class", "fas fa-chevron-down");
+            this.children[0].setAttribute("class", "fa-solid fa-chevron-down");
         }
     });
 }
@@ -285,11 +285,11 @@ for(let i = 0; i < albumTabs.length; i++){
         content = this.nextElementSibling;
         if(content.style.display == "block"){
             content.style.display = "none";
-            this.children[0].setAttribute("class", "fas fa-chevron-up");
+            this.children[0].setAttribute("class", "fa-solid fa-chevron-up");
         }
         else{
             content.style.display = "block";
-            this.children[0].setAttribute("class", "fas fa-chevron-down");
+            this.children[0].setAttribute("class", "fa-solid fa-chevron-down");
         }
     });
 }

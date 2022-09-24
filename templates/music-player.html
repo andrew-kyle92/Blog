@@ -6,7 +6,8 @@
     <title>Music Player</title>
     <link id="musicCSS" rel="stylesheet" href="{{ url_for('static', filename='css/music.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="text/css">
-    <script src="https://kit.fontawesome.com/aa2109974d.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/2cf927da1b.js" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/ajax/ajax-music.js') }}"></script>
 </head>
 <body id="main-player-content">
     <div id="main-frame" class="player-frame">
@@ -15,14 +16,14 @@
         {% endif %}
         <br>
         <div id="artist-list">
-            <button class="artist-btn">Artists <i class="fas fa-bars"></i></button>
+            <button class="artist-btn">Artists <i class="fa-solid fa-bars"></i></button>
             <div class="song-list">
                 {% for artist in artists | sort(attribute="artist") %}
                 <div id="{{ loop.index0 }}" class="artist-index">
-                        <button class="artist-tab"><i class="fas fa-chevron-up"></i> <span class="artist-text">{{ artist.artist }}</span></button>
+                        <button class="artist-tab"><i class="fa-solid fa-chevron-up"></i> <span class="artist-text">{{ artist.artist }}</span></button>
                             <div class="artist-content">
                                 {% for album in artist.albums | sort(attribute="album") %}
-                                <button data-artist-id="{{ artist.id }}" class="album-tab"><i class="fas fa-chevron-up"></i> <span class="album-text">{{ album.album }}</span></button>
+                                <button data-artist-id="{{ artist.id }}" class="album-tab"><i class="fa-solid fa-chevron-up"></i> <span class="album-text">{{ album.album }}</span></button>
                                     <div class="song-tab">
                                         {% for song in album.songs | sort(attribute="track_number") %}
                                         <p class="lower-level-tab" data-song='
@@ -65,16 +66,18 @@
                 </div>
 
                 <div class="buttons">
-                    <i id="back-btn" class="fas fa-step-backward" title="Back (b)"></i>
-                    <i id="play-pause-btn" class="fas fa-play-circle" title="Play/Pause (space)"></i>
-                    <i id="forward-btn" class="fas fa-step-forward" title="Next (n)"></i>
+                    <i id="loop-btn" class="fa-solid fa-infinity" title="Loop (l)"></i>
+                    <i id="back-btn" class="fa-solid fa-backward-step" title="Back (b)"></i>
+                    <i id="play-pause-btn" class="fa-solid fa-circle-play" title="Play/Pause (space)"></i>
+                    <i id="forward-btn" class="fa-solid fa-forward-step" title="Next (n)"></i>
+                    <i id="shuffle-btn" class="fa-solid fa-shuffle" title="Shuffle (s)"></i>
                 </div>
                 <div class="volume-buttons">
-                    <i class="fas fa-volume-off volume" onclick="volumeDown()"></i>
+                    <i class="fa-solid fa-volume-off volume" onclick="volumeDown()"></i>
                     <div class="volume-bar volume">
                         <input type="range" min="1" max="100" value="100" class="volume_slider" onchange="setVolume()">
                     </div>
-                    <i class="fas fa-volume-up volume" onclick="volumeUp()"></i>
+                    <i class="fa-solid fa-volume-high volume" onclick="volumeUp()"></i>
                 </div>
 
             </div>

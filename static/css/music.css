@@ -56,16 +56,16 @@
     color: #b3b1b1;
 }
 
-.fa-step-backward, .fa-step-forward, .fa-play-circle, .fa-pause-circle{
+.fa-backward-step, .fa-forward-step, .fa-circle-play, .fa-circle-pause, .fa-shuffle, .fa-infinity{
     font-size: 70px!important;
-    width: 12rem;
+    width: 10rem;
 }
 
-.fa-volume-up, .fa-volume-off {
+.fa-volume-high, .fa-volume-off {
     font-size: 30px!important;
 }
 
-.fa-step-backward:hover, .fa-step-forward:hover, .fa-play-circle:hover, .fa-pause-circle:hover, .fa-volume-up:hover,
+.fa-backward-step:hover, .fa-forward-step:hover, .fa-circle-play:hover, .fa-circle-pause:hover, .fa-volume-high:hover,
 .fa-volume-off:hover {
     color: #b8b8b8;
     cursor: pointer;
@@ -378,7 +378,7 @@
         flex-direction: column;
     }
 
-    .fa-step-backward, .fa-step-forward, .fa-play-circle, .fa-pause-circle {
+    .fa-backward-step, .fa-forward-step, .fa-circle-play, .fa-circle-pause, .fa-infinity, .fa-shuffle {
         font-size: 50px!important;
         margin: auto 0.5rem;
         width: 4rem;
@@ -426,9 +426,9 @@
         padding: 1rem 0rem;
     }
 
-    .fa-step-backward, .fa-step-forward, .fa-play-circle, .fa-pause-circle {
+    .fa-backward-step, .fa-forward-step, .fa-circle-play, .fa-circle-pause, .fa-infinity, .fa-shuffle {
         font-size: 50px!important;
-        width: 6rem;
+        width: 5rem;
     }
 
     #inner-player-bottom {
