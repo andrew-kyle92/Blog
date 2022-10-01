@@ -20,7 +20,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from functions import create_folder_struct, add_music, update_account
 from sql_queries import get_user_songs, delete_song, get_all_artists_tabs, upload_tab, get_all_song_tabs, get_song,\
-    query_users, get_all_songs_audio, get_all_artists_audio
+    query_users, get_all_songs_audio, get_all_artists_audio, get_song_audio, get_all_albums_audio, get_album_songs
 from email_class import SendEmail
 from forms import (CreatePostForm, RegisterForm, LoginForm, CommentForm, ContactForm, EmailPassword, CodeConfirmation,
                    ResetPassword, ProfileContent, SongUpload, EditSettings, ChangePassword, EditUser, TabUpload)
@@ -185,7 +185,7 @@ def register():
     user = current_user
     year = datetime.datetime.now().year
     form = RegisterForm(request.form, meta={"csrf_context": flask.session})
-    if form.validate():
+    if request.method == "POST" and form.validate():
         if User.query.filter_by(email=form.email.data).first():
             flash("You've already signed up with that email, log in instead!")
             return redirect(url_for("login"))
@@ -561,8 +561,7 @@ def forgot_password():
 @app.route("/music-player", methods=["POST", "GET"])
 def music_player():
     widget = request.args.get("widget")
-    all_artists = Artist.query.all()
-    return render_template("music-player.html", artists=all_artists, widget=widget)
+    return render_template("music-player.html", widget=widget)
 
 
 @app.route("/song-upload", methods=["POST", "GET"])
@@ -856,14 +855,76 @@ def artist_index(artist):
     return render_template("guitar-tabs/artist.html", artist=artist, title=title, all_songs=all_songs)
 
 
-# Fetch Routes
+# ################## Fetch Routes ##################
+
+
+@app.route("/fetch-artists", methods=["POST", "GET"])
+def get_artists():
+    all_artists = get_all_artists_audio()
+    return all_artists
+
+
+@app.route("/fetch-albums", methods=["POST", "GET"])
+def get_albums():
+    artist_id = request.args.get("artist_id")
+    albums = get_all_albums_audio(artist_id)
+    all_albums = {}
+    for i in range(0, len(albums)):
+        all_albums[i] = {"id": albums[i]["id"], "album": albums[i]["album"]}
+    return all_albums
+
+
+@app.route("/fetch-album-songs", methods=["GET"])
+def fetch_album_songs():
+    album_id = request.args.get("album_id")
+    all_songs = get_album_songs(album_id)
+    return all_songs
+
+
 @app.route("/fetch-songs", methods=["POST", "GET"])
 def fetch_songs():
+    import random
+    shuffled = request.args.get("shuffled")
     all_artists = get_all_artists_audio()
-    all_songs = {}
-    for artist in all_artists:
-        all_songs[artist] = get_all_songs_audio(artist)
-    return all_songs
+    all_songs = []
+    for artist_id in all_artists.keys():
+        songs = get_all_songs_audio(all_artists[artist_id])
+        for key in songs.keys():
+            all_songs.append({key: songs[key]})
+    if shuffled == "true":
+        random.shuffle(all_songs)
+    return {"songs": all_songs}
+
+
+@app.route("/get-song", methods=["POST", "GET"])
+def get_song():
+    ref_id = request.args.get("_id")
+    song_data = get_song_audio(ref_id)
+    return song_data
+
+
+@app.route("/fetch-previous-next-tracks", methods=["GET"])
+def fetch_previous_next_tracks():
+    ref_id = request.args.get("refId")
+    all_artists = get_all_artists_audio()
+    all_songs = []
+    track_info = {}
+    for artist_id in all_artists.keys():
+        songs = get_all_songs_audio(all_artists[artist_id])
+        for k in songs.keys():
+            all_songs.append({"ref_id": k, "song_name": songs[k]["song_name"]})
+    for i in range(0, len(all_songs)):
+        if all_songs[i]["ref_id"] == ref_id:
+            if i == 0:
+                track_info["previous_track"] = all_songs[len(all_songs) - 1]
+                track_info["next_track"] = all_songs[i + 1]
+            elif i == len(all_songs) - 1:
+                track_info["previous_track"] = all_songs[i - 1]
+                track_info["next_track"] = all_songs[0]
+            else:
+                track_info["previous_track"] = all_songs[i - 1]
+                track_info["next_track"] = all_songs[i + 1]
+    return track_info
 
 
 # Fresh Login Function
