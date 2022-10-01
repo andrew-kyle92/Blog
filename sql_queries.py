@@ -138,14 +138,54 @@ def delete_song(user_id, song_id):
 def get_all_artists_audio():
     """ Queries all audio artists in the DB """
     with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
-        with conn.cursor() as cur:
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             query = """
-                SELECT artist FROM artists
+                SELECT
+                    id,
+                    artist
+                FROM artists
             """
             cur.execute(query)
             res = cur.fetchall()
-            all_artists = [artist for artist in res[0]]
+            all_artists = {row["id"]: row["artist"] for row in res}
             return all_artists
+
+
+def get_all_albums_audio(artist_id):
+    """ Queries all audio albums from a specific artist """
+    with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            query = f"""
+                SELECT
+                    id,
+                    album
+                FROM albums
+                WHERE artist_id = {artist_id}
+                ORDER BY album
+            """
+            cur.execute(query)
+            res = cur.fetchall()
+            albums = [{"id": row["id"], "album": row["album"]} for row in res]
+            return albums
+
+
+def get_album_songs(album_id):
+    with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            query = f"""
+                SELECT
+                    ref_id,
+                    song_name
+                FROM songs
+                INNER JOIN albums
+                    ON albums.id = album_id
+                WHERE album_id = {album_id}
+                ORDER BY song_name 
+            """
+            cur.execute(query)
+            res = cur.fetchall()
+            all_songs = {song["ref_id"]: {"song_name": song["song_name"]} for song in res}
+            return all_songs
 
 
 def get_all_songs_audio(artist):
@@ -154,30 +194,58 @@ def get_all_songs_audio(artist):
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             query = f"""
                 SELECT 
-                    al.album,
                     s.song_name,
-                    s.song_file,
-                    s.album_art,
                     s.ref_id
                 FROM songs s
-                INNER JOIN albums al
-                    ON al.id = s.album_id
                 INNER JOIN artists ar
                     ON ar.id = s.artist_id
                 WHERE ar.artist = '{artist}'
-                ORDER BY album
+                ORDER BY s.song_name
             """
             cur.execute(query)
             all_songs = cur.fetchall()
             songs_dict = {
-                song["song_name"]: {
-                    "album": song["album"],
-                    "album_art": song["album_art"],
-                    "song_file": song["song_file"],
-                    "ref_id": song["ref_id"]
+                song["ref_id"]: {
+                    "song_name": song["song_name"]
                 }
                 for song in all_songs}
             return songs_dict
+
+
+def get_song_audio(_id):
+    """ Gets a specific song based on the reference id """
+    with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            query = f"""
+                SELECT
+                    s.ref_id,
+                    ar.artist,
+                    al.album,
+                    s.song_name,
+                    s.album_art,
+                    s.song_file
+                FROM songs s
+                INNER JOIN artists ar
+                    ON ar.id = s.artist_id
+                INNER JOIN albums al
+                    ON al.id = s.album_id
+                WHERE s.ref_id = '{_id}'
+            """
+            cur.execute(query)
+            song_data = cur.fetchall()
+            song_dict = {
+                song["ref_id"]:
+                    {
+                        "artist": song["artist"],
+                        "album": song["album"],
+                        "song_name": song["song_name"],
+                        "album_art": song["album_art"],
+                        "song_file": song["song_file"]
+                    }
+                for song in song_data}
+            return song_dict
+
+# ######## All queries related to guitar-tabs ########
 
 
 def get_all_artists_tabs():
