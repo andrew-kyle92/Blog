@@ -46,7 +46,7 @@ const fetch_songs = async (shuffled) => {
 }
 
 const fetch_song = async (_id) => {
-    const song_url = "get-song?" + new URLSearchParams({
+    const song_url = "fetch-song?" + new URLSearchParams({
         "_id": _id
     });
     let songData = await fetch(song_url)
@@ -112,13 +112,13 @@ const getArtists = async () => {
         let artistId = Object.keys(artists)[i];
         // Div element Creation and assignment
         let div = document.createElement("div");
-        div.setAttribute("id", artistId);
+        div.setAttribute("id", "artist-" + artistId);
         div.setAttribute("class", "middle-level-content");
         div.title = artistName;
         div.setAttribute("onclick", `albumDropDown(${artistId})`);
         sideBarOuterListContent.appendChild(div);
         // span Element creation and design
-        let parentDiv = document.getElementById(artistId);
+        let parentDiv = document.getElementById("artist-" + artistId);
         let span = document.createElement("span");
         span.setAttribute("class", "music-content-artist");
         span.innerHTML = `<i class="fa-solid fa-caret-right"></i> ${artistName}`;
@@ -127,7 +127,7 @@ const getArtists = async () => {
 }
 
 const albumDropDown = async (id) => {
-    let div = document.getElementById(id);
+    let div = document.getElementById("artist-" + id);
     let artist = div.title;
     if(!div.className.includes("expanded")){
         div.setAttribute("class", "middle-level-content expanded");
@@ -164,7 +164,7 @@ const albumDropDown = async (id) => {
         }
     }
     else{
-        // destorying the album content for less memory usage
+        // destroying the album content for less memory usage
         let albumDiv = document.getElementById(`content-${artist}-albums`);
         div.firstChild.innerHTML = `<i class="fa-solid fa-caret-right"></i> ${artist}`;
         div.setAttribute("class", "middle-level-content");
@@ -477,7 +477,7 @@ backBtn.addEventListener("click", async function(){
         if(!loopOn){
             let albumTitle = document.getElementById("album-title");
             if(albumTitle){
-                albumTitle.innerText = song[Object.keys(song)[0]]["album"];
+                albumTitle.innerText = song[Object.keys(song)[0]]["album"]; 
                 let songsDiv = document.getElementById("songs-outer-content");
                 while(songsDiv.childElementCount > 0){
                     songsDiv.removeChild(songsDiv.firstElementChild);
