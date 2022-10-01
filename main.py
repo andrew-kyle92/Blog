@@ -19,8 +19,8 @@ from werkzeug.datastructures import CombinedMultiDict
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from functions import create_folder_struct, add_music, update_account
-from sql_queries import get_user_songs, delete_song, get_all_artists_tabs, upload_tab, get_all_song_tabs, get_song,\
-    query_users, get_all_songs_audio, get_all_artists_audio, get_song_audio, get_all_albums_audio, get_album_songs
+from sql_queries import (get_user_songs, delete_song, get_all_artists_tabs, upload_tab, get_all_song_tabs, get_song,
+    query_users, get_all_songs_audio, get_all_artists_audio, get_song_audio, get_all_albums_audio, get_album_songs)
 from email_class import SendEmail
 from forms import (CreatePostForm, RegisterForm, LoginForm, CommentForm, ContactForm, EmailPassword, CodeConfirmation,
                    ResetPassword, ProfileContent, SongUpload, EditSettings, ChangePassword, EditUser, TabUpload)
@@ -896,8 +896,8 @@ def fetch_songs():
     return {"songs": all_songs}
 
 
-@app.route("/get-song", methods=["POST", "GET"])
-def get_song():
+@app.route("/fetch-song", methods=["POST", "GET"])
+def fetch_song():
     ref_id = request.args.get("_id")
     song_data = get_song_audio(ref_id)
     return song_data

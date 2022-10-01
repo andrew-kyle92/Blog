@@ -534,10 +534,17 @@ body {
     }
 
     #side-bar {
+        animation-name: sidebar-collapse;
+        animation-duration: 0.5s;;
         display: none;
-        height: 70%;
+        height: 96%;
         top: 36px;
         width: 100%;
+    }
+
+    @keyframes sidebar-collapse {
+        from {height: 0%}
+        to {height: 96%}
     }
 
     #side-bar-bottom {
