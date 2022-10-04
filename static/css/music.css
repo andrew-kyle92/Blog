@@ -537,6 +537,11 @@ body {
 
 /* Music Player Responsiveness */
 @media only screen and (max-width: 495px){
+    #no-song-flag {
+        left: 35%;
+        top: 65%;
+    }
+
     #mobile-menu-btn {
         background: hsl(0, 0%, 14%);
         display: block;
