@@ -180,7 +180,7 @@ def get_album_songs(album_id):
                 INNER JOIN albums
                     ON albums.id = album_id
                 WHERE album_id = {album_id}
-                ORDER BY song_name 
+                ORDER BY track_number 
             """
             cur.execute(query)
             res = cur.fetchall()
@@ -199,8 +199,10 @@ def get_all_songs_audio(artist):
                 FROM songs s
                 INNER JOIN artists ar
                     ON ar.id = s.artist_id
+                INNER JOIN albums al
+                    ON al.id = s.album_id
                 WHERE ar.artist = '{artist}'
-                ORDER BY s.song_name
+                ORDER BY al.album ASC
             """
             cur.execute(query)
             all_songs = cur.fetchall()
