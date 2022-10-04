@@ -94,6 +94,7 @@ var loopPlaylist = [];
 var shuffleOn = false;
 var backBtnClicked = false;
 var forwardBtnClicked = false;
+var manualSongSelected = false;
 
 
 // ################## Main functions ##################
@@ -353,13 +354,14 @@ function updateTime(){
     currentTrack.addEventListener("timeupdate", function(){
         if(currentTrack.ended){
             if(loopOn){
-                if(!backBtnClicked){
+                if(!backBtnClicked || !manualSongSelected){
                     currentTrack.pause();
                     currentTrack.currentTime = 0;
                     playNextTrack();
                 }
                 else{
                     backBtnClicked = false;
+                    manualSongSelected = false;
                 }
             }
             else{
@@ -405,12 +407,13 @@ function updateTime(){
 };
 
 var playTrack = async (refId) =>{
+    manualSongSelected = true;
     if(currentTrack != null){
         let currentSong = document.getElementsByClassName("song-playing")[0];
         if(currentSong){
             currentSong.setAttribute("class", "song-item");
         }
-        currentTrack.currentTime = currentTrack.duration;
+        currentTrack.currentTime = 0;
         songPlaying = false;
         playPauseBtn.setAttribute("class", "fa-solid fa-circle-play");
     }
@@ -449,35 +452,135 @@ async function playNextTrack(){
 
 // ################## Button Logic ##################
 playPauseBtn.addEventListener("click", function(){
-    if(playPauseBtn.className == "fa-solid fa-circle-play"){
-        songPlaying = true;
-        playPauseBtn.setAttribute("class", "fa-solid fa-circle-pause");
-        currentTrack.play();
+    if(currentTrack != null){
+        if(playPauseBtn.className == "fa-solid fa-circle-play"){
+            songPlaying = true;
+            playPauseBtn.setAttribute("class", "fa-solid fa-circle-pause");
+            currentTrack.play();
+        }
+        else{
+            playPauseBtn.setAttribute("class", "fa-solid fa-circle-play");
+            songPlaying = false;
+            currentTrack.pause();
+        }
     }
     else{
-        playPauseBtn.setAttribute("class", "fa-solid fa-circle-play");
-        songPlaying = false;
-        currentTrack.pause();
+        // creating no song selected flag
+        let parentDiv = document.getElementById("main-content");
+        let newSpan = document.createElement("span");
+        newSpan.id = "no-song-flag";
+        newSpan.innerText = "No song selected";
+        parentDiv.insertBefore(newSpan, parentDiv.firstElementChild);
+        // destroying the span after 5 seconds
+        setTimeout(() => {
+            parentDiv.removeChild(parentDiv.firstElementChild);
+        }, 7500);
     }
 });
 
 backBtn.addEventListener("click", async function(){
-    let trackInfo = await fetch_previous_next_tracks(currentTrack.id);
-    backBtnClicked = true;
-    if(currentTrack.currentTime < 5){
+    if(currentTrack != null){
+        let trackInfo = await fetch_previous_next_tracks(currentTrack.id);
+        backBtnClicked = true;
+        if(currentTrack.currentTime < 5){
+            currentTrack.pause();
+            currentTrack.currentTime = 0;
+            songPlaying = false;
+            playPauseBtn.setAttribute("class", "fa-solid fa-circle-play");
+            let songSelected = document.getElementsByClassName("song-playing")[0];
+            if(songSelected){
+                songSelected.setAttribute("class", "song-item");
+            }
+            let song;
+            if(loopOn){
+                let previousTrack;
+                for(let i = 0; i < loopPlaylist.length; i++){
+                    if(Object.keys(loopPlaylist[i])[0] == currentTrack.id){
+                        if(i == 0){
+                            previousTrack = loopPlaylist.length - 1;
+                        }
+                        else{
+                            previousTrack = i - 1;
+                        }
+                    }
+
+                }
+                song = await fetch_song(Object.keys(loopPlaylist[previousTrack])[0]);
+            }
+            else{
+                song = await fetch_song(trackInfo["previous_track"]["ref_id"]);
+            }
+            if(!loopOn){
+                let albumTitle = document.getElementById("album-title");
+                if(albumTitle){
+                    albumTitle.innerText = song[Object.keys(song)[0]]["album"]; 
+                    let songsDiv = document.getElementById("songs-outer-content");
+                    while(songsDiv.childElementCount > 0){
+                        songsDiv.removeChild(songsDiv.firstElementChild);
+                    }
+                    // creating song span in songs list
+                    let newSpan = document.createElement("span");
+                    newSpan.setAttribute("id", `${Object.keys(song)[0]}`);
+                    newSpan.setAttribute("class", "song-item");
+                    newSpan.title = song[Object.keys(song)[0]]["song_name"];
+                    newSpan.innerText = song[Object.keys(song)[0]]["song_name"];
+                    newSpan.setAttribute("onclick", `playTrack('${Object.keys(song)[0]}')`);
+                    songsDiv.appendChild(newSpan);
+                }
+            }
+            currentTrack = setTrack(song[Object.keys(song)[0]], Object.keys(song)[0]);
+        }
+        else{
+            currentTrack.currentTime = 0;
+        }
+        currentTrack.play();
+        playPauseBtn.setAttribute("class", "fa-solid fa-circle-pause");
+    }
+    else{
+        // creating no song selected flag
+        let parentDiv = document.getElementById("main-content");
+        let newSpan = document.createElement("span");
+        newSpan.id = "no-song-flag";
+        newSpan.innerText = "No song selected";
+        parentDiv.insertBefore(newSpan, parentDiv.firstElementChild);
+        // destroying the span after 5 seconds
+        setTimeout(() => {
+            parentDiv.removeChild(parentDiv.firstElementChild);
+        }, 7500);
+    }
+});
+
+forwardBtn.addEventListener("click", async function(){
+    if(currentTrack != null){
+        let song;
+        forwardBtnClicked = true;
         currentTrack.pause();
         currentTrack.currentTime = 0;
         songPlaying = false;
         playPauseBtn.setAttribute("class", "fa-solid fa-circle-play");
-        let songSelected = document.getElementsByClassName("song-playing")[0];
-        if(songSelected){
-            songSelected.setAttribute("class", "song-item");
+        if(!loopPlaylist.length == 0){
+            let nextTrack;
+            for(let i = 0; i < loopPlaylist.length; i++){
+                if(Object.keys(loopPlaylist[i])[0] == currentTrack.id){
+                    nextTrack = i == loopPlaylist.length - 1 ? 0
+                                : i == 0 ? 1 : i + 1;
+                    break;
+                }
+            }
+            let songSelected = document.getElementsByClassName("song-playing")[0];
+            if(songSelected){
+                songSelected.setAttribute("class", "song-item");
+            }
+            song = await fetch_song(Object.keys(loopPlaylist[nextTrack])[0]);
         }
-        let song = await fetch_song(trackInfo["previous_track"]["ref_id"]);
+        else{
+            let trackInfo = await fetch_previous_next_tracks(currentTrack.id);
+            song = await fetch_song(trackInfo["next_track"]["ref_id"])
+        }
         if(!loopOn){
             let albumTitle = document.getElementById("album-title");
             if(albumTitle){
-                albumTitle.innerText = song[Object.keys(song)[0]]["album"]; 
+                albumTitle.innerText = song[Object.keys(song)[0]]["album"];
                 let songsDiv = document.getElementById("songs-outer-content");
                 while(songsDiv.childElementCount > 0){
                     songsDiv.removeChild(songsDiv.firstElementChild);
@@ -493,61 +596,21 @@ backBtn.addEventListener("click", async function(){
             }
         }
         currentTrack = setTrack(song[Object.keys(song)[0]], Object.keys(song)[0]);
+        currentTrack.play();
+        playPauseBtn.setAttribute("class", "fa-solid fa-circle-pause");
     }
     else{
-        currentTrack.currentTime = 0;
+        // creating no song selected flag
+        let parentDiv = document.getElementById("main-content");
+        let newSpan = document.createElement("span");
+        newSpan.id = "no-song-flag";
+        newSpan.innerText = "No song selected";
+        parentDiv.insertBefore(newSpan, parentDiv.firstElementChild);
+        // destroying the span after 5 seconds
+        setTimeout(() => {
+            parentDiv.removeChild(parentDiv.firstElementChild);
+        }, 7500);
     }
-    currentTrack.play();
-    playPauseBtn.setAttribute("class", "fa-solid fa-circle-pause");
-});
-
-forwardBtn.addEventListener("click", async function(){
-    let song;
-    forwardBtnClicked = true;
-    currentTrack.pause();
-    currentTrack.currentTime = 0;
-    songPlaying = false;
-    playPauseBtn.setAttribute("class", "fa-solid fa-circle-play");
-    if(!loopPlaylist.length == 0){
-        let nextTrack;
-        for(let i = 0; i < loopPlaylist.length; i++){
-            if(Object.keys(loopPlaylist[i])[0] == currentTrack.id){
-                nextTrack = i == loopPlaylist.length - 1 ? 0
-                            : i == 0 ? 1 : 2;
-                break;
-            }
-        }
-        let songSelected = document.getElementsByClassName("song-playing")[0];
-        if(songSelected){
-            songSelected.setAttribute("class", "song-item");
-        }
-        song = await fetch_song(Object.keys(loopPlaylist[nextTrack])[0]);
-    }
-    else{
-        let trackInfo = await fetch_previous_next_tracks(currentTrack.id);
-        song = await fetch_song(trackInfo["next_track"]["ref_id"])
-    }
-    if(!loopOn){
-        let albumTitle = document.getElementById("album-title");
-        if(albumTitle){
-            albumTitle.innerText = song[Object.keys(song)[0]]["album"];
-            let songsDiv = document.getElementById("songs-outer-content");
-            while(songsDiv.childElementCount > 0){
-                songsDiv.removeChild(songsDiv.firstElementChild);
-            }
-            // creating song span in songs list
-            let newSpan = document.createElement("span");
-            newSpan.setAttribute("id", `${Object.keys(song)[0]}`);
-            newSpan.setAttribute("class", "song-item");
-            newSpan.title = song[Object.keys(song)[0]]["song_name"];
-            newSpan.innerText = song[Object.keys(song)[0]]["song_name"];
-            newSpan.setAttribute("onclick", `playTrack('${Object.keys(song)[0]}')`);
-            songsDiv.appendChild(newSpan);
-        }
-    }
-    currentTrack = setTrack(song[Object.keys(song)[0]], Object.keys(song)[0]);
-    currentTrack.play();
-    playPauseBtn.setAttribute("class", "fa-solid fa-circle-pause");
 });
 
 loopBtn.addEventListener("click", async () => {
