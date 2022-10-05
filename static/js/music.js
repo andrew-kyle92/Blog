@@ -175,8 +175,10 @@ const albumDropDown = async (id) => {
 
 const getAlbumSongs = async (albumName, id) => {
     if(!document.getElementById("side-bar-songs-content")){
-        let currentAlbumSelected = document.getElementsByClassName("span-active")[0];
-        currentAlbumSelected.setAttribute("class", "music-content-albums");
+        let currentAlbumSelected = document.getElementsByClassName("span-active");
+        if(currentAlbumSelected.length != 0){
+            currentAlbumSelected[0].setAttribute("class", "music-content-albums");
+        }
         let albumDiv = document.getElementById(id);
         albumDiv.setAttribute("class", "music-content-albums span-active");
         let outerDiv = document.getElementById("side-bar-mid");
@@ -211,11 +213,13 @@ const getAlbumSongs = async (albumName, id) => {
         let albumSongs = await fetch_album_songs(id);
         // creating a span element for every song in the album
         let songParentDiv = document.getElementById("songs-outer-content");
-        for(let i = 0; i < Object.keys(albumSongs).length; i++){
+        for(let i = 0; i < albumSongs["songs"].length; i++){
+            let _id = Object.keys(albumSongs["songs"][i])[0];
+            let songName = albumSongs["songs"][i][_id]["song_name"];
             let songSpan = document.createElement("span");
-            songSpan.setAttribute("id", Object.keys(albumSongs)[i]);
+            songSpan.setAttribute("id", _id);
             if(currentTrack){
-                if(albumSongs[Object.keys(albumSongs)[i]["song_name"] == songInfo.innerText]){
+                if(songName == songInfo.innerText){
                     songSpan.setAttribute("class", "song-item song-playing");
                 }
                 else{
@@ -225,9 +229,9 @@ const getAlbumSongs = async (albumName, id) => {
             else{
                 songSpan.setAttribute("class", "song-item");
             }
-            songSpan.setAttribute("onclick", `playTrack('${Object.keys(albumSongs)[i]}')`)
-            songSpan.title = albumSongs[Object.keys(albumSongs)[i]]["song_name"];
-            songSpan.innerText = albumSongs[Object.keys(albumSongs)[i]]["song_name"];
+            songSpan.setAttribute("onclick", `playTrack('${_id}')`);
+            songSpan.title = songName;
+            songSpan.innerText = songName;
             songParentDiv.appendChild(songSpan);
         }
     }
@@ -248,13 +252,15 @@ const getAlbumSongs = async (albumName, id) => {
                 songParentDiv.removeChild(songParentDiv.lastChild);
             }
             // adding new list of songs
-            for(let i = 0; i < Object.keys(albumSongs).length; i++){
+            for(let i = 0; i < albumSongs["songs"].length; i++){
+                let _id = Object.keys(albumSongs["songs"][i])[0];
+                let songName = albumSongs["songs"][i][_id]["song_name"];
                 let songSpan = document.createElement("span");
-                songSpan.setAttribute("id", Object.keys(albumSongs)[i]);
+                songSpan.setAttribute("id", _id);
                 songSpan.setAttribute("class", "song-item");
-                songSpan.setAttribute("onclick", `playTrack('${Object.keys(albumSongs)[i]}')`)
-                songSpan.title = albumSongs[Object.keys(albumSongs)[i]]["song_name"];
-                songSpan.innerText = albumSongs[Object.keys(albumSongs)[i]]["song_name"];
+                songSpan.setAttribute("onclick", `playTrack('${_id}')`)
+                songSpan.title =songName;
+                songSpan.innerText = songName;
                 songParentDiv.appendChild(songSpan);
             }
         }
@@ -278,12 +284,14 @@ const getAlbumSongs = async (albumName, id) => {
                 // creating a span element for every song in the album
                 let songParentDiv = document.getElementById("songs-outer-content");
                 for(let i = 0; i < Object.keys(albumSongs).length; i++){
+                    let _id = Object.keys(albumSongs["songs"][i])[0];
+                    let songName = albumSongs["songs"][i][_id]["song_name"];
                     let songSpan = document.createElement("span");
-                    songSpan.setAttribute("id", Object.keys(albumSongs)[i]);
+                    songSpan.setAttribute("id", _id);
                     songSpan.setAttribute("class", "song-item");
-                    songSpan.setAttribute("onclick", `playTrack('${Object.keys(albumSongs)[i]}')`)
-                    songSpan.title = albumSongs[Object.keys(albumSongs)[i]]["song_name"];
-                    songSpan.innerText = albumSongs[Object.keys(albumSongs)[i]]["song_name"];
+                    songSpan.setAttribute("onclick", `playTrack('${_id}')`)
+                    songSpan.title = songName;
+                    songSpan.innerText = songName;
                     songParentDiv.appendChild(songSpan);
                 }
             }

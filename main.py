@@ -877,8 +877,11 @@ def get_albums():
 @app.route("/fetch-album-songs", methods=["GET"])
 def fetch_album_songs():
     album_id = request.args.get("album_id")
-    all_songs = get_album_songs(album_id)
-    return all_songs
+    songs = get_album_songs(album_id)
+    all_songs = []
+    for _id in songs.keys():
+        all_songs.append({_id: songs[_id]})
+    return {"songs": all_songs}
 
 
 @app.route("/fetch-songs", methods=["POST", "GET"])
