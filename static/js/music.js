@@ -175,6 +175,8 @@ const albumDropDown = async (id) => {
 
 const getAlbumSongs = async (albumName, id) => {
     if(!document.getElementById("side-bar-songs-content")){
+        let currentAlbumSelected = document.getElementsByClassName("span-active")[0];
+        currentAlbumSelected.setAttribute("class", "music-content-albums");
         let albumDiv = document.getElementById(id);
         albumDiv.setAttribute("class", "music-content-albums span-active");
         let outerDiv = document.getElementById("side-bar-mid");
@@ -315,7 +317,7 @@ function setTrack(song, id) {
     }
     endDuration = document.getElementsByClassName("seconds-end")[0];
     songDurationM = parseInt((currentTrack.duration / 60) % 60);
-    songDurationS = parseInt(currentTrack.duration % 60)
+    songDurationS = parseInt(currentTrack.duration % 60);
     if(songDurationS < 10){
         endDuration.innerText = songDurationM + ":0" + songDurationS;
     }
@@ -371,27 +373,18 @@ function updateTime(){
             }
         }
         else{
-            duration = document.getElementsByClassName("seconds-start")[0];
-            s = parseInt(currentTrack.currentTime % 60);
-            m = parseInt((currentTrack.currentTime / 60) % 60);
-            if(s < 10){
-                duration.innerText = m + ":0" + s;
-            }
-            else{
-                duration.innerText = m + ":" + s;
-            }
-        }
-    });
-    // End time update
-    currentTrack.addEventListener("timeupdate", function(){
-        endDuration = document.getElementsByClassName("seconds-end")[0];
-        songDurationM = parseInt((currentTrack.duration / 60) % 60);
-        songDurationS = parseInt(currentTrack.duration % 60)
-        if(songDurationS < 10){
-            endDuration.innerText = songDurationM + ":0" + songDurationS;
-        }
-        else{
-            endDuration.innerText = songDurationM + ":" + songDurationS;
+            let startDuration = document.getElementsByClassName("seconds-start")[0];
+            let endDuration = document.getElementsByClassName("seconds-end")[0];
+            let currentMinutes = Math.floor(currentTrack.currentTime / 60);
+            let currentSeconds = Math.floor(currentTrack.currentTime % 60);
+            let durationMinutes = Math.floor(currentTrack.duration / 60);
+            let durationSeconds = Math.floor(currentTrack.duration % 60);
+            
+            currentSeconds = currentSeconds < 10 ? "0" + currentSeconds : currentSeconds;
+            durationSeconds = durationSeconds < 10 ? "0" + durationSeconds : durationSeconds;
+
+            startDuration.innerText = currentMinutes + ":" + currentSeconds;
+            endDuration.innerText = durationMinutes + ":" + durationSeconds;
         }
     });
     // Progress Bar update
@@ -421,6 +414,10 @@ var playTrack = async (refId) =>{
     currentTrack = setTrack(song[Object.keys(song)[0]], Object.keys(song)[0]);
     currentTrack.play();
     playPauseBtn.setAttribute("class", "fa-solid fa-circle-pause");
+    if(window.innerWidth < 500){
+        let sideBar = document.getElementById("side-bar");
+        sideBar.style.display = "none";
+    }
 };
 
 async function playNextTrack(){
@@ -451,7 +448,7 @@ async function playNextTrack(){
 }
 
 // ################## Button Logic ##################
-playPauseBtn.addEventListener("click", function(){
+playPauseBtn.addEventListener("click", async function(){
     if(currentTrack != null){
         if(playPauseBtn.className == "fa-solid fa-circle-play"){
             songPlaying = true;
@@ -465,16 +462,13 @@ playPauseBtn.addEventListener("click", function(){
         }
     }
     else{
-        // creating no song selected flag
-        let parentDiv = document.getElementById("main-content");
-        let newSpan = document.createElement("span");
-        newSpan.id = "no-song-flag";
-        newSpan.innerText = "No song selected";
-        parentDiv.insertBefore(newSpan, parentDiv.firstElementChild);
-        // destroying the span after 5 seconds
-        setTimeout(() => {
-            parentDiv.removeChild(parentDiv.firstElementChild);
-        }, 7500);
+        let getSong = await fetch_songs("false");
+        let songObject = getSong["songs"][0];
+        let songId = Object.keys(songObject)[0];
+        let song = await fetch_song(songId);
+        currentTrack = setTrack(song[songId], songId);
+        playPauseBtn.setAttribute("class", "fa-solid fa-circle-pause");
+        currentTrack.play();
     }
 });
 
