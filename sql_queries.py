@@ -180,7 +180,7 @@ def get_album_songs(album_id):
                 INNER JOIN albums
                     ON albums.id = album_id
                 WHERE album_id = {album_id}
-                ORDER BY track_number 
+                ORDER BY track_number DESC
             """
             cur.execute(query)
             res = cur.fetchall()
