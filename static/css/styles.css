@@ -309,6 +309,10 @@ tbody tr:nth-child(odd) {
     width: 20vw;
 }
 
+.form-label {
+    font-weight: bold;
+}
+
 .submit-btn input {
 
 }
