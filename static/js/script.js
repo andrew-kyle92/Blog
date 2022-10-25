@@ -37,28 +37,12 @@ function edit() {
 }
 
 // For Song Upload page
-window.addEventListener("load", () => {
-    submitBtn = document.getElementById("submit");
+function submitBtnClick() {
+    var submitBtn = document.getElementById("submit");
     if(document.URL.includes("song-upload")){
-        submitBtn.addEventListener("click", () => {
-            for(let i = 0; i < 60; i++)
-                setTimeout(() => {
-                    if(submitBtn.value == "Loading"){
-                        submitBtn.value = "Loading."
-                    }
-                    else if(submitBtn.value == "Loading."){
-                        submitBtn.value = "Loading.."
-                    }
-                    else if(submitBtn.value == "Loading.."){
-                        submitBtn.value = "Loading..."
-                    }
-                    else{
-                        submitBtn.value = "Loading"
-                    }
-                }, 100)
-        });
+        submitBtn.innerHTML = 'Upload <span class="btn-load"><i class="fa-solid fa-spinner"></i></span>';
     }
-});
+}
 
 // Show/Hide password
 var allEyes = document.getElementsByClassName("show-pass");
@@ -77,3 +61,5 @@ for(let i = 0; i < allEyes.length; i++){
         }
     });
 }
+
+// for forms
