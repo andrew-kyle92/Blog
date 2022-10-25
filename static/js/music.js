@@ -637,12 +637,17 @@ loopBtn.addEventListener("click", async () => {
             titleSpan.setAttribute("class", "playlist-title");
             titleSpan.innerText = "Playlist";
             playListDiv.appendChild(titleSpan);
+            // Creating song div element
+            let innerPlaylistDiv = document.createElement("div");
+            innerPlaylistDiv.setAttribute("id", "song-playlist-div");
+            playListDiv.appendChild(innerPlaylistDiv);
             // getting all songs
             let loopList = await fetch_songs("false");
             for(let i = 0; i < loopList["songs"].length; i++){
                 loopPlaylist.push(loopList["songs"][i]);
             }
             // creating a span for every playlist song
+            var songPlaylistDiv = document.getElementById("song-playlist-div");
             for(let i = 0; i < loopPlaylist.length; i++){
                 let songSpan = document.createElement("span");
                 songSpan.setAttribute("id", Object.keys(loopPlaylist[i])[0]);
@@ -659,7 +664,7 @@ loopBtn.addEventListener("click", async () => {
                 }
                 songSpan.setAttribute("onclick", `playTrack('${Object.keys(loopPlaylist[i])[0]}')`);
                 songSpan.innerText = loopPlaylist[i][Object.keys(loopPlaylist[i])[0]]["song_name"];
-                playListDiv.appendChild(songSpan);
+                songPlaylistDiv.appendChild(songSpan);
             }
         }
         if(document.getElementsByClassName("song-playing").length == 0){
@@ -719,11 +724,17 @@ shuffleBtn.addEventListener("click", async () => {
         titleSpan.setAttribute("class", "playlist-title");
         titleSpan.innerText = "Shuffled Playlist";
         playListDiv.appendChild(titleSpan);
+        // Creating song div element
+        let innerPlaylistDiv = document.createElement("div");
+        innerPlaylistDiv.setAttribute("id", "song-playlist-div");
+        playListDiv.appendChild(innerPlaylistDiv);
+        // Gathering all songs
         let loopList = await fetch_songs("true");
         for(let i = 0; i < loopList["songs"].length; i++){
             loopPlaylist.push(loopList["songs"][i]);
         }
         // creating a span for every playlist song
+        var songPlaylistDiv = document.getElementById("song-playlist-div");
         for(let i = 0; i < loopPlaylist.length; i++){
             let songSpan = document.createElement("span");
             songSpan.setAttribute("id", Object.keys(loopPlaylist[i])[0]);
@@ -740,7 +751,7 @@ shuffleBtn.addEventListener("click", async () => {
             }
             songSpan.setAttribute("onclick", `playTrack('${Object.keys(loopPlaylist[i])[0]}')`);
             songSpan.innerText = loopPlaylist[i][Object.keys(loopPlaylist[i])[0]]["song_name"];
-            playListDiv.appendChild(songSpan);
+            songPlaylistDiv.appendChild(songSpan);
         }
         if(!loopOn){
             loopBtn.click();
