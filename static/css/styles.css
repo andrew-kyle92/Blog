@@ -116,17 +116,28 @@ html {
     width: fit-content;
 }
 
-.submit-btn input {
+.submit-btn button {
     background-color: #0085A1;
     border: 1px solid #0085A1;
+    border-radius: 5px;
     color: #fff;
-    height: 50px;
+    height: auto;
     width: fit-content;
+    padding: 10px;
 }
 
-.submit-btn input:hover {
+.submit-btn button:hover {
     background-color: #00657b !important;
     border-color: #00657b !important;
+}
+
+.btn-load {
+    animation: btn-rotation 2s infinite linear;
+    display: inline-block;
+}
+
+@keyframes btn-rotation {
+    100% {transform: rotate(360deg);}
 }
 
 .fa-eye-slash:before, .fa-eye:before {
@@ -313,16 +324,16 @@ tbody tr:nth-child(odd) {
     font-weight: bold;
 }
 
-.submit-btn input {
-
-}
-
 .break {
     flex-basis: 100%;
 }
 
 .show-pass:hover {
     cursor: pointer;
+}
+
+.required-star {
+    color: #c40a0a;
 }
 
 /******************** End Settings Page Styling ********************/
