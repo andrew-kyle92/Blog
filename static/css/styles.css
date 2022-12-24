@@ -79,6 +79,13 @@ html {
 /******************** End General Styling ********************/
 
 /******************** Form Error Styling ********************/
+#form {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    width: 50%;
+}
+
 .error label{
     color: #c40a0a;
 }
@@ -93,22 +100,6 @@ html {
     color: #c40a0a;
     font-size: 16px;
     font-style: italic;
-}
-/******************** End Form Error Styling ********************/
-
-/******************** Login Page ********************/
-#form {
-    display: flex;
-    flex-direction: column;
-    margin: auto;
-    width: fit-content;
-}
-
-.bottom-links {
-    display: flex;
-    flex-direction: column;
-    margin: 1rem auto;
-    width: fit-content;
 }
 
 .submit-btn {
@@ -140,12 +131,46 @@ html {
     100% {transform: rotate(360deg);}
 }
 
+.form-groups {
+    margin: 0.5rem auto;
+    width: 100%;
+}
+
+.form-input {
+    width: 100%;
+}
+
+.form-label {
+    font-weight: bold;
+}
+
+.form-password {
+    width: 90%;
+}
+
 .fa-eye-slash:before, .fa-eye:before {
-    margin-left: -40px;
+
 }
 
 .fa-eye-slash:hover, .fa-eye:before {
     cursor: pointer;
+}
+
+.show-pass:hover {
+    cursor: pointer;
+}
+
+.required-star {
+    color: #c40a0a;
+}
+/******************** End Form Error Styling ********************/
+
+/******************** Login Page ********************/
+.bottom-links {
+    display: flex;
+    flex-direction: column;
+    margin: 1rem auto;
+    width: fit-content;
 }
 
 .under-form {
@@ -303,39 +328,9 @@ tbody tr:nth-child(odd) {
     vertical-align: middle;
 }
 
-#user-edit-form {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    margin: 1rem auto;
-    width: 90%;
-}
-
-.form-groups {
-    margin: 0.5rem auto;
-}
-
-.form-input {
-    width: 20vw;
-}
-
-.form-label {
-    font-weight: bold;
-}
-
 .break {
     flex-basis: 100%;
 }
-
-.show-pass:hover {
-    cursor: pointer;
-}
-
-.required-star {
-    color: #c40a0a;
-}
-
 /******************** End Settings Page Styling ********************/
 
 /********************* User Profile Styling ********************/
@@ -438,7 +433,6 @@ tbody tr:nth-child(odd) {
     cursor: pointer;
 }
 
-
 .post-h2 {
     color: #454545;
 }
@@ -454,7 +448,6 @@ tbody tr:nth-child(odd) {
     margin: auto;
     width: 710px;
 }
-
 /******************** End User Profile Styling ********************/
 
 /******************** Responsiveness ********************/

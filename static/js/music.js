@@ -283,7 +283,7 @@ const getAlbumSongs = async (albumName, id) => {
                 let albumSongs = await fetch_album_songs(id);
                 // creating a span element for every song in the album
                 let songParentDiv = document.getElementById("songs-outer-content");
-                for(let i = 0; i < Object.keys(albumSongs).length; i++){
+                for(let i = 0; i < albumSongs["songs"].length; i++){
                     let _id = Object.keys(albumSongs["songs"][i])[0];
                     let songName = albumSongs["songs"][i][_id]["song_name"];
                     let songSpan = document.createElement("span");
