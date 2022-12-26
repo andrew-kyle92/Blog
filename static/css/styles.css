@@ -140,12 +140,28 @@ html {
     width: 100%;
 }
 
+.form-input:focus-within {
+    border: 1px solid #0085A1;
+    outline: none;
+}
+
+input[type=text], input[type=password] {
+    border: 1px solid #c3c3c3;
+}
+
+.icon {
+    background-color: #0085A1;
+    color: aliceblue;
+    padding: 7px;
+}
+
 .form-label {
     font-weight: bold;
 }
 
 .form-password {
-    width: 90%;
+    display: flex;
+    width: 100%;
 }
 
 .fa-eye-slash:before, .fa-eye:before {
@@ -270,7 +286,7 @@ html {
 .password-content {
     display: none;
     margin: 1rem auto;
-    width: fit-content;
+    width: 100%;
 }
 
 .administration-content {
