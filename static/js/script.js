@@ -45,18 +45,18 @@ function submitBtnClick() {
 }
 
 // Show/Hide password
-var allEyes = document.getElementsByClassName("show-pass");
+var allEyes = document.getElementsByClassName("icon");
 for(let i = 0; i < allEyes.length; i++){
     let input = allEyes[i].previousElementSibling;
-    let eyeSlash = "fas fa-regular fa-eye-slash";
-    let openEye = "fas fa-regular fa-eye";
+    let eyeSlash = "fas fa-regular fa-eye-slash icon";
+    let openEye = "fas fa-regular fa-eye icon";
     allEyes[i].addEventListener("click", function(){
-        if(allEyes[i].children[0].className == openEye){
-            allEyes[i].children[0].setAttribute("class", eyeSlash);
+        if(allEyes[i].className == openEye){
+            allEyes[i].setAttribute("class", eyeSlash);
             input.setAttribute("type", "text");
         }
         else{
-            allEyes[i].children[0].setAttribute("class", openEye);
+            allEyes[i].setAttribute("class", openEye);
             input.setAttribute("type", "password");
         }
     });
