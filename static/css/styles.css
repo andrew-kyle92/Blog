@@ -865,6 +865,10 @@ tbody tr:nth-child(odd) {
 }
 
 @media only screen and (max-width: 600px) and (min-width: 100px){
+    #searchForm {
+        flex-direction: column;
+    }
+
     .below-img p {
         text-align: center;
     }
