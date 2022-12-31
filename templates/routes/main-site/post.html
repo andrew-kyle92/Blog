@@ -1,0 +1,81 @@
+{% include "header.html" %}
+{% from "_macro.html" import make_form %}
+
+{% if api %}
+  {% if post.author == "Unknown" %}
+    {% set author = "Unknown" %}
+  {% else %}
+    {% set author = post.author %}
+  {% endif %}
+{% endif %}
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url('{% if api %}{{ post.urlToImage }}{% else %}{{ post.img_url }}{% endif %}')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>{{ post.title }}</h1>
+            <h2 class="subheading">{% if api %}{{ post.description }}{% else %}{{ post.subtitle }}{% endif %}</h2>
+            <span class="meta">Posted by
+              <a href="{% if api %}{{ post.url }}{% else %}{{ url_for('profile', _id=post.author_id) }}{% endif %}" {% if api %} target="_blank" {% endif %}>{% if api %}{{ author }}{% else %}{{ post.author.name }}{% endif %}</a>
+              on {% if api %}{{ post.publishedAt }}{% else %}{{ post.date }}{% endif %}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            {% if api %}{{ post.content | safe }}{% else %}{{ post.body | safe }}{% endif %}
+
+            {% if api %}
+            <p>To view the full article, follow this link: <a href="{{ post.url }}" target="_blank">full article</a></p>
+            <p>Source: {{ post.source.name }}</p>
+            {% endif %}
+          <hr>
+            {% if not api %}
+              {% if user.id == post.author_id %}
+              <div class="clearfix">
+              <a class="btn btn-primary float-right" href="{{ url_for('edit_post', post_id=post.id) }}">Edit Post</a>
+              </div>
+              {% endif %}
+            
+
+              {{ ckeditor.load() }}
+              {{ make_form(form=form) }}
+
+              <!-- Comments Area -->
+              <div class="col-lg-8 col-md-10 mx-auto comment">
+                <h2>Comments</h2>
+                  <ul class="commentList">
+                    {% for comment in comments: %}
+                      {% if comment.post_id == post.id %}
+                      <li>
+                          <div class="commenterImage">
+                            <img src="{{ comment.author.email | gravatar }}"/>
+                          </div>
+                          <div class="commentText">
+                              <p>{{ comment.comment|safe }}</p>
+                            <span class="date sub-text">{{ comment.date }} AT {{ comment.time }}</span>
+                          </div>
+                      </li>
+                      {% endif %}
+                    {% endfor %}
+                  </ul>
+                </div>
+
+
+              </div>
+            {% endif %}
+      </div>
+    </div>
+  </article>
+
+  <hr>
+{% include "footer.html" %}

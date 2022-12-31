@@ -1,0 +1,47 @@
+{% include "header.html" %}
+
+  <!-- Slideshow container -->
+  <div id="slideshow-container">
+    <!-- Full-width images with number and caption text -->
+    {% for set in nasa_data %}
+    <div class="mySlides fader">
+      <div class="numberText">{{ loop.index }} / {{ nasa_data | length() }}</div>
+      <img {% if "hdurl" in set.keys() %} src="{{ set['hdurl'] }}" {% else %} src="{{ set['url'] }}" {% endif %} alt="">
+      <div class="text">{{ set["explanation"] }}</div>
+    </div>
+    {% endfor %}
+    <!-- Next and previous buttons -->
+    <a class="prev" onclick="plusSlides(-1)"><i class="fa-solid fa-angle-left"></i></a>
+    <a class="next" onclick="plusSlides(1)"><i class="fa-solid fa-angle-right"></i></a>
+  </div>
+  <!-- The dots/circles -->
+  <div style="text-align: center">
+    <span class="dot" onclick="currentSlide(1)"></span>
+    <span class="dot" onclick="currentSlide(2)"></span>
+    <span class="dot" onclick="currentSlide(3)"></span>
+    <span class="dot" onclick="currentSlide(4)"></span>
+    <span class="dot" onclick="currentSlide(5)"></span>
+  </div>
+  <hr>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <h2 class="content-desc">This is a page of random APIs. Have fun!</h2>
+          <div id="jokesAPI" class="api-box">
+            <a href="{{ url_for('jokes')  }}">
+              <img src="{{ url_for('static', filename='/img/jokes-image.jpg') }}" alt="jokes-image">
+              <div class="box-desc">
+                <p class="api-name-desc"><a class="api-link" href="https://v2.jokeapi.dev/" target="_blank">JokeAPI</a></p>
+                <p class="api-desc">Feelin' down? Need a laugh? Or maybe you just love jokes and wanna read some. Click <a href="{{ url_for('jokes') }}" style="color: #fff">here</a> or the picture, if you feel like laughing.</p>
+              </div>
+            </a>
+          </div>
+          <hr>
+        </div>  
+    </div>
+  </div>
+  <hr>
+
+{% include "footer.html" %}

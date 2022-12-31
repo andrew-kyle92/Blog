@@ -1,0 +1,110 @@
+{% include "header.html" %}
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url({{ url_for('static', filename='/img/jokes-image.jpg') }})">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="site-heading">
+            <h1>Enjoy the jokes!</h1>
+            <span class="subheading">Brought to you by <a href="https://v2.jokeapi.dev/">JokesAPI</a></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <h2 class="content-desc">Design the types of jokes you'd like to see.</h2>
+          <div class="jokes-form">
+            <div class="joke-form-groups">
+              <label for="category">Category/Categories</label>
+              <br>
+              <select name="category" id="categoryOptions">
+                <option value="Any">Any</option>
+                <option value="Custom">Custom</option>
+              </select>
+            </div>
+            <div class="joke-form-groups" id="cat-options">
+              <div class="checkbox-group">
+                <input type="checkbox" name="programming" value="Programming">
+                <label class="joke-check-label" for="programming">Programming</label>
+              </div>
+              <div class="checkbox-group">
+                <input type="checkbox" name="misc" value="Misc">
+                <label class="joke-check-label" for="misc">Misc</label>
+              </div>
+              <div class="checkbox-group">
+                <input type="checkbox" name="dark" value="Dark">
+                <label class="joke-check-label" for="dark">Dark</label>
+              </div>
+              <div class="checkbox-group">
+                <input type="checkbox" name="pun" value="Pun">
+                <label class="joke-check-label" for="pun">Pun</label>
+              </div>
+              <div class="checkbox-group">
+                <input type="checkbox" name="spooky" value="Spooky">
+                <label class="joke-check-label" for="spooky">Spooky</label>
+              </div>
+              <div class="checkbox-group">
+                <input type="checkbox" name="christmas" value="Christmas">
+                <label class="joke-check-label" for="christmas">Christmas</label>
+              </div>
+            </div>
+            <div class="joke-form-groups" id="joke-flags">
+              <p class="p-label">Flags to blacklist (optional)</p>
+              <div class="joke-options">
+                <div class="checkbox-group">
+                  <input type="checkbox" name="nsfw" value="nsfw">
+                  <label class="joke-check-label" for="nsfw">nsfw</label>
+                </div>
+                <div class="checkbox-group">
+                  <input type="checkbox" name="religious" value="religious">
+                  <label class="joke-check-label" for="religious">religious</label>
+                </div>
+                <div class="checkbox-group">
+                  <input type="checkbox" name="political" value="political">
+                  <label class="joke-check-label" for="political">political</label>
+                </div>
+                <div class="checkbox-group">
+                  <input type="checkbox" name="racist" value="racist">
+                  <label class="joke-check-label" for="racist">racist</label>
+                </div>
+                <div class="checkbox-group">
+                  <input type="checkbox" name="sexist" value="sexist">
+                  <label class="joke-check-label" for="sexist">sexist</label>
+                </div>
+                <div class="checkbox-group">
+                  <input type="checkbox" name="explicit" value="explicit">
+                  <label class="joke-check-label" for="explicit">explicit</label>
+                </div>
+              </div>
+            </div>
+            <div class="joke-form-groups">
+              <label for="jokeType">Joke Type (<em>leave blank for all types</em>)</label>
+              <br>
+              <select id="jokeType">
+                <option value=""></option>
+                <option value="single">Single</option>
+                <option value="twopart">Two Part</option>
+              </select>
+            </div>
+            <div class="joke-form-groups">
+              <label for="keywords">Search Keywords</label>
+              <br>
+              <input id="keywords" type="text" name="keywords" placeholder="Optional">
+            </div>
+          </div>
+            <button class="search-btn" type="button" onclick="getJokes()">Search</button>
+          <hr>
+          <div id="jokeResultsDiv"></div> 
+        </div>
+    </div>
+  </div>
+  <hr>
+
+{% include "footer.html" %}
