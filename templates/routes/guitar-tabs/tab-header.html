@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{ title }}</title>
+    <script src="https://cdn.jsdelivr.net/npm/@coderline/alphatab@latest/dist/alphaTab.js"></script>
+    <script src="https://kit.fontawesome.com/2cf927da1b.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tabs.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/guitar.ico') }}" type="image/x-icon">
+  </head>
+
+ <body data-song-file="{{ songFile }}">
+    <div id="page-top">
+        <div class="left-top">
+            {% if request.endpoint != "guitar_tabs" %}
+            <a class="blog-home-btn" href="{{ url_for('guitar_tabs') }}">Tabs Home</a>
+            {% else %}
+            <a class="blog-home-btn" href="{{ url_for('get_all_posts') }}">Blog Home</a>
+            {% endif %}
+        </div>
+        <div class="middle-top">
+            <p>Guitar Tabs</p>
+        </div>
+        <div class="right-top">
+            <a class="tab-upload" href="{{ url_for('tab_upload') }}">Upload a tab</a>
+        </div>
+    </div>
+
+    <div id="mobile-header">
+        <div class="mobile-title">
+            <a href="{{ url_for('guitar_tabs') }}">Guitar Tabs</a>
+        </div>
+        <div class="links-min collapsed">
+            <button class="nav-menu-btn">Menu <i class="fas fa-solid fa-bars"></i></button>
+        </div>
+        <div class="links-content">
+            <ul class="mobile-ul">
+                <li><a class="collapse-a" href="{{ url_for('get_all_posts') }}">Blog Home</a></li>
+                <li><a class="collapse-a" href="{{ url_for('tab_upload') }}">Upload a tab</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <hr>

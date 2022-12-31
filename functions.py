@@ -134,3 +134,9 @@ def upload_tab_file(data):
         os.mkdir(f"{tab_root}/{artist_path}")
         os.mkdir(f"{tab_root}/{artist_path}/{album_path}")
         return True, full_path
+
+
+class AttributeDict(dict):
+    __getattr__ = dict.__getitem__
+    __setattr__ = dict.__setattr__
+    __delattr__ = dict.__delattr__

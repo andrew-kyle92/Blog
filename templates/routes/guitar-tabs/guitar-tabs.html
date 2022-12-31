@@ -1,0 +1,428 @@
+{% include "guitar-tabs/header.html" %}
+
+    <button id="scrollToTop" title="Scroll to top" onclick="topFunction()">Top</button>
+
+    <div id="page-index">
+        <a href="#a">A</a>
+        <a href="#b">B</a>
+        <a href="#c">C</a>
+        <a href="#d">D</a>
+        <a href="#e">E</a>
+        <a href="#f">F</a>
+        <a href="#g">G</a>
+        <a href="#h">H</a>
+        <a href="#i">I</a>
+        <a href="#j">J</a>
+        <a href="#k">K</a>
+        <a href="#l">L</a>
+        <a href="#m">M</a>
+        <a href="#n">N</a>
+        <a href="#o">O</a>
+        <a href="#p">P</a>
+        <a href="#q">Q</a>
+        <a href="#r">R</a>
+        <a href="#s">S</a>
+        <a href="#t">T</a>
+        <a href="#u">U</a>
+        <a href="#v">V</a>
+        <a href="#w">W</a>
+        <a href="#x">X</a>
+        <a href="#y">Y</a>
+        <a href="#z">Z</a>
+    </div>
+
+    <div id="main-content">
+        <div id="a" class="outer-index">
+            <p>A</p>
+            <div class="inner-list">
+                {% for artist in all_artists %}
+                {% if artist.startswith('A') %}
+                <div class="artist">
+                    <div class="artist-list">
+                        <a class="artist-a" href="{{ url_for('artist_index', artist=artist) }}">{{ artist }}</a>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            <hr class="inner-hr">
+        </div>
+        <div id="b" class="outer-index">
+            <p>B</p>
+            <div class="inner-list">
+            {% for artist in all_artists %}
+                {% if artist.startswith('B') %}
+                <div class="artist">
+                    <div class="artist-list">
+                        <a class="artist-a" href="{{ url_for('artist_index', artist=artist) }}">{{ artist }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr class="inner-hr">
+        </div>
+        <div id="c" class="outer-index">
+            <p>C</p>
+            <div class="inner-list">
+            {% for artist in all_artists %}
+                {% if artist.startswith('C') %}
+                <div class="artist">
+                    <div class="artist-list">
+                        <a class="artist-a" href="{{ url_for('artist_index', artist=artist) }}">{{ artist }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr class="inner-hr">
+        </div>
+        <div id="d" class="outer-index">
+            <p>D</p>
+            <div class="inner-list">
+            {% for artist in all_artists %}
+                {% if artist.startswith('D') %}
+                <div class="artist">
+                    <div class="artist-list">
+                        <a class="artist-a" href="{{ url_for('artist_index', artist=artist) }}">{{ artist }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr class="inner-hr">
+        </div>
+        <div id="e" class="outer-index">
+            <p>E</p>
+            <div class="inner-list">
+            {% for artist in all_artists %}
+                {% if artist.startswith('E') %}
+                <div class="artist">
+                    <div class="artist-list">
+                        <a class="artist-a" href="{{ url_for('artist_index', artist=artist) }}">{{ artist }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr class="inner-hr">
+        </div>
+        <div id="f" class="outer-index">
+            <p>F</p>
+            <div class="inner-list">
+            {% for artist in all_artists %}
+                {% if artist.startswith('F') %}
+                <div class="artist">
+                    <div class="artist-list">
+                        <a class="artist-a" href="{{ url_for('artist_index', artist=artist) }}">{{ artist }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr class="inner-hr">
+        </div>
+        <div id="g" class="outer-index">
+            <p>G</p>
+            <div class="inner-list">
+            {% for artist in all_artists %}
+                {% if artist.startswith('G') %}
+                <div class="artist">
+                    <div class="artist-list">
+                        <a class="artist-a" href="{{ url_for('artist_index', artist=artist) }}">{{ artist }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr class="inner-hr">
+        </div>
+        <div id="h" class="outer-index">
+            <p>H</p>
+            <div class="inner-list">
+            {% for artist in all_artists %}
+                {% if artist.startswith('H') %}
+                <div class="artist">
+                    <div class="artist-list">
+                        <a class="artist-a" href="{{ url_for('artist_index', artist=artist) }}">{{ artist }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr class="inner-hr">
+        </div>
+        <div id="i" class="outer-index">
+            <p>I</p>
+            <div class="inner-list">
+            {% for artist in all_artists %}
+                {% if artist.startswith('I') %}
+                <div class="artist">
+                    <div class="artist-list">
+                        <a class="artist-a" href="{{ url_for('artist_index', artist=artist) }}">{{ artist }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr class="inner-hr">
+        </div>
+        <div id="j" class="outer-index">
+            <p>J</p>
+            <div class="inner-list">
+            {% for artist in all_artists %}
+                {% if artist.startswith('J') %}
+                <div class="artist">
+                    <div class="artist-list">
+                        <a class="artist-a" href="{{ url_for('artist_index', artist=artist) }}">{{ artist }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr class="inner-hr">
+        </div>
+        <div id="k" class="outer-index">
+            <p>K</p>
+            <div class="inner-list">
+            {% for artist in all_artists %}
+                {% if artist.startswith('K') %}
+                <div class="artist">
+                    <div class="artist-list">
+                        <a class="artist-a" href="{{ url_for('artist_index', artist=artist) }}">{{ artist }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr class="inner-hr">
+        </div>
+        <div id="l" class="outer-index">
+            <p>L</p>
+            <div class="inner-list">
+            {% for artist in all_artists %}
+                {% if artist.startswith('L') %}
+                <div class="artist">
+                    <div class="artist-list">
+                        <a class="artist-a" href="{{ url_for('artist_index', artist=artist) }}">{{ artist }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr class="inner-hr">
+        </div>
+        <div id="m" class="outer-index">
+            <p>M</p>
+            <div class="inner-list">
+            {% for artist in all_artists %}
+                {% if artist.startswith('M') %}
+                <div class="artist">
+                    <div class="artist-list">
+                        <a class="artist-a" href="{{ url_for('artist_index', artist=artist) }}">{{ artist }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr class="inner-hr">
+        </div>
+        <div id="n" class="outer-index">
+            <p>N</p>
+            <div class="inner-list">
+            {% for artist in all_artists %}
+                {% if artist.startswith('N') %}
+                <div class="artist">
+                    <div class="artist-list">
+                        <a class="artist-a" href="{{ url_for('artist_index', artist=artist) }}">{{ artist }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr class="inner-hr">
+        </div>
+        <div id="o" class="outer-index">
+            <p>O</p>
+            <div class="inner-list">
+            {% for artist in all_artists %}
+                {% if artist.startswith('O') %}
+                <div class="artist">
+                    <div class="artist-list">
+                        <a class="artist-a" href="{{ url_for('artist_index', artist=artist) }}">{{ artist }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr class="inner-hr">
+        </div>
+        <div id="p" class="outer-index">
+            <p>P</p>
+            <div class="inner-list">
+            {% for artist in all_artists %}
+                {% if artist.startswith('P') %}
+                <div class="artist">
+                    <div class="artist-list">
+                        <a class="artist-a" href="{{ url_for('artist_index', artist=artist) }}">{{ artist }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr class="inner-hr">
+        </div>
+        <div id="q" class="outer-index">
+            <p>Q</p>
+            <div class="inner-list">
+            {% for artist in all_artists %}
+                {% if artist.startswith('Q') %}
+                <div class="artist">
+                    <div class="artist-list">
+                        <a class="artist-a" href="{{ url_for('artist_index', artist=artist) }}">{{ artist }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr class="inner-hr">
+        </div>
+        <div id="r" class="outer-index">
+            <p>R</p>
+            <div class="inner-list">
+            {% for artist in all_artists %}
+                {% if artist.startswith('R') %}
+                <div class="artist">
+                    <div class="artist-list">
+                        <a class="artist-a" href="{{ url_for('artist_index', artist=artist) }}">{{ artist }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr class="inner-hr">
+        </div>
+        <div id="s" class="outer-index">
+            <p>S</p>
+            <div class="inner-list">
+            {% for artist in all_artists %}
+                {% if artist.startswith('S') %}
+                <div class="artist">
+                    <div class="artist-list">
+                        <a class="artist-a" href="{{ url_for('artist_index', artist=artist) }}">{{ artist }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr class="inner-hr">
+        </div>
+        <div id="t" class="outer-index">
+            <p>T</p>
+            <div class="inner-list">
+            {% for artist in all_artists %}
+                {% if artist.startswith('T') %}
+                <div class="artist">
+                    <div class="artist-list">
+                        <a class="artist-a" href="{{ url_for('artist_index', artist=artist) }}">{{ artist }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr class="inner-hr">
+        </div>
+        <div id="u" class="outer-index">
+            <p>U</p>
+            <div class="inner-list">
+            {% for artist in all_artists %}
+                {% if artist.startswith('U') %}
+                <div class="artist">
+                    <div class="artist-list">
+                        <a class="artist-a" href="{{ url_for('artist_index', artist=artist) }}">{{ artist }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr class="inner-hr">
+        </div>
+        <div id="v" class="outer-index">
+            <p>V</p>
+            <div class="inner-list">
+            {% for artist in all_artists %}
+                {% if artist.startswith('V') %}
+                <div class="artist">
+                    <div class="artist-list">
+                        <a class="artist-a" href="{{ url_for('artist_index', artist=artist) }}">{{ artist }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr class="inner-hr">
+        </div>
+        <div id="w" class="outer-index">
+            <p>W</p>
+            <div class="inner-list">
+            {% for artist in all_artists %}
+                {% if artist.startswith('W') %}
+                <div class="artist">
+                    <div class="artist-list">
+                        <a class="artist-a" href="{{ url_for('artist_index', artist=artist) }}">{{ artist }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr class="inner-hr">
+        </div>
+        <div id="x" class="outer-index">
+            <p>X</p>
+            <div class="inner-list">
+            {% for artist in all_artists %}
+                {% if artist.startswith('X') %}
+                <div class="artist">
+                    <div class="artist-list">
+                        <a class="artist-a" href="{{ url_for('artist_index', artist=artist) }}">{{ artist }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr class="inner-hr">
+        </div>
+        <div id="y" class="outer-index">
+            <p>Y</p>
+            <div class="inner-list">
+            {% for artist in all_artists %}
+                {% if artist.startswith('Y') %}
+                <div class="artist">
+                    <div class="artist-list">
+                        <a class="artist-a" href="{{ url_for('artist_index', artist=artist) }}">{{ artist }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr class="inner-hr">
+        </div>
+        <div id="z" class="outer-index">
+            <p>Z</p>
+            <div class="inner-list">
+            {% for artist in all_artists %}
+                {% if artist.startswith('Z') %}
+                <div class="artist">
+                    <div class="artist-list">
+                        <a class="artist-a" href="{{ url_for('artist_index', artist=artist) }}">{{ artist }}</a>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr class="inner-hr">
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/guitar-tabs.js') }}"></script>
+
+{% include "guitar-tabs/footer.html" %}

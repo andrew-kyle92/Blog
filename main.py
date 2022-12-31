@@ -1,13 +1,14 @@
 import datetime
+import json
 import os
-import time as t
-from datetime import date, timedelta
 import random as r
 import secrets
+import time as t
+from datetime import date, timedelta
 
 import flask
 from dotenv import dotenv_values
-from flask import Flask, render_template, redirect, url_for, flash, request, abort
+from flask import Flask, render_template, redirect, url_for, flash, request, abort, session
 from flask_bootstrap import Bootstrap
 from flask_ckeditor import CKEditor
 from flask_gravatar import Gravatar
@@ -18,18 +19,22 @@ from sqlalchemy.orm import relationship
 from werkzeug.datastructures import CombinedMultiDict
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-from functions import create_folder_struct, add_music, update_account
-from sql_queries import (get_user_songs, delete_song, get_all_artists_tabs, upload_tab, get_all_song_tabs, get_song,
-    query_users, get_all_songs_audio, get_all_artists_audio, get_song_audio, get_all_albums_audio, get_album_songs)
+
+from apis import APIs
 from email_class import SendEmail
 from forms import (CreatePostForm, RegisterForm, LoginForm, CommentForm, ContactForm, EmailPassword, CodeConfirmation,
                    ResetPassword, ProfileContent, SongUpload, EditSettings, ChangePassword, EditUser, TabUpload)
+from functions import create_folder_struct, add_music, update_account, AttributeDict
+from sql_queries import (get_user_songs, delete_song, get_all_artists_tabs, upload_tab, get_all_song_tabs, get_song,
+                         query_users, get_all_songs_audio, get_all_artists_audio, get_song_audio, get_all_albums_audio,
+                         get_album_songs)
 
 UPLOAD_FOLDER = "static/uploads"
 ALLOWED_EXTENSIONS = {"jpg", "png", "gp3", "gp4", "gp5", "gpx", "gp"}
 app = Flask(__name__)
 config = dotenv_values(".env")
 app.config['SECRET_KEY'] = config.get("SECRET_KEY")
+app.config["PERMANENT_SESSION_LIFETIME"] = datetime.timedelta(minutes=20)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["ALLOWED_EXTENSIONS"] = ALLOWED_EXTENSIONS
 app.config["MAX_CONTENT_LENGTH"] = 1000 * 1024 * 1024  # 1000mb
@@ -37,6 +42,7 @@ app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
 ckeditor = CKEditor(app)
 Bootstrap(app)
 send_email = SendEmail()
+apis = APIs()
 
 # Gravatar Init
 gravatar = Gravatar(app,
@@ -165,17 +171,21 @@ db.create_all()  # This is for database creation for test environment
 def get_all_posts():
     title = "Andrew's Blog"
     year = datetime.datetime.now().year
+    api_articles = json.dumps(session["articles"]) if "articles" in session.keys() else None
     if current_user.is_authenticated:
         user = User.query.get(current_user.id)
     else:
         user = None
     posts = BlogPost.query.all()
-    return render_template("index.html",
+    scripts = ["js/newsAPI.js"]
+    return render_template("routes/main-site/index.html",
                            all_posts=posts,
+                           api_articles=api_articles,
                            is_authenticated=current_user.is_authenticated,
                            user=user,
                            year=year,
-                           title=title
+                           title=title,
+                           scripts=scripts
                            )
 
 
@@ -219,7 +229,7 @@ def register():
 
             return redirect(url_for("get_all_posts"))
 
-    return render_template("register.html", form=form, user=user, title=title, year=year)
+    return render_template("routes/main-site/register.html", form=form, user=user, title=title, year=year)
 
 
 @app.route('/login', methods=["POST", "GET"])
@@ -271,7 +281,7 @@ def login():
             else:
                 flash("Your username or password are incorrect", category="unsuccessful_login")
                 return redirect(url_for("login"))
-    return render_template("login.html", form=form, user=user, title=title, year=year)
+    return render_template("routes/main-site/login.html", form=form, user=user, title=title, year=year)
 
 
 @app.route('/logout')
@@ -293,7 +303,7 @@ def profile(_id):
     user = current_user
     year = datetime.datetime.now().year
     return render_template(
-        "profile.html",
+        "routes/main-site/profile.html",
         is_authenticated=user.is_authenticated,
         user=user_data,
         title=title,
@@ -334,7 +344,7 @@ def edit_profile():
         db.session.commit()
         return redirect(url_for("profile", _id=_id))
     if current_user.id == user_data.id:
-        return render_template("edit-profile.html",
+        return render_template("routes/main-site/edit-profile.html",
                                is_authenticated=user.is_authenticated,
                                title=title,
                                user=user_data,
@@ -347,10 +357,28 @@ def edit_profile():
 
 @app.route("/post", methods=["POST", "GET"])
 def show_post():
+    requested_post = None
     post_id = request.args.get("post_id")
+    api_post = request.args.get("API")
+    publishedDate = request.args.get("publishDate")
+    articles = session["articles"] if "articles" in session.keys() else None
+    if articles is not None:
+        print(len(articles))
     user = current_user
-    requested_post = BlogPost.query.get(post_id)
-    title = f"{requested_post.title} | {requested_post.subtitle} | Andrew's Blog"
+    if not api_post:
+        requested_post = BlogPost.query.get(post_id)
+    else:
+        for article in articles:
+            if article["author"] is not None and article["publishedAt"] == publishedDate:
+                articleDict = AttributeDict(article)
+                requested_post = articleDict
+                break
+            elif article["author"] is None:
+                if article["publishedAt"] == publishedDate:
+                    articleDict = AttributeDict(article)
+                    requested_post = articleDict
+                    break
+    title = f"{requested_post.title} | Andrew's Blog"
     comments = Comment.query.all()
     year = datetime.datetime.now().year
     form = CommentForm(request.form, meta={"csrf_context": flask.session})
@@ -373,14 +401,15 @@ def show_post():
             return redirect(url_for("show_post", post_id=requested_post.id))
     form.comment.data = ""
     return render_template(
-        "post.html",
+        "routes/main-site/post.html",
         post=requested_post,
         is_authenticated=user.is_authenticated,
         user=user,
         comments=comments,
         form=form,
         title=title,
-        year=year
+        year=year,
+        api=api_post
     )
 
 
@@ -389,7 +418,7 @@ def about():
     title = "About | Andrew's Blog"
     user = current_user
     year = datetime.datetime.now().year
-    return render_template("about.html", is_authenticated=user.is_authenticated, user=user, title=title, year=year)
+    return render_template("routes/main-site/about.html", is_authenticated=user.is_authenticated, user=user, title=title, year=year)
 
 
 @app.route("/contact", methods=["POST", "GET"])
@@ -413,7 +442,7 @@ def contact():
         send_email.send_email_message(msg_info)
         flash(message="Your message was sent, successfully!", category="Email Sent Success")
         return redirect(url_for("contact"))
-    return render_template("contact.html",
+    return render_template("routes/main-site/contact.html",
                            is_authenticated=user.is_authenticated,
                            user=user,
                            form=form,
@@ -443,7 +472,7 @@ def add_new_post():
             db.session.add(new_post)
             db.session.commit()
             return redirect(url_for("get_all_posts"))
-        return render_template("make-post.html",
+        return render_template("routes/main-site/make-post.html",
                                form=form,
                                is_authenticated=current_user.is_authenticated,
                                user=user,
@@ -481,7 +510,7 @@ def edit_post():
             form.img_url.data = post.img_url
             form.body.data = post.body
             return render_template(
-                "make-post.html",
+                "routes/main-site/make-post.html",
                 form=form,
                 is_authenticated=user.is_authenticated,
                 is_edit=True,
@@ -555,13 +584,13 @@ def forgot_password():
                 flash("Your password was successfully reset", category="reset_success")
                 return redirect(url_for("login", reset_successful=True))
 
-    return render_template("forgot.html", form=form, year=year)
+    return render_template("routes/main-site/forgot.html", form=form, year=year)
 
 
 @app.route("/music-player", methods=["POST", "GET"])
 def music_player():
     widget = request.args.get("widget")
-    return render_template("music-player.html", widget=widget)
+    return render_template("routes/main-site/music-player.html", widget=widget)
 
 
 @app.route("/song-upload", methods=["POST", "GET"])
@@ -654,7 +683,7 @@ def song_upload():
             else:
                 flash("Song either already exists or there was an issue uploading the files\nPlease try again")
                 return redirect(url_for("song_upload"))
-    return render_template("song-upload.html", form=form,
+    return render_template("routes/main-site/song-upload.html", form=form,
                            is_authenticated=is_authenticated,
                            title=title,
                            user=user,
@@ -710,7 +739,7 @@ def settings():
                 flash("Current password doesn't match.", category="Incorrect")
                 return redirect(url_for("settings", user_id=user.id, pass_change_success=False))
     elif current_user.id == auth_user.id:
-        return render_template("settings.html",
+        return render_template("routes/main-site/settings.html",
                                title=title,
                                user=auth_user,
                                user_songs=user_songs,
@@ -740,7 +769,7 @@ def edit_settings(user_id):
         return redirect(url_for("settings", user_id=user.id))
     form.name.data = auth_user.name
     form.email.data = auth_user.email
-    return render_template("settings-edit.html",
+    return render_template("routes/main-site/settings-edit.html",
                            title=title,
                            user=auth_user,
                            is_authenticated=current_user,
@@ -794,7 +823,7 @@ def user_edit(user_id):
                 flash(f"Nothing was updated")
             return redirect(url_for("settings", user_id=admin.id, user_updated=True))
     else:
-        return render_template("user-edit.html",
+        return render_template("routes/main-site/user-edit.html",
                                current_user=admin,
                                user=user_to_edit,
                                year=year,
@@ -803,12 +832,37 @@ def user_edit(user_id):
                                )
 
 
+# ########## Random page and API routes ##########
+@app.route("/random", methods=["POST", "GET"])
+def random():
+    title = "Random Stuff | Andrew's Blog"
+    user = current_user
+    year = datetime.datetime.now().year
+    photo_data = apis.nasa()
+
+    if request.method == "POST":
+        pass
+    else:
+        return render_template("routes/main-site/random.html", title=title, year=year, user=user, nasa_data=photo_data)
+
+
+@app.route("/random/apis/jokes", methods=["POST", "GET"])
+def jokes():
+    title = "Jokes | Andrew's Blog"
+    user = current_user
+    year = datetime.datetime.now().year
+    script = ["js/jokesAPI.js"]
+
+    return render_template("routes/api-pages/joke-api.html", title=title, year=year, user=user, scripts=script)
+
+
+# ########## Guitar Tab Routes ##########
 @app.route("/guitar-tabs", methods=["POST", "GET"])
 @login_required
 def guitar_tabs():
     title = "Guitar Tabs | Andrew's Guitar Tabs"
     all_artists = get_all_artists_tabs()
-    return render_template("guitar-tabs/guitar-tabs.html", title=title, all_artists=all_artists)
+    return render_template("routes/guitar-tabs/guitar-tabs.html", title=title, all_artists=all_artists)
 
 
 @app.route("/guitar-tabs/Guitar-Tab", methods=["POST", "GET"])
@@ -818,7 +872,7 @@ def tab():
     song_name = request.args.get("song_name")
     title = f"{song_name} | Andrew's Guitar Tabs"
     song_file = get_song(artist, song_name)
-    return render_template("guitar-tabs/song-tab.html", title=title, artist=artist, songFile=song_file)
+    return render_template("routes/guitar-tabs/song-tab.html", title=title, artist=artist, songFile=song_file)
 
 
 @app.route("/guitar-tabs/tab-upload", methods=["POST", "GET"])
@@ -844,7 +898,7 @@ def tab_upload():
             flash("Unable to upload tab, please try again or contact an admin")
             return redirect(url_for("tab_upload"))
     else:
-        return render_template("guitar-tabs/tab-upload.html", title=title, form=form)
+        return render_template("routes/guitar-tabs/tab-upload.html", title=title, form=form)
 
 
 @app.route("/guitar-tabs/Artist/<string:artist>", methods=["POST", "GET"])
@@ -852,10 +906,30 @@ def tab_upload():
 def artist_index(artist):
     title = f"{artist} | Andrew's Guitar Tabs"
     all_songs = get_all_song_tabs(artist)
-    return render_template("guitar-tabs/artist.html", artist=artist, title=title, all_songs=all_songs)
+    return render_template("routes/guitar-tabs/artist.html", artist=artist, title=title, all_songs=all_songs)
 
 
 # ################## Fetch Routes ##################
+@app.route("/search-articles", methods=["POST", "GET"])
+def search_articles():
+    kw = request.args.get("q")
+    sort = request.args.get("sort_by")
+    amt = request.args.get("amount")
+    data = apis.news(kw, sort, amt)
+    if not session.get("articles"):
+        session["articles"] = data
+    else:
+        session["articles"] = data
+    articles = {"articles": data}
+    return articles
+
+
+@app.route("/get-jokes", methods=["POST", "GET"])
+def get_jokes():
+    url = request.args.get("url")
+    all_jokes = apis.jokes(url)
+    if all_jokes is not False:
+        return all_jokes
 
 
 @app.route("/fetch-artists", methods=["POST", "GET"])
