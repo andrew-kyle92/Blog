@@ -450,8 +450,8 @@ input[type=text], input[type=password] {
 
 .joke-delivery {
     color: transparent;
-    font-size: 20px;
-    text-shadow: 1px 1px 5px #fff;
+    font-size: 25px;
+    text-shadow: 1px 1px 8px #fff;
 }
 
 /******************** Settings Page Styling ********************/
@@ -945,6 +945,55 @@ tbody tr:nth-child(odd) {
     .submit-btn input {
         width: fit-content;
     }
-}
 
-/* End Profile Styling */
+    /* Random Page */
+    .mySlides img {
+        max-width: 80%;
+    }
+
+    .text {
+        display: none;
+    }
+
+    .numberText {
+        top: 0px;
+    }
+
+    .api-box {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .api-box img {
+        width: 100%;
+    }
+
+    .box-desc p {
+        margin: 0.5rem auto;
+    }
+
+    .api-name-desc {
+        text-align: center;
+    }
+
+    /* joke page */
+    .content-desc {
+        margin: auto auto 2rem;
+        width: 100%;
+    }
+
+    .jokes-form {
+        flex-direction: column;
+    }
+    .joke-form-groups {
+        width: 100%;
+    }
+
+    #jokeDesc {
+        width: 95%;
+    }
+
+    .jokeTextDiv {
+        width: 95%;
+    }
+}

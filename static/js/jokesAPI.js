@@ -34,7 +34,7 @@ function revealDelivery(id){
     else{
         delivery.classList.remove("revealed");
         delivery.style.color = "transparent";
-        delivery.style.textShadow = "1px 1px 5px #fff";
+        delivery.style.textShadow = "1px 1px 8px #fff";
     }
     
 }
