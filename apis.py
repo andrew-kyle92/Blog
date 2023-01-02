@@ -9,7 +9,7 @@ config = dotenv_values(".env")
 
 class APIs:
     def __init__(self):
-        self.current_hour = 0
+        self.current_hour = 1
         self.nasa_data = None
         self.nasa_key = config.get("NASA_KEY")
         self.news_key = config.get("NEWS_KEY")
