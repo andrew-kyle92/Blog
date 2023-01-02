@@ -2,7 +2,7 @@
 
 // ########## fetch calls ##########
 const fetchJokes = async (url) => {
-    const jokeUrl = `/get-jokes?url=${url}`;
+    const jokeUrl = new URL(url);
     let jokeData = await fetch(jokeUrl)
         .then(async (response) => {
             const data = await response.json();
@@ -60,14 +60,20 @@ const getJokes = async () => {
                 cats.push(customOptions[i].value);
             }
         }
-        for(let i = 0; i < cats.length; i++){
-            if(i == cats.length - 1){
-                completeUrl += cats[i];
-            }
-            else{
-                completeUrl += cats[i] + seperator;
+        if(cats != 0){
+            for(let i = 0; i < cats.length; i++){
+                if(i == cats.length - 1){
+                    completeUrl += cats[i];
+                }
+                else{
+                    completeUrl += cats[i] + seperator;
+                }
             }
         }
+        else{
+            completeUrl += "Any";
+        }
+        
     }
     // finding all flags
     flags = []
@@ -97,9 +103,9 @@ const getJokes = async () => {
     if(keywords.value != ''){
         completeUrl += completeUrl.includes("?") ? `&contains=${keywords.value}` : `?contains${keywords.value}`;
     }
-    let amount = completeUrl.includes("?") ? "&amount=5" : "?amount=5";
+    completeUrl = completeUrl.includes("?") ? `${completeUrl}&amount=5` : `${completeUrl}?amount=5`;
     // pulling Joke data;
-    let jokeData = await fetchJokes(completeUrl + amount);
+    let jokeData = await fetchJokes(completeUrl);
     if(!jokeData["error"]){
         // Clearing previous joke data
         // getting the results div
