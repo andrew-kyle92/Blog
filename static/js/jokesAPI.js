@@ -101,7 +101,7 @@ const getJokes = async () => {
     }
     // adding keywords
     if(keywords.value != ''){
-        completeUrl += completeUrl.includes("?") ? `&contains=${keywords.value}` : `?contains${keywords.value}`;
+        completeUrl += completeUrl.includes("?") ? `&contains=${keywords.value.replace(" ", "%20")}` : `?contains=${keywords.value.replace(" ", "%20")}`;
     }
     completeUrl = completeUrl.includes("?") ? `${completeUrl}&amount=5` : `${completeUrl}?amount=5`;
     // pulling Joke data;
@@ -243,7 +243,33 @@ const getJokes = async () => {
         
     }
     else{
-        console.log(jokes["message"]);
-        console.log(jokes["causedBy"]);
+        // generate error
+        let resultsDiv = document.getElementById("jokeResultsDiv");
+        if(resultsDiv.childElementCount > 0){
+            while(resultsDiv.childElementCount > 0) {
+                resultsDiv.removeChild(resultsDiv.lastElementChild);
+            }
+        }
+        // creating message portion of error
+        let newMsg = document.createElement("h2");
+        newMsg.setAttribute("class", "jokeErrorMsg");
+        newMsg.innerHTML = `- ${jokeData["message"]}`;
+        resultsDiv.appendChild(newMsg);
+        // creating reasons portion of error
+        let reasonMsg = document.createElement("h2");
+        reasonMsg.setAttribute("class", "jokeErrorMsg");
+        reasonMsg.innerHTML = "- Reasons:";
+        resultsDiv.appendChild(reasonMsg);
+        let unOrderedList = document.createElement("ul");
+        unOrderedList.setAttribute("id", "errorList");
+        resultsDiv.appendChild(unOrderedList);
+        let listParent = document.getElementById("errorList");
+        for(let i = 0; i < jokeData["causedBy"].length; i++){
+            let listItem = document.createElement("li");
+            listItem.setAttribute("class", "errorListItem");
+            listItem.innerHTML = jokeData["causedBy"][i];
+            listParent.appendChild(listItem);
+        }
+        
     }
 }
