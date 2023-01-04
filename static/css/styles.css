@@ -454,6 +454,15 @@ input[type=text], input[type=password] {
     text-shadow: 1px 1px 8px #fff;
 }
 
+/* No Joke Found Error */
+.jokeErrorMsg {
+    color: #cf3232;
+}
+
+.errorListItem {
+    color: #666161;
+}
+
 /******************** Settings Page Styling ********************/
 .edit-btn {
     margin: auto 4rem;
