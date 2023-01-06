@@ -1,4 +1,4 @@
-{% include "guitar-tabs/header.html" %}
+{% include "routes/guitar-tabs/header.html" %}
 {% from "_macro.html" import make_form %}
 
     {% with messages = get_flashed_messages() %}
@@ -13,4 +13,4 @@
 
     <script src="{{ url_for('static', filename='js/guitar-tabs.js') }}"></script>
 
-{% include "guitar-tabs/footer.html" %}
+{% include "routes/guitar-tabs/footer.html" %}

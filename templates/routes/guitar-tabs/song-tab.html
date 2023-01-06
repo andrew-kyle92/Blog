@@ -1,4 +1,4 @@
-{% include "guitar-tabs/tab-header.html" %}
+{% include "routes/guitar-tabs/tab-header.html" %}
 
   <a class="artist-home" href="{{ url_for('artist_index', artist=artist) }}">Back to Artist</a>
 
@@ -83,4 +83,4 @@
 
     <script src="{{ url_for('static', filename='js/tabs.js') }}"></script>
 
-{% include "guitar-tabs/footer.html" %}
+{% include "routes/guitar-tabs/footer.html" %}
