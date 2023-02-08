@@ -3,6 +3,8 @@ import requests
 import datetime as dt
 from dotenv import dotenv_values
 from starting_nasa_data import nasa_data_start
+import spotipy
+from spotipy.oauth2 import SpotifyOAuth
 
 config = dotenv_values(".env")
 
@@ -61,3 +63,29 @@ class APIs:
         except requests.exceptions as e:
             print(e)
             return False
+
+
+class Spotify:
+    """
+        For using the spotipy api (essentially spotify's api) and using it for
+        music streaming
+    """
+    def __init__(self):
+        self.client_id = config.get("SPOTIFY_CLIENT_ID")
+        self.client_secret = config.get("SPOTIFY_CLIENT_SECRET")
+        self.redirect_url = "http://127.0.0.1:5000/callback"
+
+    def search_artist(self, a):
+        """
+        Search artist by name and pull any data related to them
+        :param a:
+        :return artist music data:
+        """
+        sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
+            client_id=self.client_id,
+            client_secret=self.client_secret,
+            redirect_uri=self.redirect_url,
+            scope="user-library-read"
+        ))
+        results = sp.search(q=a, limit=10)
+        print(results)

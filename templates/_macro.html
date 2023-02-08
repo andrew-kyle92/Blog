@@ -135,3 +135,58 @@
     {% endfor %}
 </form>
 {% endmacro %}
+
+<!-- form template for uploading guitar tabs -->
+{% macro tab_upload_form(action='', form='') %}
+
+<form class="tab-upload-form" action="{{ action }}" method="post" enctype="multipart/form-data">
+    {{ form.csrf_token }}
+    {% if form.csrf_token.errors %}
+        {% for error in form.csrf_token.errors %}
+        <br>
+        <span class="field-error">{{ error }}</span>
+        {% endfor %}
+    {% endif %}
+    {% for field in form %}
+        {% if field.type == "StringField" %}
+    <div class="form-group-tab-upload">
+        <label class="form-label" for="{{ field.name }}">{{ field.label.text }}{% if "required" in field|string() %}*{% endif %}</label>
+        <br>
+        <input class="form-input" name="{{ field.name }}" type="text" {% if "required" in field|string() %} required {% endif %}>
+            {% if field.errors %}
+            {% for error in field.errors %}
+        <span class="field-error">{{ error }}</span>
+            {% endfor %}
+            {% endif %}
+    </div>
+        {% endif %}
+    {% endfor %}
+    <div class="forms-multi-input">
+        <div class="form-group-tab-upload">
+            <label class="form-label" for="{{ form.song_file.name }}">{{ form.song_file.label.text }}{% if "required" in form.song_file|string() %}*{% endif %}</label>
+            <br>
+            <input class="form-input" type="file" name="{{ form.song_file.name }}" accept=".gp,.gpx,.gp5,.gp4,.pdf" {% if "required" in form.song_file|string() %} required {% endif %}>
+            {% if form.song_file.errors %}
+            {% for error in form.song_file.errors %}
+            <span class="field-error">{{ error }}</span>
+            {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group-tab-upload">
+            <label class="form-label" for="{{ form.premium_tab.name }}">{{ form.premium_tab.label.text }}</label>
+            <br>
+            <input class="form-input" type="checkbox" name="{{ form.premium_tab.name }}">
+            {% if form.premium_tab.errors %}
+            {% for error in form.premium_tabs.errors %}
+            <span class="field-error">{{ error }}</span>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="submit-btn">
+        <button id="submit" type="submit" name="{{ form.submit.name }}">{{ form.submit.label.text }}</button>
+    </div>
+</form>
+
+{% endmacro %}

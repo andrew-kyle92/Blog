@@ -1,3 +1,4 @@
+import secrets
 import psycopg2
 import psycopg2.extras
 from dotenv import dotenv_values
@@ -282,7 +283,9 @@ def get_all_song_tabs(artist):
             cur.execute(query)
             songs = cur.fetchall()
 
-            songs_dict = {song["tab_name"]: {"file": song["tab_file"], "album": song["album"]} for song in songs}
+            songs_dict = {song["tab_name"]: {"file": song["tab_file"], "album": song["album"],
+                                             "premium_tab": song["premium_tab"], "ref_id": song["ref_id"]}
+                          for song in songs}
             return songs_dict
 
 
@@ -296,9 +299,11 @@ def upload_tab(form_data):
             with conn.cursor() as cur:
                 upload_query = f"""
                     INSERT INTO song_tabs
-                        (artist, tab_name, tab_file, album)
+                        (artist, tab_name, tab_file, album, premium_tab, ref_id)
                     VALUES
-                        ('{form_data['artist']}', '{form_data['tab_name']}', '{can_upload[1]}', '{form_data['album']}');
+                        ('{form_data['artist']}', '{form_data['tab_name']}', '{can_upload[1]}', '{form_data['album']}',
+                        '{form_data['premium_tab'] if form_data['premium_tab'] is not None else False}',
+                        '{secrets.token_hex(12)}');
                 """
                 cur.execute(upload_query)
                 return True
@@ -306,22 +311,20 @@ def upload_tab(form_data):
         return False
 
 
-def get_song(artist, song_name):
+def get_song(ref_id):
     """
     Gets the songFile based on the song and artist name
-    :param artist:
-    :param song_name:
+    :param ref_id:
     :return:
-    query of the song path
+    all the data for this specific tab
     """
     with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
-        with conn.cursor() as cur:
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             query = f"""
-                SELECT tab_file
+                SELECT *
                 FROM song_tabs
-                WHERE artist = '{artist}'
-                AND tab_name = '{song_name}'
+                WHERE ref_id = '{ref_id}'
             """
             cur.execute(query)
-            song_file = cur.fetchone()
-            return song_file[0]
+            song_data = cur.fetchone()
+            return song_data

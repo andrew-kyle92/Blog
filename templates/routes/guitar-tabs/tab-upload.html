@@ -1,5 +1,5 @@
 {% include "routes/guitar-tabs/header.html" %}
-{% from "_macro.html" import make_form %}
+{% from "_macro.html" import tab_upload_form %}
 
     {% with messages = get_flashed_messages() %}
     {% if messages: %}
@@ -9,7 +9,7 @@
     {% endif %}
     {% endwith %}
 
-    {{ make_form(form=form, has_file=True) }}
+    {{ tab_upload_form(form=form) }}
 
     <script src="{{ url_for('static', filename='js/guitar-tabs.js') }}"></script>
 

@@ -8,14 +8,20 @@ hr {
 }
 
 html {
-    width: 100%;
     overflow: auto;
+    scroll-behavior: smooth;
+    width: 100%;
 }
 
 body {
     background: #2e2d2d;
     margin: 0;
     overflow: hidden;
+}
+
+::selection {
+    background: #8f8f8f;
+    color: #c62a2a;
 }
 
 #scrollToTop {
@@ -140,6 +146,24 @@ body {
 }
 
 /* Styling for the form on tab-upload.html */
+.tab-upload-form {
+    background: antiquewhite;
+    border-radius: 5px;
+    font-family: sans-serif!important;
+    margin: auto;
+    padding: 1rem;
+    width: 30%;
+}
+
+.form-group-tab-upload {
+    margin: 1rem 0rem;
+}
+
+.forms-multi-input {
+    display: flex;
+    flex-direction: row;
+}
+
 #form {
     display: flex;
     flex-direction: column;
@@ -161,7 +185,11 @@ body {
 
 .form-input {
     border-radius: 5px;
-    height: 25px;
+    box-sizing: border-box;
+    color: #525050;
+    font-size: 20px;
+    font-weight: bold;
+    height: 35px;
     margin: auto;
     width: 100%;
 }
@@ -305,11 +333,27 @@ tbody tr:nth-child(even) {
     #form {
         width: 75%;
     }
+
+    .tab-upload-form {
+        width: 50%;
+    }
+
+    .forms-multi-input {
+        flex-direction: column;
+    }
 }
 
 @media only screen and (max-width: 700px) and (min-width: 400px){
     #form {
         width: 100%;
+    }
+
+    .tab-upload-form {
+        width: 60%
+    }
+
+    .forms-multi-input {
+        flex-direction: column;
     }
 
     #main-content {
@@ -336,6 +380,14 @@ tbody tr:nth-child(even) {
 @media only screen and (max-width: 475px) {
     #form {
         width: 90%;
+    }
+
+    .tab-upload-form {
+        width: 90%;
+    }
+
+    .forms-multi-input {
+        flex-direction: column;
     }
 
     .inner-list {

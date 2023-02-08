@@ -15,7 +15,6 @@ function topFunction(){
         top: 0,
         behavior: 'smooth'
     });
-    document.documentElement.scrollTop = 0;
 }
 
 // Nav menu responsiveness
