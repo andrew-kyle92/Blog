@@ -125,4 +125,5 @@ class TabUpload(MyBaseForm):
     song_name = StringField("Song Name", validators=[DataRequired()])
     song_file = FileField("Song File", validators=[DataRequired(), FileAllowed(["gp3", "gp4", "gp5", "gpx", "gp"],
                                                      "Only guitar-pro files are allowed")])
+    premium_tab = BooleanField("Premium Tab")
     submit = SubmitField("Upload")

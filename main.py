@@ -34,7 +34,7 @@ ALLOWED_EXTENSIONS = {"jpg", "png", "gp3", "gp4", "gp5", "gpx", "gp"}
 app = Flask(__name__)
 config = dotenv_values(".env")
 app.config['SECRET_KEY'] = config.get("SECRET_KEY")
-app.config["PERMANENT_SESSION_LIFETIME"] = datetime.timedelta(minutes=20)
+app.config["PERMANENT_SESSION_LIFETIME"] = datetime.timedelta(minutes=60)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["ALLOWED_EXTENSIONS"] = ALLOWED_EXTENSIONS
 app.config["MAX_CONTENT_LENGTH"] = 1000 * 1024 * 1024  # 1000mb
@@ -104,6 +104,8 @@ class User(UserMixin, db.Model):
     name = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
     verification_code = db.Column(db.String(6))
+    ref_id = db.Column(db.String(128), unique=True, nullable=False)
+    premium_access = db.Column(db.Boolean, nullable=True)
     posts = relationship("BlogPost", back_populates="author")
     comments = relationship("Comment", back_populates="author")
     profile = relationship("Profile", back_populates="user")
@@ -170,6 +172,7 @@ db.create_all()  # This is for database creation for test environment
 @app.endpoint("/")
 def get_all_posts():
     title = "Andrew's Blog"
+    print(flask.session.items())
     year = datetime.datetime.now().year
     api_articles = json.dumps(session["articles"]) if "articles" in session.keys() else None
     if current_user.is_authenticated:
@@ -210,6 +213,7 @@ def register():
                 creation_date=datetime.date.today(),
                 name=request.form.get("name"),
                 password=salted_password,
+                ref_id=secrets.token_hex(12)
             )
             db.session.add(new_user)
             db.session.commit()
@@ -362,8 +366,6 @@ def show_post():
     api_post = request.args.get("API")
     publishedDate = request.args.get("publishDate")
     articles = session["articles"] if "articles" in session.keys() else None
-    if articles is not None:
-        print(len(articles))
     user = current_user
     if not api_post:
         requested_post = BlogPost.query.get(post_id)
@@ -859,6 +861,7 @@ def jokes():
 # ########## Guitar Tab Routes ##########
 @app.route("/guitar-tabs", methods=["POST", "GET"])
 @login_required
+@fresh_login_required
 def guitar_tabs():
     title = "Guitar Tabs | Andrew's Guitar Tabs"
     all_artists = get_all_artists_tabs()
@@ -867,16 +870,22 @@ def guitar_tabs():
 
 @app.route("/guitar-tabs/Guitar-Tab", methods=["POST", "GET"])
 @login_required
+@fresh_login_required
 def tab():
-    artist = request.args.get('artist')
-    song_name = request.args.get("song_name")
-    title = f"{song_name} | Andrew's Guitar Tabs"
-    song_file = get_song(artist, song_name)
-    return render_template("routes/guitar-tabs/song-tab.html", title=title, artist=artist, songFile=song_file)
+    ref_id = request.args.get("id")
+    has_access = current_user.premium_access
+    song_data = get_song(ref_id)
+    title = f"{song_data['tab_name']} | Andrew's Guitar Tabs"
+    artist = song_data["artist"]
+    premium_tab = song_data["premium_tab"] if song_data["premium_tab"] is not None else False
+
+    return render_template("routes/guitar-tabs/song-tab.html", artist=artist, title=title, songData=song_data,
+                           has_access=has_access, premium_tab=premium_tab)
 
 
 @app.route("/guitar-tabs/tab-upload", methods=["POST", "GET"])
 @login_required
+@fresh_login_required
 def tab_upload():
     title = "Tab Upload | Andrew's Guitar Tabs"
     form = TabUpload(CombinedMultiDict((request.files, request.form)), meta={"csrf_context": flask.session})
@@ -885,7 +894,8 @@ def tab_upload():
             'artist': form.artist.data,
             'album': form.album.data,
             'tab_name': form.song_name.data,
-            'tab_file': form.song_file.data.filename
+            'tab_file': form.song_file.data.filename,
+            'premium_tab': form.premium_tab.data
         }
         can_upload = upload_tab(form_data)
         if can_upload:
@@ -903,6 +913,7 @@ def tab_upload():
 
 @app.route("/guitar-tabs/Artist/<string:artist>", methods=["POST", "GET"])
 @login_required
+@fresh_login_required
 def artist_index(artist):
     title = f"{artist} | Andrew's Guitar Tabs"
     all_songs = get_all_song_tabs(artist)
@@ -1002,6 +1013,14 @@ def fetch_previous_next_tracks():
                 track_info["previous_track"] = all_songs[i - 1]
                 track_info["next_track"] = all_songs[i + 1]
     return track_info
+
+
+@app.route("/fetch-tab-path", methods=["POST", "GET"])
+def fetch_tab_path():
+    ref_id = request.args.get("ref_id")
+    song_data = get_song(ref_id)
+    song_path = {"path": song_data["tab_file"]}
+    return song_path
 
 
 # Fresh Login Function
