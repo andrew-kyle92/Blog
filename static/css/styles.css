@@ -50,12 +50,13 @@ html {
 
 .dropdown-content {
     box-shadow: -10px 5px 10px black;
-    background: #ffffff;
+    background: #fff;
     display: none;
     flex-direction: column;
     max-width: 8rem;
-    opacity: 0.8;
     position: absolute;
+    transition-property: display;
+    transition-duration: 0.5s;
     z-index: 1;
 }
 
