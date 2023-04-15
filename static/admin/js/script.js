@@ -41,7 +41,7 @@ window.addEventListener("load", () => {
             for(let j = 0; j < dbCols.length; j++){
                 let body_td = document.createElement("td");
                 let text = String(dbData[i][dbCols[j]]);
-                body_td.innerText = text.length > 50 ? text.substring(0, 50) + "..." : text;
+                body_td.innerText = text.length > 15 ? text.substring(0, 15) + "..." : text;
                 body_td.title = text;
                 // body_td.innerText = text;
                 body_tr.appendChild(body_td);
