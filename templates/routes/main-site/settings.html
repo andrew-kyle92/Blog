@@ -83,7 +83,9 @@
             {% endfor %}
           {% endif %}
       {% endwith %}
-      {{ make_form(form=form) }}
+      <div id="form-div">
+        {{ make_form(form=form) }}
+      </div>
     </div>
     {% if user.account_type == "Super-Admin" %}
     <div class="administration-content">

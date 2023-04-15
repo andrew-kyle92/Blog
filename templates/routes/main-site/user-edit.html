@@ -24,7 +24,9 @@
   <div class="cat-content-admin">
     <div class="content-main-admin">
       <img class="admin-pro-pic" src="{{ user.profile[0].profile_picture }}">
-      {{ make_form(form=form) }}
+      <div id="form-div">
+        {{ make_form(form=form) }}
+      </div>
     </div>
   </div>
 

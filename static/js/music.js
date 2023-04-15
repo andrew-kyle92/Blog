@@ -58,7 +58,7 @@ const fetch_song = async (_id) => {
 }
 
 const fetch_previous_next_tracks = async (refId) => {
-    tracksUrl = "fetch-previous-next-tracks?" + new URLSearchParams({
+    const tracksUrl = "fetch-previous-next-tracks?" + new URLSearchParams({
         "refId": refId
     });
     let tracksData = await fetch(tracksUrl)

@@ -553,11 +553,16 @@ input[type=text], input[type=password] {
 }
 
 .content-main {
-    margin: auto 0 auto auto;
+    margin: auto;
     width: 90%;
 }
 
 .content-main form {
+    width: 80%;
+}
+
+#form-div {
+    margin: auto;
     width: 80%;
 }
 

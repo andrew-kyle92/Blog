@@ -28,15 +28,16 @@ body {
 #scrollToTop {
     background: #ba2b2b;
     border-radius: 10px;
-    bottom: 4rem;
+    bottom: 1rem;
     color: #2e2d2d;
     display: none;
     font-size: 25px;
     font-family: 'PunkKid', sans-serif;
     height: 50px;
     position: fixed;
-    right: 4rem;
+    right: 1rem;
     text-align: center;
+    transition: 0.3s;
     width: 65px;
 }
 

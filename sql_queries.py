@@ -328,3 +328,59 @@ def get_song(ref_id):
             cur.execute(query)
             song_data = cur.fetchone()
             return song_data
+
+
+def admin_get_all_tables():
+    """
+    Queries the database for all the table names
+    :return:
+    A list of all the database tables
+    """
+    with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            table_query = """
+                SELECT table_name FROM information_schema.tables 
+                WHERE table_schema='public' AND table_type='BASE TABLE'
+                ORDER BY table_name asc;
+            """
+            cur.execute(table_query)
+            table_res = cur.fetchall()
+            tables = {table["table_name"]: {"col_count": None} for table in table_res}
+            for k in tables.keys():
+                col_count_query = f"""
+                    SELECT COUNT(*) as col_count
+                    FROM information_schema.columns
+                    WHERE table_name = '{k}';
+                """
+                cur.execute(col_count_query)
+                col_count_res = cur.fetchone()
+                tables[k]["col_count"] = col_count_res["col_count"]
+
+            return tables
+
+
+def admin_get_table(table):
+    """
+    Pulls are columns and rows from a particular table
+    :param table:
+    :return dictionary of all columns and rows:
+    """
+    with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            query = f"""
+                SELECT *
+                FROM {table};
+            """
+            columns_query = f"""
+                SELECT column_name
+                FROM information_schema.columns
+                WHERE table_schema = 'public'
+                    AND table_name = '{table}';
+            """
+            cur.execute(query)
+            res = cur.fetchall()
+            cur.execute(columns_query)
+            cols = cur.fetchall()
+            table_data = {table: {"data": [item for item in res], "columns": []}}
+            table_data[table]["columns"] = [col["column_name"] for col in cols]
+            return table_data
