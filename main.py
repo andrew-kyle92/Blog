@@ -922,7 +922,11 @@ def artist_index(artist):
 
 # #### Administration ####
 @app.route("/admin", methods=["POST", "GET"])
+@login_required
 def admin():
+    user = User.query.get(current_user.id)
+    if user.account_type != "Super-Admin":
+        return abort(401)
     title = "Administration | Andrew's Blog"
     all_tables = admin_get_all_tables()
     script = ["admin/js/script.js"]
