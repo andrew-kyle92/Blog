@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% block head %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="blog, person-site">
+  <meta name="author" content="Andrew Kyle">
+
+  <title>{% block title %}{% endblock %}</title>
+
+  <!-- Custom Non-Vendor CSS Styling -->
+  <link rel="stylesheet" href="{% block css %}{% endblock %}">
+
+  <!-- Custom fonts for this template -->
+  <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <!-- Favicon for the app -->
+  <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon" type="image/x-icon">
+
+  <!-- Font Awesome Kit -->
+  <script src="https://kit.fontawesome.com/2cf927da1b.js" crossorigin="anonymous"></script>
+  {% endblock %}
+</head>
+<body>
+  <!-- Navigation -->
+  <nav id="mainNav">
+    <div class="nav-left">
+      <a class="nav-link brand" href="{{ url_for('admin') }}">Administration</a>
+    </div>
+    <div class="nav-right">
+      <ul>
+        <li class="nav-item"><a href="{{ url_for('get_all_posts') }}">Main Site</a></li>
+      </ul>
+    </div>
+  </nav>
+
+{% block content %}{% endblock %}
+
+  <!-- Footer -->
+  <footer>
+
+  </footer>
+
+  {% if scripts %}
+    {% for script in scripts %}
+  <script src="{{ url_for('static', filename=script) }}"></script>
+    {% endfor %}
+  {% endif %}
+
+</body>
+
+</html>

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block css %}{{ url_for('static', filename='admin/css/styles.css') }}{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+<div id="main-content">
+    <div id="body-top">
+        <h1 class="content-title">All Database Tables</h1>
+        <h1 class="table-count">{{ tables | length}} tables</h1>
+    </div>
+    <div id="body-middle" class="tables-content">
+        <table id="all-tables-table" data-collapsed="false">
+            <thead>
+                <tr>
+                    <th>Table</th>
+                    <th>Columns</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for table in tables %}
+                <tr>
+                    <td><span id="{{ table }}-table" class="table-item">{{ table }}</span></td>
+                    <td>{{ tables[table]["col_count"] }}</td>
+                </tr>
+                {%  endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -27,7 +27,7 @@ from forms import (CreatePostForm, RegisterForm, LoginForm, CommentForm, Contact
 from functions import create_folder_struct, add_music, update_account, AttributeDict
 from sql_queries import (get_user_songs, delete_song, get_all_artists_tabs, upload_tab, get_all_song_tabs, get_song,
                          query_users, get_all_songs_audio, get_all_artists_audio, get_song_audio, get_all_albums_audio,
-                         get_album_songs)
+                         get_album_songs, admin_get_all_tables, admin_get_table)
 
 UPLOAD_FOLDER = "static/uploads"
 ALLOWED_EXTENSIONS = {"jpg", "png", "gp3", "gp4", "gp5", "gpx", "gp"}
@@ -58,7 +58,7 @@ gravatar = Gravatar(app,
 app.config['SQLALCHEMY_DATABASE_URI'] = config.get("DATABASE_URL", "postgresql:///blog.db")
 # app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql:///blogdb"  # This is for testing
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['REMEMBER_COOKIE_DURATION'] = timedelta(seconds=3600)
+app.config['REMEMBER_COOKIE_DURATION'] = timedelta(seconds=28800) # 8 hours
 app.config["FORCE_HOST_FOR_REDIRECTS"] = None
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.add_url_rule("/", endpoint="get_all_posts")
@@ -172,7 +172,6 @@ db.create_all()  # This is for database creation for test environment
 @app.endpoint("/")
 def get_all_posts():
     title = "Andrew's Blog"
-    print(flask.session.items())
     year = datetime.datetime.now().year
     api_articles = json.dumps(session["articles"]) if "articles" in session.keys() else None
     if current_user.is_authenticated:
@@ -213,7 +212,8 @@ def register():
                 creation_date=datetime.date.today(),
                 name=request.form.get("name"),
                 password=salted_password,
-                ref_id=secrets.token_hex(12)
+                ref_id=secrets.token_hex(12),
+                premium_access=False
             )
             db.session.add(new_user)
             db.session.commit()
@@ -920,6 +920,15 @@ def artist_index(artist):
     return render_template("routes/guitar-tabs/artist.html", artist=artist, title=title, all_songs=all_songs)
 
 
+# #### Administration ####
+@app.route("/admin", methods=["POST", "GET"])
+def admin():
+    title = "Administration | Andrew's Blog"
+    all_tables = admin_get_all_tables()
+    script = ["admin/js/script.js"]
+    return render_template("routes/admin/admin-index.html", tables=all_tables, title=title, scripts=script)
+
+
 # ################## Fetch Routes ##################
 @app.route("/search-articles", methods=["POST", "GET"])
 def search_articles():
@@ -1023,6 +1032,14 @@ def fetch_tab_path():
     return song_path
 
 
+@app.route("/fetch-table-data", methods=["GET"])
+def fetch_table_data():
+    table = request.args.get("table")
+    table_data = admin_get_table(table)
+    return table_data
+
+
+# ########## Fresh Login & Redirection ##########
 # Fresh Login Function
 @login_manager.needs_refresh_handler
 def refresh():

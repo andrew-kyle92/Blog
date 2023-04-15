@@ -1,0 +1,97 @@
+html {
+
+}
+
+body {
+    margin: auto;
+    width: 100%;
+}
+
+/* ########## Nav Bar ########## */
+#mainNav {
+    background: #4e555b;
+    display: flex;
+    justify-content: space-between;
+}
+
+#mainNav a {
+    color: aliceblue;
+    font-size: 24px;
+    text-decoration: none;
+}
+
+.nav-left, .nav-right {
+    margin: auto 1rem;
+}
+
+.nav-item {
+    list-style-type: none;
+}
+
+.list-inline-item {
+    list-style-type: none;
+}
+
+/* ########### Main Content ########## */
+#main-content {
+    margin: 2rem auto;
+    width: 70%;
+}
+
+#body-top {
+    background: #4e555b;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.content-title, .table-count {
+    color: aliceblue;
+    margin: auto 1rem
+}
+
+.tables-content {
+    margin: auto;
+    width: 100%;
+}
+
+table {
+    border-collapse: collapse;
+    overflow: auto;
+    width: 100%;
+}
+
+thead {
+    background: #4e555b;
+    color: aliceblue;
+    text-align: justify;
+}
+
+th {
+    border: 1px solid aliceblue;
+    font-size: 28px;
+}
+
+tbody tr:nth-child(odd) {
+    background: #d9dbda;
+}
+
+tbody tr:nth-child(even) {
+    background: #c2c4c3;
+}
+
+tbody tr {
+    font-size: 24px;
+    text-overflow: ellipsis;
+}
+
+tbody td {
+    border: 1px solid aliceblue;
+    color: #4a4a4a;
+}
+
+.table-item:hover {
+    cursor: pointer;
+    opacity: 0.5;
+}

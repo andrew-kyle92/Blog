@@ -8,10 +8,11 @@
   <meta name="description" content="blog, person-site">
   <meta name="author" content="Andrew Kyle">
 
-  <title>{{ title }}</title>
+  <title>{% block title %}{% endblock %}</title>
 
   <!-- Custom Non-Vendor CSS Styling -->
   <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+  {% block additional_css %}{% endblock %}
 
   <!-- Bootstrap core CSS -->
   <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -32,7 +33,7 @@
 
 </head>
 
-<body {% if api_articles %}onload="createPosts({{ api_articles }})"{% endif %}>
+<body {% if api_articles %} onload="createPosts({{ api_articles }})" {% endif %}>
 
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
