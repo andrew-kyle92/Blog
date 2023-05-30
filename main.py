@@ -27,7 +27,7 @@ from forms import (CreatePostForm, RegisterForm, LoginForm, CommentForm, Contact
 from functions import create_folder_struct, add_music, update_account, AttributeDict
 from sql_queries import (get_user_songs, delete_song, get_all_artists_tabs, upload_tab, get_all_song_tabs, get_song,
                          query_users, get_all_songs_audio, get_all_artists_audio, get_song_audio, get_all_albums_audio,
-                         get_album_songs, admin_get_all_tables, admin_get_table)
+                         get_album_songs, admin_get_all_tables, admin_get_table, update_play_count)
 
 UPLOAD_FOLDER = "static/uploads"
 ALLOWED_EXTENSIONS = {"jpg", "png", "gp3", "gp4", "gp5", "gpx", "gp"}
@@ -152,6 +152,7 @@ class Song(db.Model):
     song_file = db.Column(db.String(255), nullable=True)
     song_name = db.Column(db.String(255), nullable=True)
     track_number = db.Column(db.Integer, nullable=True)
+    play_count = db.Column(db.Integer, nullable=True)
 
 
 class Comment(db.Model):
@@ -1026,6 +1027,16 @@ def fetch_previous_next_tracks():
                 track_info["previous_track"] = all_songs[i - 1]
                 track_info["next_track"] = all_songs[i + 1]
     return track_info
+
+
+@app.route("/update-song-play-count", methods=["POST", "GET"])
+def update_song_play_count():
+    ref_id = request.args.get("refId")
+    updated_count = update_play_count(ref_id=ref_id)
+    if updated_count[0]:
+        return {"updatedCount": updated_count[1]}
+    else:
+        return {"error": updated_count[0]}
 
 
 @app.route("/fetch-tab-path", methods=["POST", "GET"])
