@@ -12,7 +12,8 @@ instance/*
 blogenv/
 
 ### User Data ###
-static/uploads/
+static/uploads/*
+static/img/*
 
 # Database Files
 *.db
