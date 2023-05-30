@@ -376,8 +376,7 @@ function setVolume() {
 function updateTime(){
     currentTrack.addEventListener("timeupdate", async () =>{
         if(currentTrack.currentTime >= 30 && !songCountUpdated){
-            let countUpdated = await update_play_count(currentTrack.id);
-            console.log(countUpdated);
+            await update_play_count(currentTrack.id);
         }
         if(currentTrack.ended){
             if(loopOn){
