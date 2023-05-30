@@ -248,6 +248,37 @@ def get_song_audio(_id):
                 for song in song_data}
             return song_dict
 
+
+def update_play_count(ref_id):
+    """
+    Updates the play count
+    :param ref_id:
+    :return bool:
+    """
+    with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            query = f"""
+                SELECT play_count FROM songs
+                WHERE ref_id = '{ref_id}';
+            """
+            cur.execute(query)
+            rows = cur.fetchall()
+            play_count = rows[0]["play_count"]
+            query2 = f"""
+                UPDATE songs
+                SET play_count = {play_count + 1}
+                WHERE ref_id = '{ref_id}';
+            """
+            cur.execute(query2)
+            cur.execute(query)
+            rows = cur.fetchall()
+            new_play_count = rows[0]["play_count"]
+
+            if play_count < new_play_count:
+                return True, new_play_count
+            else:
+                return False, play_count
+
 # ######## All queries related to guitar-tabs ########
 
 

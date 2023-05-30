@@ -69,6 +69,17 @@ const fetch_previous_next_tracks = async (refId) => {
     return tracksData;
 }
 
+const update_play_count = async (refId) => {
+    songCountUpdated = true;
+    const url = "update-song-play-count?" + new URLSearchParams({
+        "refId": refId
+    });
+    let countUpdate = await fetch(url).then(async (response) =>{
+        return response.json()
+    });
+    return countUpdate
+}
+
 // ################## Music Player UI Button Variables ##################
 const playPauseBtn = document.getElementById("play-pause-btn");
 const backBtn = document.getElementById("back-btn");
@@ -80,6 +91,7 @@ const loopBtn = document.getElementById("loop-btn");
 // ################## Script Variables ##################
 var sideBarOuterListContent = document.getElementById("outer-level-content");
 var songInfo = document.getElementsByClassName("track-info song")[0];
+var songCountUpdated = false;
 var artistInfo = document.getElementsByClassName("track-info artist")[0];
 var albumInfo = document.getElementsByClassName("track-info album")[0];
 var progressBar = document.getElementsByClassName("seek_slider")[0];
@@ -303,6 +315,7 @@ function setTrack(song, id) {
     songImg.setAttribute("src", song["album_art"]);
     duration = document.getElementsByClassName("seconds-start")[0];
     songInfo.innerText = song["song_name"];
+    songCountUpdated = false;
     artistInfo.innerText = song["artist"];
     albumInfo.innerText = song["album"];
     if(currentTrack == null){
@@ -361,7 +374,11 @@ function setVolume() {
 }
 
 function updateTime(){
-    currentTrack.addEventListener("timeupdate", function(){
+    currentTrack.addEventListener("timeupdate", async () =>{
+        if(currentTrack.currentTime >= 30 && !songCountUpdated){
+            let countUpdated = await update_play_count(currentTrack.id);
+            console.log(countUpdated);
+        }
         if(currentTrack.ended){
             if(loopOn){
                 if(!backBtnClicked || !manualSongSelected){
