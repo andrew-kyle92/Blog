@@ -6,7 +6,7 @@
     {% for set in nasa_data %}
     <div class="mySlides fader">
       <div class="numberText">{{ loop.index }} / {{ nasa_data | length() }}</div>
-      <img {% if "hdurl" in set.keys() %} src="{{ set['hdurl'] }}" {% else %} src="{{ set['url'] }}" {% endif %} alt="">
+      <img {% if "hdurl" in set.keys() %} src="{{ set['hdurl'] }}" {% else %} src="{{ set['url'] }}" {% endif %} alt="" />
       <div class="text">{{ set["explanation"] }}</div>
     </div>
     {% endfor %}
