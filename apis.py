@@ -30,8 +30,8 @@ class APIs:
                     self.nasa_data = req.json()
                     return self.nasa_data
                 else:
-                    print(f"Bad Request;\nStatus: {req.status_code}\nResponse: {req.json()['msg']}")
-                    return False
+                    print(f"Bad Request;\nStatus: {req.status_code}\nResponse: {req.text}")
+                    return nasa_data_start
         else:
             self.nasa_data = nasa_data_start if self.nasa_data is None else self.nasa_data
             return self.nasa_data
@@ -63,6 +63,11 @@ class APIs:
         except requests.exceptions as e:
             print(e)
             return False
+
+
+apis = APIs()
+nasa_data = apis.nasa()
+print(nasa_data)
 
 
 class Spotify:
