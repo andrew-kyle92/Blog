@@ -263,7 +263,7 @@ def update_play_count(ref_id):
             """
             cur.execute(query)
             rows = cur.fetchall()
-            play_count = rows[0]["play_count"]
+            play_count = 0 if rows[0]["play_count"] is None else rows[0]["play_count"]
             query2 = f"""
                 UPDATE songs
                 SET play_count = {play_count + 1}

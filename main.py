@@ -58,7 +58,7 @@ gravatar = Gravatar(app,
 app.config['SQLALCHEMY_DATABASE_URI'] = config.get("DATABASE_URL", "postgresql:///blog.db")
 # app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql:///blogdb"  # This is for testing
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['REMEMBER_COOKIE_DURATION'] = timedelta(seconds=28800) # 8 hours
+app.config['REMEMBER_COOKIE_DURATION'] = timedelta(seconds=28800)  # 8 hours
 app.config["FORCE_HOST_FOR_REDIRECTS"] = None
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.add_url_rule("/", endpoint="get_all_posts")
@@ -323,7 +323,6 @@ def profile(_id):
 @fresh_login_required
 def edit_profile():
     _id = request.args.get("_id")
-    print(request.args)
     user_data = User.query.get(_id)
     title = f"Edit Profile | Andrew's Blog"
     user = current_user
@@ -650,7 +649,8 @@ def song_upload():
                                 song_file=f"{album_dir}/{song}",
                                 song_name=song_name,
                                 ref_id=secrets.token_hex(12),
-                                track_number=form_data["track_number"]
+                                track_number=form_data["track_number"],
+                                play_count=0,
                             )
                             db.session.add(new_song)
                             db.session.commit()
@@ -664,7 +664,8 @@ def song_upload():
                             song_file=f"{album_dir}/{song}",
                             song_name=song_name,
                             ref_id=secrets.token_hex(12),
-                            track_number=form_data["track_number"]
+                            track_number=form_data["track_number"],
+                            play_count = 0,
                         )
                         db.session.add(new_song)
                         db.session.commit()
@@ -678,7 +679,8 @@ def song_upload():
                         song_file=f"{album_dir}/{song}",
                         song_name=song_name,
                         ref_id=secrets.token_hex(12),
-                        track_number=form_data["track_number"]
+                        track_number=form_data["track_number"],
+                        play_count=0,
                     )
                     db.session.add(new_song)
                     db.session.commit()

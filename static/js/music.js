@@ -160,7 +160,7 @@ const albumDropDown = async (id) => {
             let albumId = albums[i]["id"];
             span.setAttribute("id", albumId);
             if(currentTrack){
-                if(albumInfo.innerText == albumName){
+                if(albumInfo.innerText === albumName){
                     span.setAttribute("class", "music-content-albums span-active");
                 }
                 else{
@@ -188,7 +188,7 @@ const albumDropDown = async (id) => {
 const getAlbumSongs = async (albumName, id) => {
     if(!document.getElementById("side-bar-songs-content")){
         let currentAlbumSelected = document.getElementsByClassName("span-active");
-        if(currentAlbumSelected.length != 0){
+        if(currentAlbumSelected.length !== 0){
             currentAlbumSelected[0].setAttribute("class", "music-content-albums");
         }
         let albumDiv = document.getElementById(id);
@@ -231,7 +231,7 @@ const getAlbumSongs = async (albumName, id) => {
             let songSpan = document.createElement("span");
             songSpan.setAttribute("id", _id);
             if(currentTrack){
-                if(songName == songInfo.innerText){
+                if(songName === songInfo.innerText){
                     songSpan.setAttribute("class", "song-item song-playing");
                 }
                 else{
@@ -248,7 +248,7 @@ const getAlbumSongs = async (albumName, id) => {
         }
     }
     else{
-        if(document.getElementsByClassName("span-active").length == 0){
+        if(document.getElementsByClassName("span-active").length === 0){
             // adding the active-class to selected album
             let selectedAlbum = document.getElementById(id);
             selectedAlbum.setAttribute("class", "music-content-albums span-active");
@@ -284,7 +284,7 @@ const getAlbumSongs = async (albumName, id) => {
             while(songParentDiv.firstChild){
                 songParentDiv.removeChild(songParentDiv.lastChild);
             }
-            if(currentTrackId != id){
+            if(currentTrackId !== id){
                 // adding the active-class to selected album
                 let selectedAlbum = document.getElementById(id);
                 selectedAlbum.setAttribute("class", "music-content-albums span-active");
@@ -421,7 +421,7 @@ function updateTime(){
             sliderProgress = progressBar.value = currentTrack.currentTime * (100 / currentTrack.duration);
         }
     });
-};
+}
 
 var playTrack = async (refId) =>{
     manualSongSelected = true;
@@ -447,14 +447,14 @@ var playTrack = async (refId) =>{
 async function playNextTrack(){
     let nextTrack = null;
     for(let i = 0; i < loopPlaylist.length; i++){
-        if(currentTrack.id == Object.keys(loopPlaylist[i])[0]){
+        if(currentTrack.id === Object.keys(loopPlaylist[i])[0]){
             nextTrack = i + 1;
             break;
         }
     }
     let currentSong = document.getElementById(currentTrack.id);
     currentSong.setAttribute("class", "song-item");
-    if(nextTrack == loopPlaylist.length){
+    if(nextTrack === loopPlaylist.length){
         let refId = Object.keys(loopPlaylist[0])[0]
         let song = await fetch_song(refId);
         currentTrack = setTrack(song[Object.keys(song)[0]], Object.keys(song)[0]);
@@ -474,7 +474,7 @@ async function playNextTrack(){
 // ################## Button Logic ##################
 playPauseBtn.addEventListener("click", async function(){
     if(currentTrack != null){
-        if(playPauseBtn.className == "fa-solid fa-circle-play"){
+        if(playPauseBtn.className === "fa-solid fa-circle-play"){
             songPlaying = true;
             playPauseBtn.setAttribute("class", "fa-solid fa-circle-pause");
             currentTrack.play();
@@ -513,8 +513,8 @@ backBtn.addEventListener("click", async function(){
             if(loopOn){
                 let previousTrack;
                 for(let i = 0; i < loopPlaylist.length; i++){
-                    if(Object.keys(loopPlaylist[i])[0] == currentTrack.id){
-                        if(i == 0){
+                    if(Object.keys(loopPlaylist[i])[0] === currentTrack.id){
+                        if(i === 0){
                             previousTrack = loopPlaylist.length - 1;
                         }
                         else{
@@ -576,12 +576,12 @@ forwardBtn.addEventListener("click", async function(){
         currentTrack.currentTime = 0;
         songPlaying = false;
         playPauseBtn.setAttribute("class", "fa-solid fa-circle-play");
-        if(!loopPlaylist.length == 0){
+        if(!loopPlaylist.length === 0){
             let nextTrack;
             for(let i = 0; i < loopPlaylist.length; i++){
-                if(Object.keys(loopPlaylist[i])[0] == currentTrack.id){
-                    nextTrack = i == loopPlaylist.length - 1 ? 0
-                                : i == 0 ? 1 : i + 1;
+                if(Object.keys(loopPlaylist[i])[0] === currentTrack.id){
+                    nextTrack = i === loopPlaylist.length - 1 ? 0
+                                : i === 0 ? 1 : i + 1;
                     break;
                 }
             }
@@ -632,7 +632,7 @@ forwardBtn.addEventListener("click", async function(){
 });
 
 loopBtn.addEventListener("click", async () => {
-    if(loopBtn.dataset.active == "false"){
+    if(loopBtn.dataset.active === "false"){
         loopBtn.style.color = "#8c8c8c";
         loopBtn.dataset.active = "true";
         loopOn = true;
@@ -640,7 +640,7 @@ loopBtn.addEventListener("click", async () => {
             // removing the songs div
             let midSection = document.getElementById("side-bar-mid");
             for(let i = 0; i < midSection.childElementCount; i++){
-                if(midSection.children[i].id == "side-bar-songs-content"){
+                if(midSection.children[i].id === "side-bar-songs-content"){
                     midSection.removeChild(midSection.children[i]);
                     break;
                 }
@@ -668,7 +668,7 @@ loopBtn.addEventListener("click", async () => {
                 let songSpan = document.createElement("span");
                 songSpan.setAttribute("id", Object.keys(loopPlaylist[i])[0]);
                 if(currentTrack != null){
-                    if(songSpan.id == currentTrack.id){
+                    if(songSpan.id === currentTrack.id){
                         songSpan.setAttribute("class", "song-item song-playing");
                     }
                     else{
@@ -683,7 +683,7 @@ loopBtn.addEventListener("click", async () => {
                 songPlaylistDiv.appendChild(songSpan);
             }
         }
-        if(document.getElementsByClassName("song-playing").length == 0){
+        if(document.getElementsByClassName("song-playing").length === 0){
             let song = await fetch_song(`${Object.keys(loopPlaylist[0])[0]}`);
             setTrack(song[Object.keys(song)[0]], Object.keys(song)[0]);
         }
@@ -706,7 +706,7 @@ loopBtn.addEventListener("mouseover", () => {
 });
 
 loopBtn.addEventListener("mouseout", () => {
-    if(loopBtn.dataset.active == "false"){
+    if(loopBtn.dataset.active === "false"){
         loopBtn.style.color = "black";
     }
     else{
@@ -715,13 +715,13 @@ loopBtn.addEventListener("mouseout", () => {
 });
 
 shuffleBtn.addEventListener("click", async () => {
-    if(shuffleBtn.dataset.active == "false"){
+    if(shuffleBtn.dataset.active === "false"){
         shuffleOn = true;
         shuffleBtn.style.color = "#8c8c8c";
         shuffleBtn.dataset.active = "true";
         let midSection = document.getElementById("side-bar-mid");
         for(let i = 0; i < midSection.childElementCount; i++){
-            if(midSection.children[i].id == "side-bar-songs-content"){
+            if(midSection.children[i].id === "side-bar-songs-content"){
                 midSection.removeChild(midSection.children[i]);
                 break;
             }
@@ -755,7 +755,7 @@ shuffleBtn.addEventListener("click", async () => {
             let songSpan = document.createElement("span");
             songSpan.setAttribute("id", Object.keys(loopPlaylist[i])[0]);
             if(currentTrack != null){
-                if(songSpan.id == currentTrack.id){
+                if(songSpan.id === currentTrack.id){
                     songSpan.setAttribute("class", "song-item song-playing");
                 }
                 else{
@@ -794,7 +794,7 @@ shuffleBtn.addEventListener("mouseover", () => {
 });
 
 shuffleBtn.addEventListener("mouseout", () => {
-    if(shuffleBtn.dataset.active == "false"){
+    if(shuffleBtn.dataset.active === "false"){
         shuffleBtn.style.color = "black";
     }
     else{
