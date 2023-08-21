@@ -65,11 +65,6 @@ class APIs:
             return False
 
 
-apis = APIs()
-nasa_data = apis.nasa()
-print(nasa_data)
-
-
 class Spotify:
     """
         For using the spotipy api (essentially spotify's api) and using it for
