@@ -1,6 +1,9 @@
-{% include 'header.html' %}
+{% extends 'routes/base.html' %}
 {% from "_macro.html" import make_form %}
 
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
 <!-- Page Header -->
   <header class="masthead" style="background-image: url('{{ url_for('static', filename='img/reset.jpg') }}')">
     <div class="overlay"></div>
@@ -45,5 +48,4 @@
       </div>
     </div>
   </div>
-
-{% include 'footer.html' %}
+{% endblock %}

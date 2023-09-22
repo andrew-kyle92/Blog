@@ -1,5 +1,9 @@
-{% include "header.html" %}
+{% extends "routes/base.html" %}
 {% from "_macro.html" import make_form %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
 
 {% if api %}
   {% if post.author == "Unknown" %}
@@ -78,4 +82,4 @@
   </article>
 
   <hr>
-{% include "footer.html" %}
+{% endblock %}

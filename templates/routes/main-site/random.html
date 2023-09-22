@@ -1,5 +1,8 @@
-{% include "header.html" %}
+{% extends "routes/base.html" %}
 
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
   <!-- Slideshow container -->
   <div id="slideshow-container">
     <!-- Full-width images with number and caption text -->
@@ -43,5 +46,4 @@
     </div>
   </div>
   <hr>
-
-{% include "footer.html" %}
+{% endblock %}

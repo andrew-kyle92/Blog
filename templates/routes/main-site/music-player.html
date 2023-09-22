@@ -7,6 +7,15 @@
     <link id="musicCSS" rel="stylesheet" href="{{ url_for('static', filename='css/music.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="text/css">
     <script src="https://kit.fontawesome.com/2cf927da1b.js" crossorigin="anonymous"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q3KZFHWB62"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-Q3KZFHWB62');
+    </script>
 </head>
 <body onload="getArtists()">
     <div id="main-content">

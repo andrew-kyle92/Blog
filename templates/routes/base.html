@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="blog, person-site">
@@ -32,14 +30,14 @@
   <script src="https://kit.fontawesome.com/2cf927da1b.js" crossorigin="anonymous"></script>
 
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q3KZFHWB62"></script>
-    <script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q3KZFHWB62"></script>
+  <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
     gtag('config', 'G-Q3KZFHWB62');
-    </script>
+  </script>
 
 </head>
 
@@ -95,3 +93,57 @@
   </nav>
 
 {% block content %}{% endblock %}
+
+<!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            <li class="list-inline-item">
+              <a href="https://twitter.com/AndrewK71521915" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="https://www.facebook.com/andrew.kyle.5011" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="https://github.com/andrew-kyle92" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </li>
+          </ul>
+          <p class="copyright text-muted">Copyright &copy; Andrew Kyle {{ year }}</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+
+  <!-- Custom scripts for this template -->
+  <script src="{{ url_for('static', filename='js/clean-blog.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  {% if scripts %}
+    {% for script in scripts %}
+  <script src="{{ url_for('static', filename=script) }}"></script>
+    {% endfor %}
+  {% endif %}
+
+</body>
+
+</html>

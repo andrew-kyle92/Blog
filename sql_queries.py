@@ -7,7 +7,7 @@ from functions import check_music_dir, upload_tab_file
 config = dotenv_values(".env")
 
 # Test DB Params = dbname="blogdb", user="postgres", password=config.get("TEST_DB_PASSWORD")
-# Prod DB Params = dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")
+# Prod DB Params =
 
 
 def query_users():
