@@ -1,5 +1,8 @@
-{% include "header.html" %}
+{% extends "routes/base.html" %}
 
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
 <!-- Page Header -->
 <header class="masthead">
 <div class="overlay"></div>
@@ -73,6 +76,4 @@
       </div>
     </div>
 </div>
-
-
-{% include "footer.html" %}
+{% endblock %}

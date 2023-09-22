@@ -1,7 +1,9 @@
-{% include "header.html" %}
+{% extends "routes/base.html" %}
 {% from "_macro.html" import make_form %}
-{% block content %}
 
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
   <!-- Page Header -->
   <header class="masthead" style="background-image: url('{{ url_for('static', filename='img/contact-bg.jpg')}}')">
     <div class="overlay"></div>
@@ -24,8 +26,8 @@
         <p class="body-p">Want to get in touch? Fill out the form below to send me a message, and I will get back to you as soon as possible!</p>
 
         {% with messages = get_flashed_messages() %}
-          {% if messages: %}
-            {% for message in messages: %}
+          {% if messages %}
+            {% for message in messages %}
               <div class="alert-message block-message email-success">
                 <a class="close" onclick="closeMessage()">x</a>
                 <p style="color: #368dc7"><em>{{ message }}</em></p>
@@ -44,6 +46,4 @@
   <hr>
 
   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-
-{% include "footer.html" %}
 {% endblock %}
