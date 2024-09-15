@@ -39,7 +39,7 @@ window.addEventListener("load", async () => {
     overlay.style.display = "flex";
   });
   api.renderFinished.on(() => {
-    if(hasAccess == "False" && premiumTab == "True"){
+    if(hasAccess === "False" && premiumTab === "True"){
       overlay.style.display = "flex";
       overlayText.innerText = "Only premium accounts can access premium tabs.";
     }
@@ -55,19 +55,78 @@ window.addEventListener("load", async () => {
 
   // track selector
   function createTrackItem(track) {
-	  console.log(track.name);
-	let iconClass = track.name.toLowerCase().includes('drums') ? trackIcons.drums
+    // getting the icon
+    let iconClass = track.name.toLowerCase().includes('drums') ? trackIcons.drums
 					: track.name.toLowerCase().includes('drumkit') ? trackIcons.drums
 					: trackIcons.guitar;
+    // setting the track template
     const trackItem = document.getElementById("at-track-template").content.firstElementChild.cloneNode(true);
+    // setting the track name
     trackItem.querySelector(".at-track-name").innerText = track.name;
+    // setting the track icon
 	trackItem.querySelector(".fas").classList.add(iconClass);
+    // setting the track volume
+    let vol = ((track.playbackInfo.volume / 16) * 2) * 8
+    trackItem.querySelector(".track-vol").value = vol;
+    trackItem.querySelector('.track-vol').setAttribute('value', vol)
     trackItem.track = track;
+    // track functions
     trackItem.onclick = (e) => {
       e.stopPropagation();
-      api.renderTracks([track]);
+      if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'BUTTON') {
+        api.renderTracks([track]);
+      }
     };
-	console.log(trackItem);
+
+    // button and volume logic
+    let trackMuteBtn = trackItem.querySelector('.muteBtn');
+    trackMuteBtn.onclick = () =>{
+      if (!track.playbackInfo.isMute) {
+        // setting the sound to mute
+        api.changeTrackMute([track], true);
+        // setting the track isMute
+        track.playbackInfo.isMute = true;
+        // changing the btn color
+        trackMuteBtn.classList.add('active');
+      }
+      else {
+        // unmuting the sound
+        api.changeTrackMute([track], false);
+        // setting the isMute: false
+        track.playbackInfo.isMute = false;
+        // changing the btn color
+        trackMuteBtn.classList.remove('active');
+      }
+    }
+
+    let trackSoloBtn = trackItem.querySelector('.soloBtn');
+    trackSoloBtn.onclick = () =>{
+      if (!track.playbackInfo.isSolo) {
+        // setting the sound to mute
+        api.changeTrackSolo([track], true);
+        // setting the track isMute
+        track.playbackInfo.isSolo = true;
+        // changing the btn color
+        trackSoloBtn.classList.add('active');
+      }
+      else {
+        // unmuting the sound
+        api.changeTrackSolo([track], false);
+        // setting the isMute: false
+        track.playbackInfo.isSolo = false;
+        // changing the btn color
+        trackSoloBtn.classList.remove('active');
+      }
+    }
+
+    let volumeSlider = trackItem.querySelector('.track-vol');
+    volumeSlider.onchange = () => {
+      let maxSliderVal = 16;
+      let sliderVol = volumeSlider.value;
+      let adjustedVolume = ((sliderVol / maxSliderVal) * 2);
+      api.changeTrackVolume([track], adjustedVolume);
+    }
+
     return trackItem;
   }
  
@@ -180,16 +239,19 @@ window.addEventListener("load", async () => {
     }
     api.playPause();
   };
+
   stop.onclick = (e) => {
     if (e.target.classList.contains("disabled")) {
       return;
     }
     api.stop();
   };
+
   api.playerReady.on(() => {
     playPause.classList.remove("disabled");
     stop.classList.remove("disabled");
   });
+
   api.playerStateChanged.on((e) => {
     const icon = playPause.querySelector("i.fas");
     if (e.state === alphaTab.synth.PlayerState.Playing) {

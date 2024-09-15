@@ -7,14 +7,14 @@ from functions import check_music_dir, upload_tab_file
 config = dotenv_values(".env")
 
 # Test DB Params = dbname="blogdb", user="postgres", password=config.get("TEST_DB_PASSWORD")
-# Prod DB Params =
+# Prod DB Params = dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")
 
 
 def query_users():
     """ Fetches all users in the db"""
     conn = None
     try:
-        with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+        with psycopg2.connect(dbname="blogdb", user="postgres", password=config.get("TEST_DB_PASSWORD")) as conn:
             with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
                 user_query = """
                     SELECT * FROM users
@@ -38,7 +38,7 @@ def get_user_songs(user_id):
     conn = None
 
     try:
-        conn = psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD"))
+        conn = psycopg2.connect(dbname="blogdb", user="postgres", password=config.get("TEST_DB_PASSWORD"))
         cur = conn.cursor()
         query = f"""
             SELECT
@@ -75,7 +75,7 @@ def delete_song(user_id, song_id):
     as well as the album from the db """
 
     try:
-        with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+        with psycopg2.connect(dbname="blogdb", user="postgres", password=config.get("TEST_DB_PASSWORD")) as conn:
             with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
                 song_query = f"""
                     SELECT 
@@ -96,7 +96,7 @@ def delete_song(user_id, song_id):
                 cur.execute(song_query)
                 song_data = cur.fetchone()
 
-        with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+        with psycopg2.connect(dbname="blogdb", user="postgres", password=config.get("TEST_DB_PASSWORD")) as conn:
             with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
                 user_query = f"""
                     SELECT
@@ -109,7 +109,7 @@ def delete_song(user_id, song_id):
                 cur.execute(user_query)
                 user_data = cur.fetchone()
 
-        with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+        with psycopg2.connect(dbname="blogdb", user="postgres", password=config.get("TEST_DB_PASSWORD")) as conn:
             with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
                 delete_query = f"""
                     DELETE FROM
@@ -121,7 +121,7 @@ def delete_song(user_id, song_id):
         check_dir = check_music_dir(user_data, song_data)
 
         if check_dir[2] == 1:
-            with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+            with psycopg2.connect(dbname="blogdb", user="postgres", password=config.get("TEST_DB_PASSWORD")) as conn:
                 with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
                     album_dir_delete_query = f"""
                         DELETE FROM
@@ -138,7 +138,7 @@ def delete_song(user_id, song_id):
 
 def get_all_artists_audio():
     """ Queries all audio artists in the DB """
-    with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+    with psycopg2.connect(dbname="blogdb", user="postgres", password=config.get("TEST_DB_PASSWORD")) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             query = """
                 SELECT
@@ -154,7 +154,7 @@ def get_all_artists_audio():
 
 def get_all_albums_audio(artist_id):
     """ Queries all audio albums from a specific artist """
-    with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+    with psycopg2.connect(dbname="blogdb", user="postgres", password=config.get("TEST_DB_PASSWORD")) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             query = f"""
                 SELECT
@@ -171,7 +171,7 @@ def get_all_albums_audio(artist_id):
 
 
 def get_album_songs(album_id):
-    with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+    with psycopg2.connect(dbname="blogdb", user="postgres", password=config.get("TEST_DB_PASSWORD")) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             query = f"""
                 SELECT
@@ -191,7 +191,7 @@ def get_album_songs(album_id):
 
 def get_all_songs_audio(artist):
     """ Queries all audio songs from the database """
-    with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+    with psycopg2.connect(dbname="blogdb", user="postgres", password=config.get("TEST_DB_PASSWORD")) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             query = f"""
                 SELECT 
@@ -217,7 +217,7 @@ def get_all_songs_audio(artist):
 
 def get_song_audio(_id):
     """ Gets a specific song based on the reference id """
-    with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+    with psycopg2.connect(dbname="blogdb", user="postgres", password=config.get("TEST_DB_PASSWORD")) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             query = f"""
                 SELECT
@@ -255,7 +255,7 @@ def update_play_count(ref_id):
     :param ref_id:
     :return bool:
     """
-    with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+    with psycopg2.connect(dbname="blogdb", user="postgres", password=config.get("TEST_DB_PASSWORD")) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             query = f"""
                 SELECT play_count FROM songs
@@ -286,7 +286,7 @@ def get_all_artists_tabs():
     """
         Queries the song_tabs table and pulls all the data and stores it into a dictionary
     """
-    with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+    with psycopg2.connect(dbname="blogdb", user="postgres", password=config.get("TEST_DB_PASSWORD")) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             tab_query = f"""
                 SELECT DISTINCT artist FROM song_tabs
@@ -304,7 +304,7 @@ def get_all_song_tabs(artist):
     Pulls all tabs related to the artist requested
     :return:
     """
-    with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+    with psycopg2.connect(dbname="blogdb", user="postgres", password=config.get("TEST_DB_PASSWORD")) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             query = f"""
                 SELECT *
@@ -326,7 +326,7 @@ def upload_tab(form_data):
     """
     can_upload = upload_tab_file(form_data)
     if can_upload[0]:
-        with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+        with psycopg2.connect(dbname="blogdb", user="postgres", password=config.get("TEST_DB_PASSWORD")) as conn:
             with conn.cursor() as cur:
                 upload_query = f"""
                     INSERT INTO song_tabs
@@ -349,7 +349,7 @@ def get_song(ref_id):
     :return:
     all the data for this specific tab
     """
-    with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+    with psycopg2.connect(dbname="blogdb", user="postgres", password=config.get("TEST_DB_PASSWORD")) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             query = f"""
                 SELECT *
@@ -367,7 +367,7 @@ def admin_get_all_tables():
     :return:
     A list of all the database tables
     """
-    with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+    with psycopg2.connect(dbname="blogdb", user="postgres", password=config.get("TEST_DB_PASSWORD")) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             table_query = """
                 SELECT table_name FROM information_schema.tables 
@@ -396,7 +396,7 @@ def admin_get_table(table):
     :param table:
     :return dictionary of all columns and rows:
     """
-    with psycopg2.connect(dbname="blogdb", user="andrew", password=config.get("DB_PASSWORD")) as conn:
+    with psycopg2.connect(dbname="blogdb", user="postgres", password=config.get("TEST_DB_PASSWORD")) as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             query = f"""
                 SELECT *

@@ -55,8 +55,8 @@ gravatar = Gravatar(app,
                     base_url=None)
 
 # #CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = config.get("DATABASE_URL", "postgresql:///blog.db")
-# app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql:///blogdb"  # This is for testing
+# app.config['SQLALCHEMY_DATABASE_URI'] = config.get("DATABASE_URL", "postgresql:///blog.db")
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql:///blogdb"  # This is for testing
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['REMEMBER_COOKIE_DURATION'] = timedelta(seconds=28800)  # 8 hours
 app.config["FORCE_HOST_FOR_REDIRECTS"] = None
@@ -164,6 +164,17 @@ class Comment(db.Model):
     comment = db.Column(db.String(255), nullable=False)
     date = db.Column(db.String(255), nullable=False)
     time = db.Column(db.String(255), nullable=False)
+
+
+class SongTabs(db.Model):
+    __tablename__ = "song_tabs"
+    id = db.Column(db.Integer, primary_key=True)
+    artist = db.Column(db.String(50), nullable=False)
+    album = db.Column(db.String(150), nullable=False)
+    tab_name = db.Column(db.String(50), nullable=False)
+    tab_file = db.Column(db.String(255), nullable=False)
+    premium_tab = db.Column(db.Boolean)
+    ref_id = db.Column(db.String(128), unique=True, nullable=False)
 
 
 db.create_all()  # This is for database creation for test environment
@@ -1125,5 +1136,5 @@ def server_error(e):
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000, debug=False)
-    # app.run(host='127.0.0.1', port=5000, debug=True)  # for testing
+    # app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(host='127.0.0.1', port=5000, debug=True)  # for testing

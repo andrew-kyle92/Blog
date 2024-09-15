@@ -163,6 +163,7 @@ cython_debug/
 *.sock
 
 # End of https://www.toptal.com/developers/gitignore/api/flask
+/static/node_modules/*
 /static/node_modules/xtend/.jshintrc
 /static/node_modules/buffer-writer/.travis.yml
 /static/node_modules/packet-reader/.travis.yml
