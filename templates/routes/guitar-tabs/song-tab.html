@@ -1,7 +1,9 @@
 {% include "routes/guitar-tabs/tab-header.html" %}
 
   <a class="artist-home" href="{{ url_for('artist_index', artist=artist) }}">Back to Artist</a>
-
+  
+  <!--<div id="alphaTab"></div>-->
+	
     <div class="at-wrap">
       <div class="at-overlay">
         <div class="at-overlay-content">
@@ -69,17 +71,23 @@
         </div>
       </div>
     </div>
-
-    <template id="at-track-template">
-      <div class="at-track">
-        <div class="at-track-icon">
-          <i class="fas fa-guitar"></i>
-        </div>
-        <div class="at-track-details">
-          <div class="at-track-name"></div>
-        </div>
-      </div>
-    </template>
+	
+	<template id="at-track-template">
+		<div class="at-track">
+			<div class="at-track-icon">
+				<i class="fas"></i>
+			</div>
+			<div class="at-track-details">
+				<div class="at-track-name"></div>
+				<div class="at-track-controls">
+					<button type="button" class="btn btn-outline-danger btn-sm">Mute</button>
+					<button type="button" class="btn btn-outline-success btn-sm">Solo</button>
+					<i class="fa-solid fa-volume-high"></i>
+					<input type="range" min="0" max="16" value="12">
+				</div>
+			</div>
+		</div>
+	</template>
 
     <script src="{{ url_for('static', filename='js/tabs.js') }}"></script>
 

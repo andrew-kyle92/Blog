@@ -24,15 +24,13 @@ window.addEventListener("load", async () => {
   let path = await fetch_song_path(gpID);
 
   // initialize alphatab
-  const settings = {
-    file: hasAccess != "False" && premiumTab == "True" || premiumTab == "False" ? path["path"] : "/static/uploads/tab-files/Deep Purple/Smoke On The Water.gp4",
-    player: {
-      enablePlayer: true,
-      soundFont: "https://cdn.jsdelivr.net/npm/@coderline/alphatab@latest/dist/soundfont/sonivox.sf2",
-      scrollElement: wrapper.querySelector('.at-viewport')
-    },
-  };
-
+  var settings = new alphaTab.Settings();
+  settings.core.file = hasAccess != "False" && premiumTab == "True" || premiumTab == "False" ? path["path"] : "/static/uploads/tab-files/Deep Purple/Smoke On The Water.gp4";
+  //settings.core.tracks = "all";
+  settings.player.enablePlayer = true;
+  settings.player.soundFont = "https://cdn.jsdelivr.net/npm/@coderline/alphatab@latest/dist/soundfont/sonivox.sf2";
+  settings.player.scrollElement = wrapper.querySelector('.at-viewport');
+  
   const api = new alphaTab.AlphaTabApi(main, settings);
 
   // overlay logic
@@ -49,29 +47,41 @@ window.addEventListener("load", async () => {
       overlay.style.display = "none";
     }
   });
+  
+  var trackIcons = {
+	  drums: 'fa-drum',
+	  guitar: 'fa-guitar',
+  }
 
   // track selector
   function createTrackItem(track) {
-    const trackItem = document
-      .querySelector("#at-track-template")
-      .content.cloneNode(true).firstElementChild;
+	  console.log(track.name);
+	let iconClass = track.name.toLowerCase().includes('drums') ? trackIcons.drums
+					: track.name.toLowerCase().includes('drumkit') ? trackIcons.drums
+					: trackIcons.guitar;
+    const trackItem = document.getElementById("at-track-template").content.firstElementChild.cloneNode(true);
     trackItem.querySelector(".at-track-name").innerText = track.name;
+	trackItem.querySelector(".fas").classList.add(iconClass);
     trackItem.track = track;
     trackItem.onclick = (e) => {
       e.stopPropagation();
       api.renderTracks([track]);
     };
+	console.log(trackItem);
     return trackItem;
   }
-  const trackList = wrapper.querySelector(".at-track-list");
-  api.scoreLoaded.on((score) => {
-    // clear items
-    trackList.innerHTML = "";
-    // generate a track item for all tracks of the score
-    score.tracks.forEach((track) => {
-      trackList.appendChild(createTrackItem(track));
-    });
-  });
+ 
+	const trackList = wrapper.querySelector(".at-track-list");
+	// fill track list when the score is loaded
+	api.scoreLoaded.on((score) => {
+	  // clear items
+	  trackList.innerHTML = "";
+	  // generate a track item for all tracks of the score
+	  score.tracks.forEach((track) => {
+		trackList.appendChild(createTrackItem(track));
+	  });
+	});
+ 
   api.renderStarted.on(() => {
     // collect tracks being rendered
     const tracks = new Map();

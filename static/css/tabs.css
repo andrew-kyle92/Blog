@@ -95,7 +95,7 @@ hr {
     z-index: 1001;
     overflow: hidden;
     border-right: 1px solid rgba(0, 0, 0, 0.12);
-    background: #f7f7f7;
+    background: #2e2d2d;
 }
 
 .at-sidebar:hover {
@@ -151,6 +151,7 @@ hr {
 
 /** Track selector **/
 .at-track {
+	color: aliceblue;
     display: flex;
     position: relative;
     padding: 5px;
@@ -190,11 +191,12 @@ hr {
 }
 
 .at-track.active {
+	color: #ba2b2b;
     background: rgba(0, 0, 0, 0.03);
 }
 
 .at-track.active > .at-track-icon {
-    color: #4972a1;
+    color: #ba2b2b;
     opacity: 1;
 }
 
